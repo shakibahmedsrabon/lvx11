@@ -99,12 +99,6 @@ const ProductCarousel = () => {
                           className="absolute inset-0 w-full h-full object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
                           loading="lazy"
                         />
-                        />
-                        <img
-                          src={product.category === "Earrings" ? organicEarring : linkBracelet}
-                          alt={`${product.name} lifestyle`}
-                          className="absolute inset-0 w-full h-full object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
-                        />
                         <div className="absolute inset-0 bg-black/[0.03]"></div>
                         {(product.id === 1 || product.id === 3) && (
                           <div className="absolute top-2 left-2 px-2 py-1 text-xs font-medium text-black">

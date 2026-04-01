@@ -320,7 +320,6 @@ const Navigation = () => {
                     className="flex-1 bg-transparent text-nav-foreground placeholder:text-nav-foreground/60 outline-none text-lg"
                     autoFocus
                   />
-                  />
                 </div>
               </div>
 
