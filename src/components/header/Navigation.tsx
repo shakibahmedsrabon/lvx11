@@ -122,7 +122,7 @@ const Navigation = () => {
               onMouseEnter={() => setActiveDropdown(item.name)}
               onMouseLeave={() => setActiveDropdown(null)}
             >
-              <Link
+              <AppLink
                 href={item.href}
                 className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-sm font-light py-6 block"
               >
@@ -296,7 +296,7 @@ const Navigation = () => {
             <div className="space-y-6">
               {navItems.map((item, index) => (
                 <div key={item.name}>
-                  <Link
+                  <AppLink
                     href={item.href}
                     className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-lg font-light block py-2"
                     onClick={() => setIsMobileMenuOpen(false)}
@@ -305,7 +305,7 @@ const Navigation = () => {
                   </AppLink>
                    <div className="mt-3 pl-4 space-y-2">
                      {item.submenuItems.map((subItem, subIndex) => (
-                       <Link
+                       <AppLink
                          key={subIndex}
                          href={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
                          className="text-nav-foreground/70 hover:text-nav-hover text-sm font-light block py-1"
