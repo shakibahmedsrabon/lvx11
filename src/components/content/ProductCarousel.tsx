@@ -69,7 +69,7 @@ const products: Product[] = [
 
 const ProductCarousel = () => {
   return (
-    <section className="w-full mb-16 px-6">
+    <section className="w-full mb-16 px-6" aria-label="Product carousel">
       <Carousel
           opts={{
             align: "start",
