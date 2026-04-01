@@ -25,13 +25,13 @@ const ProductInfo = () => {
           <BreadcrumbList>
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/">Home</Link>
+                <AppLink href="/">Home</AppLink>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <Link to="/category/earrings">Earrings</Link>
+                <AppLink href="/category/earrings">Earrings</AppLink>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

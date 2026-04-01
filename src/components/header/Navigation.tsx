@@ -177,24 +177,24 @@ const Navigation = () => {
               onMouseLeave={() => setActiveDropdown(null)}
             >
               <Link
-                to={item.href}
+                href={item.href}
                 className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-sm font-light py-6 block"
               >
                 {item.name}
-              </Link>
+              </AppLink>
             </div>
           ))}
         </div>
 
         {/* Center logo */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
-          <Link to="/" className="block">
+          <AppLink href="/" className="block">
             <img 
               src="/LINEA-1.svg" 
               alt="LINEA" 
               className="h-6 w-auto"
             />
-          </Link>
+          </AppLink>
         </div>
 
         {/* Right icons */}
@@ -250,12 +250,12 @@ const Navigation = () => {
                      .find(item => item.name === activeDropdown)
                      ?.submenuItems.map((subItem, index) => (
                       <li key={index}>
-                        <Link 
-                          to={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                        <AppLink 
+                          href={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
                           className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-sm font-light block py-2"
                         >
                           {subItem}
-                        </Link>
+                        </AppLink>
                       </li>
                    ))}
                 </ul>
@@ -279,7 +279,7 @@ const Navigation = () => {
                     }
                     
                     return (
-                      <Link key={index} to={linkTo} className="w-[400px] h-[280px] cursor-pointer group relative overflow-hidden block">
+                      <AppLink key={index} href={linkTo} className="w-[400px] h-[280px] cursor-pointer group relative overflow-hidden block">
                         <img 
                           src={image.src}
                           alt={image.alt}
@@ -291,7 +291,7 @@ const Navigation = () => {
                             <ArrowRight size={12} />
                           </div>
                         )}
-                      </Link>
+                      </AppLink>
                     );
                   })}
               </div>
@@ -351,22 +351,22 @@ const Navigation = () => {
               {navItems.map((item, index) => (
                 <div key={item.name}>
                   <Link
-                    to={item.href}
+                    href={item.href}
                     className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-lg font-light block py-2"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.name}
-                  </Link>
+                  </AppLink>
                    <div className="mt-3 pl-4 space-y-2">
                      {item.submenuItems.map((subItem, subIndex) => (
                        <Link
                          key={subIndex}
-                         to={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                         href={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
                          className="text-nav-foreground/70 hover:text-nav-hover text-sm font-light block py-1"
                          onClick={() => setIsMobileMenuOpen(false)}
                        >
                          {subItem}
-                       </Link>
+                       </AppLink>
                      ))}
                    </div>
                 </div>

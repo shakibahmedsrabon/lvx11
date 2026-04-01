@@ -22,7 +22,7 @@ const CategoryHeader = ({ category }: CategoryHeaderProps) => {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link to="/">Home</Link>
+                  <AppLink href="/">Home</AppLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />

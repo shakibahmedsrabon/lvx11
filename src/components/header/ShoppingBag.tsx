@@ -137,9 +137,9 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorit
                   size="lg"
                   onClick={onClose}
                 >
-                  <Link to="/checkout">
+                  <AppLink href="/checkout">
                     Proceed to Checkout
-                  </Link>
+                  </AppLink>
                 </Button>
                 
                 <Button 
@@ -149,9 +149,9 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorit
                   onClick={onClose}
                   asChild
                 >
-                  <Link to="/category/shop">
+                  <AppLink href="/category/shop">
                     Continue Shopping
-                  </Link>
+                  </AppLink>
                 </Button>
               </div>
             </>
