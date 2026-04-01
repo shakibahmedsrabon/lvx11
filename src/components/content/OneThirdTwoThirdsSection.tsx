@@ -10,9 +10,10 @@ const OneThirdTwoThirdsSection = () => {
           <Link to="/category/rings" className="block">
             <div className="w-full h-[500px] lg:h-[800px] mb-3 overflow-hidden">
               <img 
-                src={organicEarring} 
-                alt="Artisan crafted jewelry" 
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+               src={organicEarring} 
+               alt="Handcrafted artisan jewelry with meticulous attention to detail" 
+               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+               loading="lazy"
               />
             </div>
           </Link>
@@ -30,9 +31,10 @@ const OneThirdTwoThirdsSection = () => {
           <Link to="/category/necklaces" className="block">
             <div className="w-full h-[500px] lg:h-[800px] mb-3 overflow-hidden">
               <img 
-                src={circularCollection} 
-                alt="Circular jewelry collection" 
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+               src={circularCollection} 
+               alt="Circular elements jewelry collection with geometric contemporary minimalism" 
+               className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+               loading="lazy"
               />
             </div>
           </Link>

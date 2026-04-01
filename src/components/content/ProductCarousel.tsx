@@ -69,7 +69,7 @@ const products: Product[] = [
 
 const ProductCarousel = () => {
   return (
-    <section className="w-full mb-16 px-6">
+    <section className="w-full mb-16 px-6" aria-label="Product carousel">
       <Carousel
           opts={{
             align: "start",
@@ -89,13 +89,15 @@ const ProductCarousel = () => {
                       <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">
                         <img
                           src={product.image}
-                          alt={product.name}
+                          alt={`${product.name} ${product.category}`}
                           className="w-full h-full object-cover transition-all duration-300 group-hover:opacity-0"
+                          loading="lazy"
                         />
                         <img
                           src={product.category === "Earrings" ? organicEarring : linkBracelet}
-                          alt={`${product.name} lifestyle`}
+                          alt={`${product.name} lifestyle view`}
                           className="absolute inset-0 w-full h-full object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
+                          loading="lazy"
                         />
                         <div className="absolute inset-0 bg-black/[0.03]"></div>
                         {(product.id === 1 || product.id === 3) && (
