@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import AppLink from "@/lib/navigation/AppLink";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -22,7 +22,7 @@ const CategoryHeader = ({ category }: CategoryHeaderProps) => {
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <Link to="/">Home</Link>
+                  <AppLink href="/">Home</AppLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />

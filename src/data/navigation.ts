@@ -1,0 +1,88 @@
+/**
+ * Navigation data — separated for easy migration.
+ */
+
+export interface NavImage {
+  src: string;
+  alt: string;
+  label: string;
+}
+
+export interface NavItem {
+  name: string;
+  href: string;
+  submenuItems: string[];
+  images: NavImage[];
+}
+
+export const navItems: NavItem[] = [
+  {
+    name: "Shop",
+    href: "/category/shop",
+    submenuItems: ["Rings", "Necklaces", "Earrings", "Bracelets", "Watches"],
+    images: [
+      { src: "/rings-collection.png", alt: "Rings Collection", label: "Rings" },
+      { src: "/earrings-collection.png", alt: "Earrings Collection", label: "Earrings" },
+    ],
+  },
+  {
+    name: "New in",
+    href: "/category/new-in",
+    submenuItems: [
+      "This Week's Arrivals",
+      "Spring Collection",
+      "Featured Designers",
+      "Limited Edition",
+      "Pre-Orders",
+    ],
+    images: [
+      { src: "/arcus-bracelet.png", alt: "Arcus Bracelet", label: "Arcus Bracelet" },
+      { src: "/span-bracelet.png", alt: "Span Bracelet", label: "Span Bracelet" },
+    ],
+  },
+  {
+    name: "About",
+    href: "/about/our-story",
+    submenuItems: [
+      "Our Story",
+      "Sustainability",
+      "Size Guide",
+      "Customer Care",
+      "Store Locator",
+    ],
+    images: [
+      { src: "/founders.png", alt: "Company Founders", label: "Read our story" },
+    ],
+  },
+];
+
+export const popularSearches = [
+  "Gold Rings",
+  "Silver Necklaces",
+  "Pearl Earrings",
+  "Designer Bracelets",
+  "Wedding Rings",
+  "Vintage Collection",
+];
+
+export const footerLinks = {
+  shop: [
+    { label: "New In", href: "/category/new-in" },
+    { label: "Rings", href: "/category/rings" },
+    { label: "Earrings", href: "/category/earrings" },
+    { label: "Bracelets", href: "/category/bracelets" },
+    { label: "Necklaces", href: "/category/necklaces" },
+  ],
+  support: [
+    { label: "Size Guide", href: "/about/size-guide" },
+    { label: "Care Instructions", href: "/about/customer-care" },
+    { label: "Returns", href: "/about/customer-care" },
+    { label: "Shipping", href: "/about/customer-care" },
+    { label: "Contact", href: "/about/customer-care" },
+  ],
+  connect: [
+    { label: "Instagram", href: "https://instagram.com", external: true },
+    { label: "Pinterest", href: "https://pinterest.com", external: true },
+    { label: "Newsletter", href: "#newsletter" },
+  ],
+};
