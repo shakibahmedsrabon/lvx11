@@ -1,51 +1,46 @@
-import Header from "../components/header/Header";
-import Footer from "../components/footer/Footer";
+import MainLayout from "../layouts/MainLayout";
 import LargeHero from "../components/content/LargeHero";
 import FiftyFiftySection from "../components/content/FiftyFiftySection";
 import OneThirdTwoThirdsSection from "../components/content/OneThirdTwoThirdsSection";
 import ProductCarousel from "../components/content/ProductCarousel";
 import EditorialSection from "../components/content/EditorialSection";
 import SEOHead from "../components/SEOHead";
+import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site";
 
 const Index = () => {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "JewelryStore",
-    name: "Linea Jewelry",
-    description: "Minimalist jewelry crafted for the modern individual",
-    url: window.location.origin,
+    name: siteConfig.name,
+    description: siteConfig.tagline,
+    url: siteConfig.url,
     address: {
       "@type": "PostalAddress",
-      streetAddress: "123 Madison Avenue",
-      addressLocality: "New York",
-      addressRegion: "NY",
-      postalCode: "10016",
-      addressCountry: "US",
+      streetAddress: siteConfig.contact.address.street,
+      addressLocality: siteConfig.contact.address.city,
+      addressRegion: siteConfig.contact.address.state,
+      postalCode: siteConfig.contact.address.zip,
+      addressCountry: siteConfig.contact.address.country,
     },
-    telephone: "+1-212-555-0123",
-    email: "hello@lineajewelry.com",
+    telephone: siteConfig.contact.phone,
+    email: siteConfig.contact.email,
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <MainLayout>
       <SEOHead
-        title="Linea - Minimalist Jewelry Crafted for the Modern Individual"
-        description="Discover minimalist jewelry crafted with timeless elegance. Shop rings, earrings, bracelets, and necklaces from Linea."
+        title={routes.home.title}
+        description={routes.home.description}
         jsonLd={jsonLd}
       />
-      <Header />
-      
-      <main id="main-content" className="pt-6">
-        <h1 className="sr-only">Linea - Minimalist Jewelry Collection</h1>
-        <FiftyFiftySection />
-        <ProductCarousel />
-        <LargeHero />
-        <OneThirdTwoThirdsSection />
-        <EditorialSection />
-      </main>
-      
-      <Footer />
-    </div>
+      <h1 className="sr-only">Linea - Minimalist Jewelry Collection</h1>
+      <FiftyFiftySection />
+      <ProductCarousel />
+      <LargeHero />
+      <OneThirdTwoThirdsSection />
+      <EditorialSection />
+    </MainLayout>
   );
 };
 
