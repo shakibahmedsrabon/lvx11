@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { usePathname } from "@/lib/navigation";
 
 const ScrollToTop = () => {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
 
   useEffect(() => {
     window.scrollTo(0, 0);
