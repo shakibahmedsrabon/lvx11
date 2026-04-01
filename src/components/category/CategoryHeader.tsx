@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import AppLink from "@/lib/navigation/AppLink";
 import {
   Breadcrumb,
   BreadcrumbItem,

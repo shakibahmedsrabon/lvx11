@@ -1,6 +1,7 @@
 import { ArrowRight, X, Minus, Plus } from "lucide-react";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import AppLink from "@/lib/navigation/AppLink";
+import { navItems, popularSearches } from "@/data/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import ShoppingBag from "./ShoppingBag";

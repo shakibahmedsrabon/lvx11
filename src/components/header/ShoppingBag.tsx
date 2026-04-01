@@ -1,6 +1,6 @@
 import { X, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import AppLink from "@/lib/navigation/AppLink";
 
 interface CartItem {
   id: number;

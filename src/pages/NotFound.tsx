@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { usePathname } from "@/lib/navigation";
 import { useEffect } from "react";
 
 const NotFound = () => {

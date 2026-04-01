@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import AppLink from "@/lib/navigation/AppLink";
 import Pagination from "./Pagination";
 import pantheonImage from "@/assets/pantheon.jpg";
 import eclipseImage from "@/assets/eclipse.jpg";
