@@ -4,11 +4,12 @@ const LargeHero = () => {
   return (
     <section className="w-full mb-16 px-6">
       <div className="w-full aspect-[16/9] mb-3 overflow-hidden">
-        <img 
-          src={heroImage} 
-          alt="Modern jewelry collection" 
-          className="w-full h-full object-cover"
-        />
+          <img 
+            src={heroImage} 
+            alt="Modern heritage jewelry collection featuring contemporary pieces with timeless elegance" 
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
       </div>
       <div className="">
         <h2 className="text-sm font-normal text-foreground mb-1">

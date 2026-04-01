@@ -32,8 +32,9 @@ const FiftyFiftySection = () => {
             <div className="w-full aspect-square mb-3 overflow-hidden">
               <img 
                 src={linkBracelet} 
-                alt="Chain link bracelet" 
+                alt="Refined chain link bracelet in precious metals" 
                 className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                loading="lazy"
               />
             </div>
           </Link>

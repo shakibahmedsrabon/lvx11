@@ -6,6 +6,7 @@ import ProductImageGallery from "../components/product/ProductImageGallery";
 import ProductInfo from "../components/product/ProductInfo";
 import ProductDescription from "../components/product/ProductDescription";
 import ProductCarousel from "../components/content/ProductCarousel";
+import SEOHead from "../components/SEOHead";
 import { 
   Breadcrumb, 
   BreadcrumbItem, 
@@ -20,10 +21,28 @@ const ProductDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEOHead
+        title="Pantheon Earrings - Linea Jewelry"
+        description="Discover the Pantheon earrings from Linea. Minimalist jewelry crafted with timeless elegance."
+        type="product"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: "Pantheon",
+          category: "Earrings",
+          brand: { "@type": "Brand", name: "Linea" },
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "EUR",
+            price: "2850",
+            availability: "https://schema.org/InStock",
+          },
+        }}
+      />
       <Header />
       
-      <main className="pt-6">
-        <section className="w-full px-6">
+      <main id="main-content" className="pt-6">
+        <section className="w-full px-6" aria-label="Product details">
           {/* Breadcrumb - Show above image on smaller screens */}
           <div className="lg:hidden mb-6">
             <Breadcrumb>
@@ -57,14 +76,14 @@ const ProductDetail = () => {
           </div>
         </section>
         
-        <section className="w-full mt-16 lg:mt-24">
+        <section className="w-full mt-16 lg:mt-24" aria-label="Recommended products">
           <div className="mb-4 px-6">
             <h2 className="text-sm font-light text-foreground">You might also like</h2>
           </div>
           <ProductCarousel />
         </section>
         
-        <section className="w-full">
+        <section className="w-full" aria-label="More from this category">
           <div className="mb-4 px-6">
             <h2 className="text-sm font-light text-foreground">Our other Earrings</h2>
           </div>
