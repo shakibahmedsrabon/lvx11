@@ -89,8 +89,16 @@ const ProductCarousel = () => {
                       <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">
                         <img
                           src={product.image}
-                          alt={product.name}
+                          alt={`${product.name} ${product.category}`}
                           className="w-full h-full object-cover transition-all duration-300 group-hover:opacity-0"
+                          loading="lazy"
+                        />
+                        <img
+                          src={product.category === "Earrings" ? organicEarring : linkBracelet}
+                          alt={`${product.name} lifestyle view`}
+                          className="absolute inset-0 w-full h-full object-cover transition-all duration-300 opacity-0 group-hover:opacity-100"
+                          loading="lazy"
+                        />
                         />
                         <img
                           src={product.category === "Earrings" ? organicEarring : linkBracelet}
