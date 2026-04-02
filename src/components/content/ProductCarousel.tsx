@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import AppLink from "@/lib/navigation/AppLink";
-import { useProducts } from "@/hooks/useProducts";
+import { useProducts, formatPrice } from "@/hooks/useProducts";
 
 const ProductCarousel = () => {
   const { products, loading } = useProducts();
