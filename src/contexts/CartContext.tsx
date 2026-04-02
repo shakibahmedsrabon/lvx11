@@ -103,6 +103,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     return item ? item.quantity : 0;
   };
 
+  const clearCart = () => setCartItems([]);
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -113,6 +115,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         addToCart,
         updateQuantity,
         removeFromCart,
+        clearCart,
         toggleFavorite,
         isFavorite,
         getItemQuantity,
