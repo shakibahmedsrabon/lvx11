@@ -51,16 +51,17 @@ const CustomerCare = () => {
             <div className="grid md:grid-cols-3 gap-8">
               {contacts.map((contact) => (
                 <div key={contact.id} className="space-y-2">
-                  <h3 className="text-lg font-light text-foreground">{contact.name}</h3>
-                  {contact.link && (
+                  {contact.link ? (
                     <a
                       href={contact.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-muted-foreground hover:text-foreground transition-colors underline text-sm"
+                      className="text-lg font-light text-foreground hover:text-muted-foreground transition-colors cursor-pointer"
                     >
-                      {contact.link}
+                      {contact.name || contact.link}
                     </a>
+                  ) : (
+                    <h3 className="text-lg font-light text-foreground">{contact.name}</h3>
                   )}
                 </div>
               ))}
