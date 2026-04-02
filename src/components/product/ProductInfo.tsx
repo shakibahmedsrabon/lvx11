@@ -40,6 +40,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const decrementQuantity = () => { vibrate(); setQuantity(prev => Math.max(1, prev - 1)); };
 
   const handleAddToCart = () => {
+    vibrate([10, 30, 10]);
     for (let i = 0; i < quantity; i++) {
       addToCart(cartProduct);
     }
