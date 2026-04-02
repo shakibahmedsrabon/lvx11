@@ -13,19 +13,23 @@ import {
 import { Minus, Plus, Heart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import pantheonImage from "@/assets/pantheon.jpg";
+import { Product } from "@/data/products";
 
-const ProductInfo = () => {
+interface ProductInfoProps {
+  product: Product;
+}
+
+const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart, toggleFavorite, isFavorite, getItemQuantity } = useCart();
   const { toast } = useToast();
 
-  const product = {
-    id: 1,
-    name: "Pantheon",
-    price: "৳2,850",
-    image: pantheonImage,
-    category: "Earrings",
+  const cartProduct = {
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.image,
+    category: product.category,
   };
 
   const incrementQuantity = () => setQuantity(prev => prev + 1);
