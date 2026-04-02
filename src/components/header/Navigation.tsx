@@ -123,7 +123,7 @@ const Navigation = () => {
             </svg>
             {totalItems > 0 && (
               <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-foreground text-background text-[0.6rem] font-medium rounded-full flex items-center justify-center">
-                {totalItems}
+                {totalItems > 9 ? '9+' : totalItems}
               </span>
             )}
           </button>
