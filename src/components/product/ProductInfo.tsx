@@ -37,7 +37,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addToCart(product);
+      addToCart(cartProduct);
     }
     toast({
       title: "Added to bag",
