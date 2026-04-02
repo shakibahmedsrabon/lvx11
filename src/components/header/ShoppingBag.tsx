@@ -133,7 +133,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorit
                 </p>
                 
                 <Button 
-                  className="w-full rounded-none bg-[#25D366] hover:bg-[#20BD5A] text-white" 
+                  className="w-full rounded-none bg-foreground text-background hover:bg-foreground/90 tracking-wide" 
                   size="lg"
                   onClick={() => {
                     const url = buildWhatsAppUrl(
@@ -143,7 +143,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorit
                     onClose();
                   }}
                 >
-                  Checkout via WhatsApp
+                  Proceed to Checkout
                 </Button>
                 
                 <Button 
