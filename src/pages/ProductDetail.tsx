@@ -19,8 +19,9 @@ import {
 
 const ProductDetail = () => {
   const { productId } = useParams();
+  const product = products.find(p => p.slug === productId) || products[0];
 
-  const meta = getRouteMeta("product", { productName: "Pantheon" });
+  const meta = getRouteMeta("product", { productName: product.name });
 
   return (
     <MainLayout>
