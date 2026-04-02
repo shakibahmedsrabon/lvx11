@@ -16,9 +16,17 @@ interface Contact {
   link: string | null;
 }
 
+interface FAQ {
+  id: number;
+  question: string | null;
+  answer: string | null;
+}
+
 const CustomerCare = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [loading, setLoading] = useState(true);
+  const [faqsLoading, setFaqsLoading] = useState(true);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -26,7 +34,13 @@ const CustomerCare = () => {
       if (!error && data) setContacts(data);
       setLoading(false);
     };
+    const fetchFaqs = async () => {
+      const { data, error } = await (supabase as any).from('FAQ').select('*');
+      if (!error && data) setFaqs(data);
+      setFaqsLoading(false);
+    };
     fetchContacts();
+    fetchFaqs();
   }, []);
 
   return (
@@ -72,61 +86,24 @@ const CustomerCare = () => {
         </ContentSection>
 
         <ContentSection title="Frequently Asked Questions">
-          <Accordion type="single" collapsible className="space-y-4">
-            <AccordionItem value="shipping" className="border border-border rounded-lg px-6">
-              <AccordionTrigger className="text-left hover:no-underline">
-                What are your shipping options and timeframes?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                We offer free standard shipping (3-5 business days) on orders over $500. Express shipping (1-2 business days) is available for $25. All orders are fully insured and require signature confirmation.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="returns" className="border border-border rounded-lg px-6">
-              <AccordionTrigger className="text-left hover:no-underline">
-                What is your return and exchange policy?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                We offer a 30-day return policy for unworn items in original condition. Custom and engraved pieces are final sale. Returns are free with our prepaid return label.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="warranty" className="border border-border rounded-lg px-6">
-              <AccordionTrigger className="text-left hover:no-underline">
-                What warranty do you offer on your jewelry?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                All LINEA jewelry comes with a lifetime warranty against manufacturing defects. This includes free repairs for normal wear and tear, stone tightening, and professional cleaning.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="sizing" className="border border-border rounded-lg px-6">
-              <AccordionTrigger className="text-left hover:no-underline">
-                Can I resize my jewelry after purchase?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Yes, we offer free ring resizing within 60 days of purchase (up to 2 sizes). Additional resizing is available for a service fee. Some designs cannot be resized due to their construction.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="care" className="border border-border rounded-lg px-6">
-              <AccordionTrigger className="text-left hover:no-underline">
-                How should I care for my LINEA jewelry?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Store pieces separately in soft pouches, avoid contact with chemicals and cosmetics, and clean gently with a soft cloth. We recommend professional cleaning every 6-12 months.
-              </AccordionContent>
-            </AccordionItem>
-
-            <AccordionItem value="authentication" className="border border-border rounded-lg px-6">
-              <AccordionTrigger className="text-left hover:no-underline">
-                How can I verify the authenticity of my jewelry?
-              </AccordionTrigger>
-              <AccordionContent className="text-muted-foreground">
-                Every LINEA piece comes with a certificate of authenticity and is hallmarked. You can verify authenticity on our website using your unique piece number or contact our customer care team.
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
+          {faqsLoading ? (
+            <p className="text-muted-foreground">Loading FAQs...</p>
+          ) : faqs.length > 0 ? (
+            <Accordion type="single" collapsible className="space-y-4">
+              {faqs.map((faq) => (
+                <AccordionItem key={faq.id} value={`faq-${faq.id}`} className="border border-border rounded-lg px-6">
+                  <AccordionTrigger className="text-left hover:no-underline">
+                    {faq.question}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground">
+                    {faq.answer}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          ) : (
+            <p className="text-muted-foreground">No FAQs available.</p>
+          )}
         </ContentSection>
 
         <ContentSection title="Contact Form">
