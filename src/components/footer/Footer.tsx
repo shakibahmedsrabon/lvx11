@@ -1,8 +1,26 @@
+import { useState, useEffect } from "react";
 import AppLink from "@/lib/navigation/AppLink";
 import { siteConfig } from "@/config/site";
 import { footerLinks } from "@/data/navigation";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Contact {
+  id: number;
+  name: string | null;
+  link: string | null;
+}
 
 const Footer = () => {
+  const [contacts, setContacts] = useState<Contact[]>([]);
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      const { data, error } = await (supabase as any).from('Contacts').select('*');
+      if (!error && data) setContacts(data);
+    };
+    fetchContacts();
+  }, []);
+
   return (
     <footer className="w-full bg-background text-foreground pt-8 pb-2 px-6 border-t border-border mt-48">
       <div>
