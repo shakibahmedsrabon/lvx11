@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import PageHeader from "../../components/about/PageHeader";
@@ -7,8 +8,27 @@ import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../components/ui/accordion";
 import AboutSidebar from "../../components/about/AboutSidebar";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Contact {
+  id: number;
+  name: string | null;
+  link: string | null;
+}
 
 const CustomerCare = () => {
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      const { data, error } = await (supabase as any).from('Contacts').select('*');
+      if (!error && data) setContacts(data);
+      setLoading(false);
+    };
+    fetchContacts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
