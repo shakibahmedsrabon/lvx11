@@ -13,19 +13,23 @@ import {
 import { Minus, Plus, Heart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import pantheonImage from "@/assets/pantheon.jpg";
+import { Product } from "@/data/products";
 
-const ProductInfo = () => {
+interface ProductInfoProps {
+  product: Product;
+}
+
+const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart, toggleFavorite, isFavorite, getItemQuantity } = useCart();
   const { toast } = useToast();
 
-  const product = {
-    id: 1,
-    name: "Pantheon",
-    price: "৳2,850",
-    image: pantheonImage,
-    category: "Earrings",
+  const cartProduct = {
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.image,
+    category: product.category,
   };
 
   const incrementQuantity = () => setQuantity(prev => prev + 1);
@@ -33,7 +37,7 @@ const ProductInfo = () => {
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
-      addToCart(product);
+      addToCart(cartProduct);
     }
     toast({
       title: "Added to bag",
@@ -43,7 +47,7 @@ const ProductInfo = () => {
   };
 
   const handleToggleFavorite = () => {
-    toggleFavorite(product);
+    toggleFavorite(cartProduct);
     toast({
       title: isFavorite(product.id) ? "Removed from favorites" : "Added to favorites",
       description: `${product.name} has been ${isFavorite(product.id) ? "removed from" : "added to"} your favorites.`,
@@ -79,11 +83,11 @@ const ProductInfo = () => {
       <div className="space-y-2">
         <div className="flex justify-between items-start">
           <div>
-            <p className="text-sm font-light text-muted-foreground mb-1">Earrings</p>
-            <h1 className="text-2xl md:text-3xl font-light text-foreground">Pantheon</h1>
+            <p className="text-sm font-light text-muted-foreground mb-1">{product.category}</p>
+            <h1 className="text-2xl md:text-3xl font-light text-foreground">{product.name}</h1>
           </div>
           <div className="text-right">
-            <p className="text-xl font-light text-foreground">৳2,850</p>
+            <p className="text-xl font-light text-foreground">{product.price}</p>
           </div>
         </div>
       </div>
@@ -165,7 +169,7 @@ const ProductInfo = () => {
         <Button 
           className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none tracking-wide"
           onClick={() => {
-            const url = buildWhatsAppUrl([{ name: product.name, price: product.price, quantity, slug: "pantheon" }]);
+            const url = buildWhatsAppUrl([{ name: product.name, price: product.price, quantity, slug: product.slug }]);
             window.open(url, "_blank");
           }}
         >

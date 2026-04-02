@@ -7,6 +7,7 @@ import ProductDescription from "../components/product/ProductDescription";
 import ProductCarousel from "../components/content/ProductCarousel";
 import SEOHead from "../components/SEOHead";
 import { getRouteMeta } from "@/config/routes";
+import { products } from "@/data/products";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,8 +19,9 @@ import {
 
 const ProductDetail = () => {
   const { productId } = useParams();
+  const product = products.find(p => p.slug === productId) || products[0];
 
-  const meta = getRouteMeta("product", { productName: "Pantheon" });
+  const meta = getRouteMeta("product", { productName: product.name });
 
   return (
     <MainLayout>
@@ -68,7 +70,7 @@ const ProductDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <ProductImageGallery />
           <div className="lg:pl-12 mt-8 lg:mt-0 lg:sticky lg:top-6 lg:h-fit">
-            <ProductInfo />
+            <ProductInfo product={product} />
             <ProductDescription />
           </div>
         </div>
