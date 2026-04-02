@@ -88,7 +88,7 @@ const ProductDetail = () => {
           <ProductImageGallery product={product} />
           <div className="lg:pl-12 mt-8 lg:mt-0 lg:sticky lg:top-6 lg:h-fit">
             <ProductInfo product={product} />
-            <ProductDescription product={product} />
+            <ProductDescription />
           </div>
         </div>
       </section>
