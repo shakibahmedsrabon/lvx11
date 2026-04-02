@@ -32,15 +32,15 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     category: product.category,
   };
 
-  const vibrate = (ms: number | number[] = 10) => {
-    if (navigator.vibrate) navigator.vibrate(ms);
+  const vibrate = (pattern: number | number[]) => {
+    if (navigator.vibrate) navigator.vibrate(pattern);
   };
 
-  const incrementQuantity = () => { vibrate(); setQuantity(prev => prev + 1); };
-  const decrementQuantity = () => { vibrate(); setQuantity(prev => Math.max(1, prev - 1)); };
+  const incrementQuantity = () => { vibrate(50); setQuantity(prev => prev + 1); };
+  const decrementQuantity = () => { vibrate(50); setQuantity(prev => Math.max(1, prev - 1)); };
 
   const handleAddToCart = () => {
-    vibrate([10, 30, 10]);
+    vibrate([100, 30, 100]);
     for (let i = 0; i < quantity; i++) {
       addToCart(cartProduct);
     }
@@ -52,7 +52,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   };
 
   const handleToggleFavorite = () => {
-    vibrate(15);
+    vibrate([50, 30, 100]);
     toggleFavorite(cartProduct);
     toast({
       title: isFavorite(product.id) ? "Removed from favorites" : "Added to favorites",
