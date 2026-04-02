@@ -53,6 +53,33 @@ export type Database = {
         }
         Relationships: []
       }
+      "Site config": {
+        Row: {
+          description: string | null
+          id: number
+          logo: string | null
+          name: string | null
+          slong: string | null
+          title: string | null
+        }
+        Insert: {
+          description?: string | null
+          id?: number
+          logo?: string | null
+          name?: string | null
+          slong?: string | null
+          title?: string | null
+        }
+        Update: {
+          description?: string | null
+          id?: number
+          logo?: string | null
+          name?: string | null
+          slong?: string | null
+          title?: string | null
+        }
+        Relationships: []
+      }
       "Terms of Service": {
         Row: {
           content: string | null

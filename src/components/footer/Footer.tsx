@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import AppLink from "@/lib/navigation/AppLink";
-import { siteConfig } from "@/config/site";
 import { footerLinks } from "@/data/navigation";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 interface Contact {
   id: number;
@@ -19,6 +19,7 @@ const cleanContactDisplay = (value: string): string => {
 };
 
 const Footer = () => {
+  const siteConfig = useSiteConfig();
   const [contacts, setContacts] = useState<Contact[]>([]);
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const Footer = () => {
               loading="lazy"
             />
             <p className="text-sm font-light text-muted-foreground leading-relaxed max-w-md mb-6">
-              {siteConfig.tagline}
+              {siteConfig.slong}
             </p>
 
             {contacts.length > 0 ? (
@@ -67,18 +68,10 @@ const Footer = () => {
                 })}
               </div>
             ) : (
-              <address className="not-italic space-y-2 text-sm font-light text-muted-foreground">
-                <div>
-                  <p className="font-normal text-foreground mb-1">Visit Us</p>
-                  <p>{siteConfig.contact.address.street}</p>
-                  <p>{siteConfig.contact.address.city}, {siteConfig.contact.address.state} {siteConfig.contact.address.zip}</p>
-                </div>
-                <div>
-                  <p className="font-normal text-foreground mb-1 mt-3">Contact</p>
-                  <p><a href={`tel:${siteConfig.contact.phone}`} className="hover:text-foreground transition-colors">{siteConfig.contact.phone}</a></p>
-                  <p><a href={`mailto:${siteConfig.contact.email}`} className="hover:text-foreground transition-colors">{siteConfig.contact.email}</a></p>
-                </div>
-              </address>
+              <div className="space-y-2 text-sm font-light text-muted-foreground">
+                <p className="font-normal text-foreground mb-1">Contact</p>
+                <p>No contact info available</p>
+              </div>
             )}
           </div>
 

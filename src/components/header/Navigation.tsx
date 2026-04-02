@@ -4,8 +4,10 @@ import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
 import ShoppingBag from "./ShoppingBag";
 import { useCart } from "@/contexts/CartContext";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const Navigation = () => {
+  const siteConfig = useSiteConfig();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
@@ -81,8 +83,8 @@ const Navigation = () => {
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <AppLink href="/" className="block">
             <img 
-              src="/LINEA-1.svg" 
-              alt="LINEA" 
+              src={siteConfig.logo} 
+              alt={siteConfig.name} 
               className="h-6 w-auto"
             />
           </AppLink>

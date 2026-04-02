@@ -6,35 +6,38 @@ import ProductCarousel from "../components/content/ProductCarousel";
 import EditorialSection from "../components/content/EditorialSection";
 import SEOHead from "../components/SEOHead";
 import { routes } from "@/config/routes";
-import { siteConfig } from "@/config/site";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { siteConfig as defaults } from "@/config/site";
 
 const Index = () => {
+  const siteConfig = useSiteConfig();
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "JewelryStore",
     name: siteConfig.name,
-    description: siteConfig.tagline,
-    url: siteConfig.url,
+    description: siteConfig.slong,
+    url: defaults.url,
     address: {
       "@type": "PostalAddress",
-      streetAddress: siteConfig.contact.address.street,
-      addressLocality: siteConfig.contact.address.city,
-      addressRegion: siteConfig.contact.address.state,
-      postalCode: siteConfig.contact.address.zip,
-      addressCountry: siteConfig.contact.address.country,
+      streetAddress: defaults.contact.address.street,
+      addressLocality: defaults.contact.address.city,
+      addressRegion: defaults.contact.address.state,
+      postalCode: defaults.contact.address.zip,
+      addressCountry: defaults.contact.address.country,
     },
-    telephone: siteConfig.contact.phone,
-    email: siteConfig.contact.email,
+    telephone: defaults.contact.phone,
+    email: defaults.contact.email,
   };
 
   return (
     <MainLayout>
       <SEOHead
-        title={routes.home.title}
-        description={routes.home.description}
+        title={siteConfig.title}
+        description={siteConfig.description}
         jsonLd={jsonLd}
       />
-      <h1 className="sr-only">Linea - Minimalist Jewelry Collection</h1>
+      <h1 className="sr-only">{siteConfig.name} - {siteConfig.slong}</h1>
       <FiftyFiftySection />
       <ProductCarousel />
       <LargeHero />
