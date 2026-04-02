@@ -21,7 +21,7 @@ interface ShoppingBagProps {
   onViewFavorites?: () => void;
 }
 
-const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorites }: ShoppingBagProps) => {
+const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, onViewFavorites }: ShoppingBagProps) => {
   if (!isOpen) return null;
 
   const subtotal = cartItems.reduce((sum, item) => {
