@@ -59,7 +59,7 @@ const ProductGrid = () => {
                       {product.title}
                     </h3>
                     <p className="text-sm font-light text-foreground">
-                      {product.price}
+                      {formatPrice(product.pricePerMonth)}
                     </p>
                   </div>
                 </div>

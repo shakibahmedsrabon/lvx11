@@ -53,7 +53,7 @@ const ProductDetail = () => {
           offers: {
             "@type": "Offer",
             priceCurrency: "BDT",
-            price: String(product.priceNumeric),
+            price: String(product.pricePerMonth),
             availability: product.stock
               ? "https://schema.org/InStock"
               : "https://schema.org/OutOfStock",
