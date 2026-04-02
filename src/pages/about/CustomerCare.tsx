@@ -16,9 +16,17 @@ interface Contact {
   link: string | null;
 }
 
+interface FAQ {
+  id: number;
+  question: string | null;
+  answer: string | null;
+}
+
 const CustomerCare = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [loading, setLoading] = useState(true);
+  const [faqsLoading, setFaqsLoading] = useState(true);
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -26,7 +34,13 @@ const CustomerCare = () => {
       if (!error && data) setContacts(data);
       setLoading(false);
     };
+    const fetchFaqs = async () => {
+      const { data, error } = await (supabase as any).from('FAQ').select('*');
+      if (!error && data) setFaqs(data);
+      setFaqsLoading(false);
+    };
     fetchContacts();
+    fetchFaqs();
   }, []);
 
   return (
