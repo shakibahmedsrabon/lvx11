@@ -70,7 +70,7 @@ const ProductDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
           <ProductImageGallery />
           <div className="lg:pl-12 mt-8 lg:mt-0 lg:sticky lg:top-6 lg:h-fit">
-            <ProductInfo />
+            <ProductInfo product={product} />
             <ProductDescription />
           </div>
         </div>
