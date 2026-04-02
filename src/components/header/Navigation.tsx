@@ -12,7 +12,7 @@ const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
   
-  const { cartItems, favorites, updateQuantity, toggleFavorite, totalItems } = useCart();
+  const { cartItems, favorites, updateQuantity, clearCart, toggleFavorite, totalItems } = useCart();
   
   // Preload dropdown images for faster display
   useEffect(() => {
@@ -269,6 +269,7 @@ const Navigation = () => {
         onClose={() => setIsShoppingBagOpen(false)}
         cartItems={cartItems}
         updateQuantity={updateQuantity}
+        clearCart={clearCart}
         onViewFavorites={() => {
           setIsShoppingBagOpen(false);
           setOffCanvasType('favorites');

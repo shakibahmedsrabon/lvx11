@@ -17,10 +17,11 @@ interface ShoppingBagProps {
   onClose: () => void;
   cartItems: CartItem[];
   updateQuantity: (id: number, newQuantity: number) => void;
+  clearCart: () => void;
   onViewFavorites?: () => void;
 }
 
-const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorites }: ShoppingBagProps) => {
+const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, onViewFavorites }: ShoppingBagProps) => {
   if (!isOpen) return null;
 
   const subtotal = cartItems.reduce((sum, item) => {
@@ -40,14 +41,29 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorit
       <div className="absolute right-0 top-0 h-screen w-96 bg-background border-l border-border animate-slide-in-right flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-lg font-light text-foreground">Shopping Bag</h2>
-          <button
-            onClick={onClose}
-            className="p-2 text-foreground hover:text-muted-foreground transition-colors"
-            aria-label="Close"
-          >
-            <X size={20} />
-          </button>
+          <div className="flex items-center gap-3">
+            <h2 className="text-lg font-light text-foreground">Shopping Bag</h2>
+            {cartItems.length > 0 && (
+              <span className="text-xs text-muted-foreground">({cartItems.reduce((s, i) => s + i.quantity, 0)})</span>
+            )}
+          </div>
+          <div className="flex items-center gap-2">
+            {cartItems.length > 0 && (
+              <button
+                onClick={clearCart}
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors underline"
+              >
+                Clear all
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className="p-2 text-foreground hover:text-muted-foreground transition-colors"
+              aria-label="Close"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
         
         {/* Content */}
