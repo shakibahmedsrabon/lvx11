@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import AppLink from "@/lib/navigation/AppLink";
 import Pagination from "./Pagination";
-import { useProductsByCategory } from "@/hooks/useProducts";
+import { useProductsByCategory, formatPrice } from "@/hooks/useProducts";
 import { useParams } from "@/lib/navigation";
 
 const ProductGrid = () => {
@@ -59,7 +59,7 @@ const ProductGrid = () => {
                       {product.title}
                     </h3>
                     <p className="text-sm font-light text-foreground">
-                      {product.price}
+                      {formatPrice(product.pricePerMonth)}
                     </p>
                   </div>
                 </div>

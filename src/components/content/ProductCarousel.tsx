@@ -5,7 +5,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import AppLink from "@/lib/navigation/AppLink";
-import { useProducts } from "@/hooks/useProducts";
+import { useProducts, formatPrice } from "@/hooks/useProducts";
 
 const ProductCarousel = () => {
   const { products, loading } = useProducts();
@@ -50,7 +50,7 @@ const ProductCarousel = () => {
                           {product.title}
                         </h3>
                         <p className="text-sm font-light text-foreground">
-                          {product.price}
+                          {formatPrice(product.pricePerMonth)}
                         </p>
                       </div>
                     </div>

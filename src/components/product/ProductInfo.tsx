@@ -1,3 +1,15 @@
+/**
+ * ProductInfo — displays product details with month-based pricing.
+ *
+ * Pricing logic:
+ * - Each product has a `pricePerMonth` (base monthly price from DB)
+ * - `duration` from DB = default number of months (minimum 1)
+ * - User can increase/decrease months using the month selector
+ * - Displayed price = pricePerMonth × selectedMonths (auto-calculated)
+ * - Cart stores the total calculated price for the selected months
+ * - WhatsApp "Buy Now" also sends the total price with month info
+ */
+
 import { useState } from "react";
 import AppLink from "@/lib/navigation/AppLink";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
@@ -13,7 +25,7 @@ import {
 import { Minus, Plus, Heart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import { Product } from "@/hooks/useProducts";
+import { Product, formatPrice, calculateTotalPrice } from "@/hooks/useProducts";
 
 interface ProductInfoProps {
   product: Product;
@@ -21,13 +33,25 @@ interface ProductInfoProps {
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
+  /**
+   * selectedMonths — how many months the user wants to subscribe/purchase.
+   * Defaults to product.duration (from DB), minimum 1 month.
+   * User can expand this to any number of months.
+   * Price auto-recalculates: totalPrice = pricePerMonth × selectedMonths
+   */
+  const [selectedMonths, setSelectedMonths] = useState(product.duration);
   const { addToCart, toggleFavorite, isFavorite, getItemQuantity } = useCart();
   const { toast } = useToast();
+
+  // Auto-calculate total price based on selected months
+  const totalPrice = calculateTotalPrice(product.pricePerMonth, selectedMonths);
+  const displayPrice = formatPrice(totalPrice);
 
   const cartProduct = {
     id: product.id,
     name: product.title,
-    price: product.price,
+    // Cart price reflects the total for selected months
+    price: displayPrice,
     image: product.image,
     category: product.category,
   };
@@ -35,6 +59,10 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const vibrate = (pattern: number | number[]) => {
     if (navigator.vibrate) navigator.vibrate(pattern);
   };
+
+  // Month selector handlers — minimum 1 month, no maximum
+  const incrementMonths = () => { vibrate(50); setSelectedMonths(prev => prev + 1); };
+  const decrementMonths = () => { vibrate(50); setSelectedMonths(prev => Math.max(1, prev - 1)); };
 
   const incrementQuantity = () => { vibrate(50); setQuantity(prev => prev + 1); };
   const decrementQuantity = () => { vibrate(50); setQuantity(prev => Math.max(1, prev - 1)); };
@@ -46,7 +74,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     }
     toast({
       title: "Added to bag",
-      description: `${product.title} (×${quantity}) has been added to your bag.`,
+      description: `${product.title} (${selectedMonths} month${selectedMonths > 1 ? "s" : ""} × ${quantity}) added.`,
     });
     setQuantity(1);
   };
@@ -62,6 +90,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Breadcrumb — desktop only */}
       <div className="hidden lg:block">
         <Breadcrumb>
           <BreadcrumbList>
@@ -84,6 +113,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </Breadcrumb>
       </div>
 
+      {/* Product title + auto-calculated price */}
       <div className="space-y-2">
         <div className="flex justify-between items-start">
           <div>
@@ -91,29 +121,67 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             <h1 className="text-2xl md:text-3xl font-light text-foreground">{product.title}</h1>
           </div>
           <div className="text-right">
-            <p className="text-xl font-light text-foreground">{product.price}</p>
+            {/* Total price = pricePerMonth × selectedMonths */}
+            <p className="text-xl font-light text-foreground">{displayPrice}</p>
+            {selectedMonths > 1 && (
+              <p className="text-xs text-muted-foreground">
+                {formatPrice(product.pricePerMonth)}/month × {selectedMonths}
+              </p>
+            )}
           </div>
         </div>
       </div>
 
+      {/* Description */}
       {product.description && (
         <div className="space-y-4 py-4 border-b border-border">
           <p className="text-sm font-light text-muted-foreground">{product.description}</p>
         </div>
       )}
 
-      {product.duration && (
-        <div className="py-2">
-          <p className="text-sm font-light text-muted-foreground">Duration: {product.duration} days</p>
+      {/* 
+        Month selector — users can expand months to purchase longer subscriptions.
+        Price auto-recalculates as months change.
+        Minimum: 1 month. No maximum limit.
+      */}
+      <div className="py-4 border-b border-border">
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-light text-foreground">Duration (months)</span>
+          <div className="flex items-center border border-border">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={decrementMonths}
+              className="h-10 w-10 p-0 hover:bg-transparent hover:opacity-50 rounded-none border-none"
+            >
+              <Minus className="h-4 w-4" />
+            </Button>
+            <span className="h-10 flex items-center px-4 text-sm font-light min-w-12 justify-center border-l border-r border-border">
+              {selectedMonths}
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={incrementMonths}
+              className="h-10 w-10 p-0 hover:bg-transparent hover:opacity-50 rounded-none border-none"
+            >
+              <Plus className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
-      )}
+        <p className="text-xs text-muted-foreground mt-2">
+          {formatPrice(product.pricePerMonth)} per month • Total: {displayPrice}
+        </p>
+      </div>
 
+      {/* Out of stock notice */}
       {!product.stock && (
         <div className="py-2">
           <p className="text-sm font-medium text-destructive">Out of Stock</p>
         </div>
       )}
 
+      {/* Quantity selector + Add to cart + Favorite */}
       <div className="space-y-4">
         <div className="flex items-center gap-4">
           <span className="text-sm font-light text-foreground">Quantity</span>
@@ -168,11 +236,17 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           </button>
         </div>
 
+        {/* Buy Now — sends total price (pricePerMonth × months) via WhatsApp */}
         <Button 
           className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none tracking-wide"
           disabled={!product.stock}
           onClick={() => {
-            const url = buildWhatsAppUrl([{ name: product.title, price: product.price, quantity, slug: product.slug }]);
+            const url = buildWhatsAppUrl([{
+              name: `${product.title} (${selectedMonths} month${selectedMonths > 1 ? "s" : ""})`,
+              price: displayPrice,
+              quantity,
+              slug: product.slug,
+            }]);
             window.open(url, "_blank");
           }}
         >
