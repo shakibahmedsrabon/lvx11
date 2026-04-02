@@ -161,7 +161,7 @@ const ProductInfo = () => {
         <Button 
           className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none tracking-wide"
           onClick={() => {
-            const url = buildWhatsAppUrl([{ name: product.name, price: product.price, quantity }]);
+            const url = buildWhatsAppUrl([{ name: product.name, price: product.price, quantity, slug: "pantheon" }]);
             window.open(url, "_blank");
           }}
         >
