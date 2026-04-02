@@ -19,13 +19,11 @@ const CheckoutHeader = () => {
 
           {/* Center - Logo - Absolutely positioned to ensure perfect centering */}
           <AppLink href="/" className="absolute left-1/2 transform -translate-x-1/2">
-            {siteConfig.logo && (
-              <img 
-                src={siteConfig.logo} 
-                alt={siteConfig.name} 
-                className="h-6 w-auto"
-              />
-            )}
+            <img 
+              src={siteConfig.logo} 
+              alt={siteConfig.name} 
+              className="h-6 w-auto"
+            />
           </AppLink>
 
           {/* Right side - Support */}
