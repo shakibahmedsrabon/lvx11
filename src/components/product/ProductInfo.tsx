@@ -32,10 +32,15 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     category: product.category,
   };
 
-  const incrementQuantity = () => setQuantity(prev => prev + 1);
-  const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
+  const vibrate = (ms: number | number[] = 10) => {
+    if (navigator.vibrate) navigator.vibrate(ms);
+  };
+
+  const incrementQuantity = () => { vibrate(); setQuantity(prev => prev + 1); };
+  const decrementQuantity = () => { vibrate(); setQuantity(prev => Math.max(1, prev - 1)); };
 
   const handleAddToCart = () => {
+    vibrate([10, 30, 10]);
     for (let i = 0; i < quantity; i++) {
       addToCart(cartProduct);
     }
@@ -47,6 +52,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   };
 
   const handleToggleFavorite = () => {
+    vibrate(15);
     toggleFavorite(cartProduct);
     toast({
       title: isFavorite(product.id) ? "Removed from favorites" : "Added to favorites",
