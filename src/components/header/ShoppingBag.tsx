@@ -1,6 +1,7 @@
 import { X, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppLink from "@/lib/navigation/AppLink";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 interface CartItem {
   id: number;
@@ -132,14 +133,17 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, onViewFavorit
                 </p>
                 
                 <Button 
-                  asChild 
-                  className="w-full rounded-none" 
+                  className="w-full rounded-none bg-[#25D366] hover:bg-[#20BD5A] text-white" 
                   size="lg"
-                  onClick={onClose}
+                  onClick={() => {
+                    const url = buildWhatsAppUrl(
+                      cartItems.map(item => ({ name: item.name, price: item.price, quantity: item.quantity }))
+                    );
+                    window.open(url, "_blank");
+                    onClose();
+                  }}
                 >
-                  <AppLink href="/checkout">
-                    Proceed to Checkout
-                  </AppLink>
+                  Checkout via WhatsApp
                 </Button>
                 
                 <Button 
