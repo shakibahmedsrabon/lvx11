@@ -2,10 +2,12 @@
  * useProducts hook — fetches products from the "Products" table in the database.
  *
  * Product pricing model:
- * - `price` in DB = price per month (base monthly price)
- * - `duration` in DB = default number of months (defaults to 1 if not set)
- * - Users can increase/decrease months on the product page
- * - Total price = price × selectedMonths (auto-calculated everywhere)
+ * - `price` in DB = JSON object mapping month durations to prices
+ *   Example: {"1": 400, "2": 700, "3": 800, "6": 1200, "12": 1200}
+ * - Keys are the available month durations (NOT incremental — e.g. 1, 2, 3, 6, 12)
+ * - Values are the total price for that duration
+ * - Default selected duration = first key (lowest months)
+ * - Users pick from the available durations only (no free-form +1/-1)
  *
  * The `formatPrice` helper formats numbers as ৳ (Taka) currency.
  * The `toSlug` helper generates URL-friendly slugs from product titles.
@@ -14,19 +16,56 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+/**
+ * Pricing map: keys are month counts, values are prices for that duration.
+ * Example: { 1: 400, 2: 700, 3: 800, 6: 1200, 12: 1200 }
+ */
+export type PriceMap = Record<number, number>;
+
 export interface Product {
   id: number;
   title: string;
   slug: string;
   category: string;
-  /** Price per month (base unit price) */
-  pricePerMonth: number;
+  /**
+   * JSON pricing — keys = available month durations, values = price for that duration.
+   * Available durations are ONLY those present as keys (e.g. 1, 2, 3, 6, 12).
+   */
+  prices: PriceMap;
+  /** Sorted array of available month durations from the price JSON keys */
+  availableDurations: number[];
+  /** Convenience: price for the shortest (default) duration */
+  basePrice: number;
   currency: string;
   image: string;
   description?: string;
   stock: boolean;
-  /** Default duration in months (minimum 1) — users can expand this */
-  duration: number;
+}
+
+/**
+ * Parse the price JSON from DB into a PriceMap.
+ * Handles: object like {"1":400,"2":700}, single number (legacy), or null.
+ */
+export function parsePriceMap(raw: any): PriceMap {
+  if (raw && typeof raw === "object" && !Array.isArray(raw)) {
+    const map: PriceMap = {};
+    for (const [k, v] of Object.entries(raw)) {
+      const months = parseInt(k, 10);
+      const price = typeof v === "number" ? v : parseFloat(v as string);
+      if (!isNaN(months) && !isNaN(price)) map[months] = price;
+    }
+    return Object.keys(map).length > 0 ? map : { 1: 0 };
+  }
+  // Legacy: single number
+  if (typeof raw === "number") return { 1: raw };
+  return { 1: 0 };
+}
+
+/**
+ * Get sorted duration keys from a PriceMap (e.g. [1, 2, 3, 6, 12])
+ */
+export function getDurations(prices: PriceMap): number[] {
+  return Object.keys(prices).map(Number).sort((a, b) => a - b);
 }
 
 /**
@@ -35,13 +74,6 @@ export interface Product {
 export function formatPrice(price: number | null): string {
   if (price == null || price === 0) return "৳0";
   return `৳${price.toLocaleString()}`;
-}
-
-/**
- * Calculate total price based on monthly price × number of months
- */
-export function calculateTotalPrice(pricePerMonth: number, months: number): number {
-  return pricePerMonth * months;
 }
 
 /**
@@ -68,19 +100,23 @@ const fetchProducts = (): Promise<Product[]> => {
         cached = [];
         return [];
       }
-      cached = data.map((row: any) => ({
-        id: row.id,
-        title: row.title || "",
-        slug: toSlug(row.title || `product-${row.id}`),
-        category: row.category || "",
-        // DB `price` = monthly price; `duration` = default months (fallback 1)
-        pricePerMonth: row.price || 0,
-        currency: "BDT",
-        image: row.image || "",
-        description: row.description || undefined,
-        stock: row.stock ?? true,
-        duration: row.duration || 1, // default 1 month if not set
-      }));
+      cached = data.map((row: any) => {
+        const prices = parsePriceMap(row.price);
+        const availableDurations = getDurations(prices);
+        return {
+          id: row.id,
+          title: row.title || "",
+          slug: toSlug(row.title || `product-${row.id}`),
+          category: row.category || "",
+          prices,
+          availableDurations,
+          basePrice: prices[availableDurations[0]] || 0,
+          currency: "BDT",
+          image: row.image || "",
+          description: row.description || undefined,
+          stock: row.stock ?? true,
+        };
+      });
       return cached!;
     });
 

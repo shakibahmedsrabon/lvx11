@@ -43,7 +43,7 @@ export type Database = {
           duration: number | null
           id: number
           image: string | null
-          price: number | null
+          price: Json | null
           stock: boolean | null
           title: string | null
         }
@@ -54,7 +54,7 @@ export type Database = {
           duration?: number | null
           id?: number
           image?: string | null
-          price?: number | null
+          price?: Json | null
           stock?: boolean | null
           title?: string | null
         }
@@ -65,7 +65,7 @@ export type Database = {
           duration?: number | null
           id?: number
           image?: string | null
-          price?: number | null
+          price?: Json | null
           stock?: boolean | null
           title?: string | null
         }

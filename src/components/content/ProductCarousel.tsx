@@ -50,7 +50,7 @@ const ProductCarousel = () => {
                           {product.title}
                         </h3>
                         <p className="text-sm font-light text-foreground">
-                          {formatPrice(product.pricePerMonth)}
+                          {formatPrice(product.basePrice)}
                         </p>
                       </div>
                     </div>
