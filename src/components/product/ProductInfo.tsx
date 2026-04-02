@@ -17,7 +17,7 @@ import pantheonImage from "@/assets/pantheon.jpg";
 
 const ProductInfo = () => {
   const [quantity, setQuantity] = useState(1);
-  const { addToCart, toggleFavorite, isFavorite } = useCart();
+  const { addToCart, toggleFavorite, isFavorite, getItemQuantity } = useCart();
   const { toast } = useToast();
 
   const product = {

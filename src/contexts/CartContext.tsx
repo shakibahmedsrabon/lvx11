@@ -97,6 +97,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const isFavorite = (id: number) => favorites.some((f) => f.id === id);
 
+  const getItemQuantity = (id: number) => {
+    const item = cartItems.find((i) => i.id === id);
+    return item ? item.quantity : 0;
+  };
+
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -109,6 +114,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         removeFromCart,
         toggleFavorite,
         isFavorite,
+        getItemQuantity,
         totalItems,
       }}
     >
