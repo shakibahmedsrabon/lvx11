@@ -36,7 +36,7 @@ const Navigation = () => {
     <nav 
       className="relative" 
       style={{
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backgroundColor: 'rgba(245, 243, 240, 0.95)',
         backdropFilter: 'blur(10px)'
       }}
     >
@@ -82,11 +82,13 @@ const Navigation = () => {
         {/* Center logo */}
         <div className="absolute left-1/2 transform -translate-x-1/2">
           <AppLink href="/" className="block">
-            <img 
-              src={siteConfig.logo} 
-              alt={siteConfig.name} 
-              className="h-6 w-auto"
-            />
+            {siteConfig.logo && (
+              <img 
+                src={siteConfig.logo} 
+                alt={siteConfig.name} 
+                className="h-6 w-auto"
+              />
+            )}
           </AppLink>
         </div>
 
