@@ -12,12 +12,12 @@ interface SiteConfigData {
 }
 
 const fallback: SiteConfigData = {
-  title: defaults.name,
-  name: defaults.name,
-  slong: defaults.tagline,
-  description: defaults.tagline,
-  logo: defaults.logo,
-  logoFull: defaults.logoFull,
+  title: "",
+  name: "",
+  slong: "",
+  description: "",
+  logo: "",
+  logoFull: "",
 };
 
 let cached: SiteConfigData | null = null;
