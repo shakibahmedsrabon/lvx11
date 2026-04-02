@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { siteConfig as defaults } from "@/config/site";
 
 interface SiteConfigData {
   title: string;
@@ -11,19 +10,10 @@ interface SiteConfigData {
   logoFull: string;
 }
 
-const fallback: SiteConfigData = {
-  title: defaults.name,
-  name: defaults.name,
-  slong: defaults.tagline,
-  description: defaults.tagline,
-  logo: defaults.logo,
-  logoFull: defaults.logoFull,
-};
-
 let cached: SiteConfigData | null = null;
-let fetchPromise: Promise<SiteConfigData> | null = null;
+let fetchPromise: Promise<SiteConfigData | null> | null = null;
 
-const fetchConfig = (): Promise<SiteConfigData> => {
+const fetchConfig = (): Promise<SiteConfigData | null> => {
   if (cached) return Promise.resolve(cached);
   if (fetchPromise) return fetchPromise;
 
@@ -34,29 +24,33 @@ const fetchConfig = (): Promise<SiteConfigData> => {
     .single()
     .then(({ data, error }: any) => {
       if (error || !data) {
-        cached = fallback;
-      } else {
-        cached = {
-          title: data.title || fallback.title,
-          name: data.name || fallback.name,
-          slong: data.slong || fallback.slong,
-          description: data.description || fallback.description,
-          logo: data.logo || fallback.logo,
-          logoFull: data.logo || fallback.logoFull,
-        };
+        cached = null;
+        return null;
       }
-      return cached!;
+      cached = {
+        title: data.title || "",
+        name: data.name || "",
+        slong: data.slong || "",
+        description: data.description || "",
+        logo: data.logo || "",
+        logoFull: data.logo || "",
+      };
+      return cached;
     });
 
   return fetchPromise;
 };
 
 export const useSiteConfig = () => {
-  const [config, setConfig] = useState<SiteConfigData>(cached || fallback);
+  const [config, setConfig] = useState<SiteConfigData | null>(cached);
+  const [loading, setLoading] = useState(!cached);
 
   useEffect(() => {
-    fetchConfig().then(setConfig);
+    fetchConfig().then((result) => {
+      setConfig(result);
+      setLoading(false);
+    });
   }, []);
 
-  return config;
+  return { config, loading };
 };
