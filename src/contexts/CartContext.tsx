@@ -25,6 +25,7 @@ interface CartContextType {
   removeFromCart: (id: number) => void;
   toggleFavorite: (item: FavoriteItem) => void;
   isFavorite: (id: number) => boolean;
+  getItemQuantity: (id: number) => number;
   totalItems: number;
 }
 
