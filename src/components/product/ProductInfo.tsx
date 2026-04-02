@@ -157,6 +157,16 @@ const ProductInfo = () => {
             />
           </Button>
         </div>
+
+        <Button 
+          className="w-full h-12 bg-[#25D366] hover:bg-[#20BD5A] text-white font-light rounded-none"
+          onClick={() => {
+            const url = buildWhatsAppUrl([{ name: product.name, price: product.price, quantity }]);
+            window.open(url, "_blank");
+          }}
+        >
+          Buy Now via WhatsApp
+        </Button>
       </div>
     </div>
   );
