@@ -17,6 +17,7 @@ interface ShoppingBagProps {
   onClose: () => void;
   cartItems: CartItem[];
   updateQuantity: (id: number, newQuantity: number) => void;
+  clearCart: () => void;
   onViewFavorites?: () => void;
 }
 
