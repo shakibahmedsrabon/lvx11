@@ -19,7 +19,7 @@ const cleanContactDisplay = (value: string): string => {
 };
 
 const Footer = () => {
-  const siteConfig = useSiteConfig();
+  const { config: siteConfig } = useSiteConfig();
   const [contacts, setContacts] = useState<Contact[]>([]);
 
   useEffect(() => {
@@ -35,15 +35,19 @@ const Footer = () => {
       <div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-8">
           <div>
-            <img
-              src={siteConfig.logoFull}
-              alt={siteConfig.name}
-              className="mb-4 h-6 w-auto"
-              loading="lazy"
-            />
-            <p className="text-sm font-light text-muted-foreground leading-relaxed max-w-md mb-6">
-              {siteConfig.slong}
-            </p>
+            {siteConfig?.logoFull && (
+              <img
+                src={siteConfig.logoFull}
+                alt={siteConfig?.name || ""}
+                className="mb-4 h-6 w-auto"
+                loading="lazy"
+              />
+            )}
+            {siteConfig?.slong && (
+              <p className="text-sm font-light text-muted-foreground leading-relaxed max-w-md mb-6">
+                {siteConfig.slong}
+              </p>
+            )}
 
             {contacts.length > 0 ? (
               <div className="space-y-2 text-sm font-light text-muted-foreground">
