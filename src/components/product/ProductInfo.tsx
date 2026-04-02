@@ -32,8 +32,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     category: product.category,
   };
 
-  const incrementQuantity = () => setQuantity(prev => prev + 1);
-  const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
+  const vibrate = (ms: number | number[] = 10) => {
+    if (navigator.vibrate) navigator.vibrate(ms);
+  };
+
+  const incrementQuantity = () => { vibrate(); setQuantity(prev => prev + 1); };
+  const decrementQuantity = () => { vibrate(); setQuantity(prev => Math.max(1, prev - 1)); };
 
   const handleAddToCart = () => {
     for (let i = 0; i < quantity; i++) {
