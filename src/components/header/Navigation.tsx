@@ -269,6 +269,7 @@ const Navigation = () => {
         onClose={() => setIsShoppingBagOpen(false)}
         cartItems={cartItems}
         updateQuantity={updateQuantity}
+        clearCart={clearCart}
         onViewFavorites={() => {
           setIsShoppingBagOpen(false);
           setOffCanvasType('favorites');
