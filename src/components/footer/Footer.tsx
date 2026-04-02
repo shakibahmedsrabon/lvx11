@@ -10,6 +10,14 @@ interface Contact {
   link: string | null;
 }
 
+const cleanContactDisplay = (value: string): string => {
+  return value
+    .replace(/^mailto:/i, '')
+    .replace(/^tel:\+?/i, '')
+    .replace(/^\+/, '')
+    .trim();
+};
+
 const Footer = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
 
@@ -39,17 +47,24 @@ const Footer = () => {
             {contacts.length > 0 ? (
               <div className="space-y-2 text-sm font-light text-muted-foreground">
                 <p className="font-normal text-foreground mb-1">Contact</p>
-                {contacts.map((contact) => (
-                  <div key={contact.id}>
-                    {contact.link ? (
-                      <a href={contact.link} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors cursor-pointer">
-                        {contact.name || contact.link}
-                      </a>
-                    ) : (
-                      <span>{contact.name}</span>
-                    )}
-                  </div>
-                ))}
+                {contacts.map((contact) => {
+                  const displayName = contact.name 
+                    ? cleanContactDisplay(contact.name) 
+                    : contact.link 
+                      ? cleanContactDisplay(contact.link) 
+                      : '';
+                  return (
+                    <div key={contact.id}>
+                      {contact.link ? (
+                        <a href={contact.link} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors cursor-pointer">
+                          {displayName}
+                        </a>
+                      ) : (
+                        <span>{displayName}</span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             ) : (
               <address className="not-italic space-y-2 text-sm font-light text-muted-foreground">
