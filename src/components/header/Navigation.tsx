@@ -1,22 +1,9 @@
-import { ArrowRight, X, Minus, Plus } from "lucide-react";
+import { ArrowRight, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import ShoppingBag from "./ShoppingBag";
-import pantheonImage from "@/assets/pantheon.jpg";
-import eclipseImage from "@/assets/eclipse.jpg";
-import haloImage from "@/assets/halo.jpg";
-
-interface CartItem {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
-  quantity: number;
-  category: string;
-}
+import { useCart } from "@/contexts/CartContext";
 
 const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -25,47 +12,7 @@ const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
   
-  // Shopping bag state with 3 mock items
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Pantheon",
-      price: "৳2,850",
-      image: pantheonImage,
-      quantity: 1,
-      category: "Earrings"
-    },
-    {
-      id: 2,
-      name: "Eclipse",
-      price: "৳3,200", 
-      image: eclipseImage,
-      quantity: 1,
-      category: "Bracelets"
-    },
-    {
-      id: 3,
-      name: "Halo",
-      price: "৳1,950",
-      image: haloImage, 
-      quantity: 1,
-      category: "Earrings"
-    }
-  ]);
-
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      setCartItems(items => items.filter(item => item.id !== id));
-    } else {
-      setCartItems(items => 
-        items.map(item => 
-          item.id === id ? { ...item, quantity: newQuantity } : item
-        )
-      );
-    }
-  };
+  const { cartItems, favorites, updateQuantity, toggleFavorite, totalItems } = useCart();
   
   // Preload dropdown images for faster display
   useEffect(() => {
@@ -82,8 +29,6 @@ const Navigation = () => {
       img.src = src;
     });
   }, []);
-
-  // navItems and popularSearches imported from @/data/navigation
 
   return (
     <nav 
@@ -155,13 +100,18 @@ const Navigation = () => {
             </svg>
           </button>
           <button 
-            className="hidden lg:block p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
+            className="hidden lg:block p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
             aria-label="Favorites"
             onClick={() => setOffCanvasType('favorites')}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
             </svg>
+            {favorites.length > 0 && (
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-foreground text-background text-[0.6rem] rounded-full flex items-center justify-center">
+                {favorites.length}
+              </span>
+            )}
           </button>
           <button 
             className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
@@ -189,7 +139,6 @@ const Navigation = () => {
         >
           <div className="px-6 py-8">
             <div className="flex justify-between w-full">
-              {/* Left side - Menu items */}
               <div className="flex-1">
                 <ul className="space-y-2">
                    {navItems
@@ -206,13 +155,10 @@ const Navigation = () => {
                    ))}
                 </ul>
               </div>
-
-              {/* Right side - Images */}
               <div className="flex space-x-6">
                 {navItems
                   .find(item => item.name === activeDropdown)
                   ?.images.map((image, index) => {
-                    // Determine the link destination based on dropdown and image
                     let linkTo = "/";
                     if (activeDropdown === "Shop") {
                       if (image.label === "Rings") linkTo = "/category/rings";
@@ -248,12 +194,9 @@ const Navigation = () => {
 
       {/* Search overlay */}
       {isSearchOpen && (
-        <div 
-          className="absolute top-full left-0 right-0 bg-nav border-b border-border z-50"
-        >
+        <div className="absolute top-full left-0 right-0 bg-nav border-b border-border z-50">
           <div className="px-6 py-8">
             <div className="max-w-2xl mx-auto">
-              {/* Search input */}
               <div className="relative mb-8">
                 <div className="flex items-center border-b border-border pb-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 text-nav-foreground mr-3">
@@ -269,8 +212,6 @@ const Navigation = () => {
                   />
                 </div>
               </div>
-
-              {/* Popular searches */}
               <div>
                 <h3 className="text-nav-foreground text-sm font-light mb-4">Popular Searches</h3>
                 <div className="flex flex-wrap gap-3">
@@ -294,7 +235,7 @@ const Navigation = () => {
         <div className="lg:hidden absolute top-full left-0 right-0 bg-nav border-b border-border z-50">
           <div className="px-6 py-8">
             <div className="space-y-6">
-              {navItems.map((item, index) => (
+              {navItems.map((item) => (
                 <div key={item.name}>
                   <AppLink
                     href={item.href}
@@ -337,15 +278,11 @@ const Navigation = () => {
       {/* Favorites Off-canvas overlay */}
       {offCanvasType === 'favorites' && (
         <div className="fixed inset-0 z-50 h-screen">
-          {/* Backdrop */}
           <div 
             className="absolute inset-0 bg-black/50 h-screen"
             onClick={() => setOffCanvasType(null)}
           />
-          
-          {/* Off-canvas panel */}
           <div className="absolute right-0 top-0 h-screen w-96 bg-background border-l border-border animate-slide-in-right flex flex-col">
-            {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-border">
               <h2 className="text-lg font-light text-foreground">Your Favorites</h2>
               <button
@@ -356,12 +293,41 @@ const Navigation = () => {
                 <X size={20} />
               </button>
             </div>
-            
-            {/* Content */}
-            <div className="p-6">
-              <p className="text-muted-foreground text-sm mb-6">
-                You haven't added any favorites yet. Browse our collection and click the heart icon to save items you love.
-              </p>
+            <div className="flex-1 flex flex-col p-6">
+              {favorites.length === 0 ? (
+                <div className="flex-1 flex items-center justify-center">
+                  <p className="text-muted-foreground text-sm text-center">
+                    You haven't added any favorites yet.<br />
+                    Browse our collection and click the heart icon to save items you love.
+                  </p>
+                </div>
+              ) : (
+                <div className="flex-1 overflow-y-auto space-y-6">
+                  {favorites.map((item) => (
+                    <div key={item.id} className="flex gap-4">
+                      <div className="w-20 h-20 bg-muted/10 rounded-lg overflow-hidden">
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="text-sm font-light text-muted-foreground">{item.category}</p>
+                            <h3 className="text-sm font-medium text-foreground">{item.name}</h3>
+                          </div>
+                          <button
+                            onClick={() => toggleFavorite(item)}
+                            className="p-1 text-foreground hover:text-muted-foreground transition-colors"
+                            aria-label="Remove from favorites"
+                          >
+                            <X size={16} />
+                          </button>
+                        </div>
+                        <p className="text-sm font-light text-foreground mt-1">{item.price}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>
