@@ -1,6 +1,7 @@
 import { X, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppLink from "@/lib/navigation/AppLink";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 
 interface CartItem {
   id: number;
