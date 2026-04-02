@@ -10,6 +10,14 @@ interface Contact {
   link: string | null;
 }
 
+const cleanContactDisplay = (value: string): string => {
+  return value
+    .replace(/^mailto:/i, '')
+    .replace(/^tel:\+?/i, '')
+    .replace(/^\+/, '')
+    .trim();
+};
+
 const Footer = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
 
