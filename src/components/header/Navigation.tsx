@@ -7,6 +7,7 @@ import { useCart } from "@/contexts/CartContext";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const Navigation = () => {
+  const siteConfig = useSiteConfig();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
