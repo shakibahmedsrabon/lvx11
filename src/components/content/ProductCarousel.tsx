@@ -25,7 +25,7 @@ const ProductCarousel = () => {
               key={product.id}
               className="basis-1/2 md:basis-1/3 lg:basis-1/4 pr-2 md:pr-4"
             >
-              <AppLink href={`/product/${product.slug}`}>”
+              <AppLink href={`/product/${product.id}`}>
                 <Card className="border-none shadow-none bg-transparent group">
                   <CardContent className="p-0">
                     <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">

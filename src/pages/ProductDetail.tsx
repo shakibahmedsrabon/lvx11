@@ -19,7 +19,13 @@ import {
 
 const ProductDetail = () => {
   const { productId } = useParams();
-  const product = products.find(p => p.slug === productId) || products[0];
+  const numericProductId = Number(productId);
+  const product =
+    products.find((p) => p.slug === productId) ||
+    (Number.isInteger(numericProductId)
+      ? products.find((p) => p.id === numericProductId)
+      : undefined) ||
+    products[0];
 
   const meta = getRouteMeta("product", { productName: product.name });
 

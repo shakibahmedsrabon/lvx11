@@ -198,7 +198,7 @@ const ProductGrid = () => {
     <section className="w-full px-6 mb-16">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {products.map((product) => (
-            <AppLink key={product.id} href={`/product/${product.slug}`}>
+            <AppLink key={product.id} href={`/product/${product.id}`}>
               <Card 
                 className="border-none shadow-none bg-transparent group cursor-pointer"
               >
