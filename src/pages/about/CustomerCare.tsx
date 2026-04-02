@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import PageHeader from "../../components/about/PageHeader";
@@ -7,8 +8,27 @@ import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../../components/ui/accordion";
 import AboutSidebar from "../../components/about/AboutSidebar";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Contact {
+  id: number;
+  name: string | null;
+  link: string | null;
+}
 
 const CustomerCare = () => {
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchContacts = async () => {
+      const { data, error } = await (supabase as any).from('Contacts').select('*');
+      if (!error && data) setContacts(data);
+      setLoading(false);
+    };
+    fetchContacts();
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -25,25 +45,29 @@ const CustomerCare = () => {
         />
         
         <ContentSection title="Contact Information">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="space-y-4">
-              <h3 className="text-lg font-light text-foreground">Phone</h3>
-              <p className="text-muted-foreground">+1 (555) 123-4567</p>
-              <p className="text-sm text-muted-foreground">Mon-Fri: 9AM-6PM EST<br />Sat: 10AM-4PM EST</p>
+          {loading ? (
+            <p className="text-muted-foreground">Loading contacts...</p>
+          ) : contacts.length > 0 ? (
+            <div className="grid md:grid-cols-3 gap-8">
+              {contacts.map((contact) => (
+                <div key={contact.id} className="space-y-2">
+                  <h3 className="text-lg font-light text-foreground">{contact.name}</h3>
+                  {contact.link && (
+                    <a
+                      href={contact.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-muted-foreground hover:text-foreground transition-colors underline text-sm"
+                    >
+                      {contact.link}
+                    </a>
+                  )}
+                </div>
+              ))}
             </div>
-            <div className="space-y-4">
-              <h3 className="text-lg font-light text-foreground">Email</h3>
-              <p className="text-muted-foreground">care@lineajewelry.com</p>
-              <p className="text-sm text-muted-foreground">Response within 24 hours</p>
-            </div>
-            <div className="space-y-4">
-              <h3 className="text-lg font-light text-foreground">Live Chat</h3>
-              <Button variant="outline" className="rounded-none">
-                Start Chat
-              </Button>
-              <p className="text-sm text-muted-foreground">Available during business hours</p>
-            </div>
-          </div>
+          ) : (
+            <p className="text-muted-foreground">No contacts available.</p>
+          )}
         </ContentSection>
 
         <ContentSection title="Frequently Asked Questions">
