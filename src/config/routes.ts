@@ -69,6 +69,11 @@ export const routes: Record<string, RouteMeta> = {
     title: "Terms of Service - Linea Jewelry",
     description: "Read Linea Jewelry's terms of service.",
   },
+  refundExchangePolicy: {
+    path: "/refund-exchange-policy",
+    title: "Refund & Exchange Policy - Linea Jewelry",
+    description: "Read Linea Jewelry's refund and exchange policy.",
+  },
 };
 
 /** Helper to interpolate route meta with dynamic params */

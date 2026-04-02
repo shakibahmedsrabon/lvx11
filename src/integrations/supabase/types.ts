@@ -35,6 +35,24 @@ export type Database = {
         }
         Relationships: []
       }
+      "Refund and exchange policy": {
+        Row: {
+          created_at: string
+          id: number
+          markdown: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          markdown?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          markdown?: string | null
+        }
+        Relationships: []
+      }
       "Terms of Service": {
         Row: {
           content: string | null

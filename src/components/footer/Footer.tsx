@@ -129,6 +129,9 @@ const Footer = () => {
             <AppLink href="/terms-of-service" className="text-sm font-light text-foreground hover:text-muted-foreground transition-colors">
               Terms of Service
             </AppLink>
+            <AppLink href="/refund-exchange-policy" className="text-sm font-light text-foreground hover:text-muted-foreground transition-colors">
+              Refund & Exchange
+            </AppLink>
           </div>
         </div>
       </div>
