@@ -9,13 +9,45 @@ import {
   BreadcrumbPage, 
   BreadcrumbSeparator 
 } from "@/components/ui/breadcrumb";
-import { Minus, Plus } from "lucide-react";
+import { Minus, Plus, Heart } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { useToast } from "@/hooks/use-toast";
+import pantheonImage from "@/assets/pantheon.jpg";
 
 const ProductInfo = () => {
   const [quantity, setQuantity] = useState(1);
+  const { addToCart, toggleFavorite, isFavorite } = useCart();
+  const { toast } = useToast();
+
+  const product = {
+    id: 1,
+    name: "Pantheon",
+    price: "৳2,850",
+    image: pantheonImage,
+    category: "Earrings",
+  };
 
   const incrementQuantity = () => setQuantity(prev => prev + 1);
   const decrementQuantity = () => setQuantity(prev => Math.max(1, prev - 1));
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < quantity; i++) {
+      addToCart(product);
+    }
+    toast({
+      title: "Added to bag",
+      description: `${product.name} (×${quantity}) has been added to your bag.`,
+    });
+    setQuantity(1);
+  };
+
+  const handleToggleFavorite = () => {
+    toggleFavorite(product);
+    toast({
+      title: isFavorite(product.id) ? "Removed from favorites" : "Added to favorites",
+      description: `${product.name} has been ${isFavorite(product.id) ? "removed from" : "added to"} your favorites.`,
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -105,11 +137,25 @@ const ProductInfo = () => {
           </div>
         </div>
 
-        <Button 
-          className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none"
-        >
-          Add to Bag
-        </Button>
+        <div className="flex gap-3">
+          <Button 
+            className="flex-1 h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none"
+            onClick={handleAddToCart}
+          >
+            Add to Bag
+          </Button>
+          <Button
+            variant="outline"
+            className="h-12 w-12 rounded-none border-border p-0"
+            onClick={handleToggleFavorite}
+            aria-label={isFavorite(product.id) ? "Remove from favorites" : "Add to favorites"}
+          >
+            <Heart 
+              className="h-5 w-5" 
+              fill={isFavorite(product.id) ? "currentColor" : "none"}
+            />
+          </Button>
+        </div>
       </div>
     </div>
   );
