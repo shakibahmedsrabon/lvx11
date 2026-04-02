@@ -10,9 +10,9 @@ import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { siteConfig as defaults } from "@/config/site";
 
 const Index = () => {
-  const siteConfig = useSiteConfig();
+  const { config: siteConfig } = useSiteConfig();
 
-  const jsonLd = {
+  const jsonLd = siteConfig ? {
     "@context": "https://schema.org",
     "@type": "JewelryStore",
     name: siteConfig.name,
@@ -28,16 +28,20 @@ const Index = () => {
     },
     telephone: defaults.contact.phone,
     email: defaults.contact.email,
-  };
+  } : undefined;
 
   return (
     <MainLayout>
-      <SEOHead
-        title={siteConfig.title}
-        description={siteConfig.description}
-        jsonLd={jsonLd}
-      />
-      <h1 className="sr-only">{siteConfig.name} - {siteConfig.slong}</h1>
+      {siteConfig && (
+        <SEOHead
+          title={siteConfig.title}
+          description={siteConfig.description}
+          jsonLd={jsonLd}
+        />
+      )}
+      {siteConfig && (
+        <h1 className="sr-only">{siteConfig.name} - {siteConfig.slong}</h1>
+      )}
       <FiftyFiftySection />
       <ProductCarousel />
       <LargeHero />
