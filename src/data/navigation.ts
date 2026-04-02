@@ -76,7 +76,7 @@ export const footerLinks = {
   support: [
     { label: "Size Guide", href: "/about/size-guide" },
     { label: "Care Instructions", href: "/about/customer-care" },
-    { label: "Returns", href: "/about/customer-care" },
+    { label: "Returns & Exchanges", href: "/refund-exchange-policy" },
     { label: "Shipping", href: "/about/customer-care" },
     { label: "Contact", href: "/about/customer-care" },
   ],

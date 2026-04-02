@@ -41,6 +41,7 @@ const App = () => (
           <Route path="/about/store-locator" element={<StoreLocator />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/refund-exchange-policy" element={<RefundExchangePolicy />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
