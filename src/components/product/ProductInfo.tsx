@@ -1,5 +1,6 @@
 import { useState } from "react";
 import AppLink from "@/lib/navigation/AppLink";
+import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/button";
 import { 
   Breadcrumb, 
