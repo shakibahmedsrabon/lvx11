@@ -41,11 +41,12 @@ const Footer = () => {
                 <p className="font-normal text-foreground mb-1">Contact</p>
                 {contacts.map((contact) => (
                   <div key={contact.id}>
-                    {contact.name && <span className="text-foreground">{contact.name}: </span>}
-                    {contact.link && (
-                      <a href={contact.link} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline">
-                        {contact.link}
+                    {contact.link ? (
+                      <a href={contact.link} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors cursor-pointer">
+                        {contact.name || contact.link}
                       </a>
+                    ) : (
+                      <span>{contact.name}</span>
                     )}
                   </div>
                 ))}
