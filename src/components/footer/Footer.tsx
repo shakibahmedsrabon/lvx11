@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import AppLink from "@/lib/navigation/AppLink";
-import { siteConfig } from "@/config/site";
 import { footerLinks } from "@/data/navigation";
 import { supabase } from "@/integrations/supabase/client";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 interface Contact {
   id: number;
@@ -19,6 +19,7 @@ const cleanContactDisplay = (value: string): string => {
 };
 
 const Footer = () => {
+  const siteConfig = useSiteConfig();
   const [contacts, setContacts] = useState<Contact[]>([]);
 
   useEffect(() => {
