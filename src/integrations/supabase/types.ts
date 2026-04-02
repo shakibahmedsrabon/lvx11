@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      FAQ: {
+        Row: {
+          answer: string | null
+          created_at: string
+          id: number
+          question: string | null
+        }
+        Insert: {
+          answer?: string | null
+          created_at?: string
+          id?: number
+          question?: string | null
+        }
+        Update: {
+          answer?: string | null
+          created_at?: string
+          id?: number
+          question?: string | null
+        }
+        Relationships: []
+      }
       "Terms of Service": {
         Row: {
           content: string | null
