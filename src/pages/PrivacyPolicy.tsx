@@ -18,8 +18,8 @@ const PrivacyPolicy = () => {
     document.title = "Privacy Policy - Linea Jewelry";
     
     const fetchData = async () => {
-      const { data: result, error } = await supabase
-        .from('Privacy and Policy' as any)
+      const { data: result, error } = await (supabase as any)
+        .from('Privacy and Policy')
         .select('*');
       
       if (error) {
