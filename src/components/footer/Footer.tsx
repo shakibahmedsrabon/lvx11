@@ -36,18 +36,34 @@ const Footer = () => {
               {siteConfig.tagline}
             </p>
 
-            <address className="not-italic space-y-2 text-sm font-light text-muted-foreground">
-              <div>
-                <p className="font-normal text-foreground mb-1">Visit Us</p>
-                <p>{siteConfig.contact.address.street}</p>
-                <p>{siteConfig.contact.address.city}, {siteConfig.contact.address.state} {siteConfig.contact.address.zip}</p>
+            {contacts.length > 0 ? (
+              <div className="space-y-2 text-sm font-light text-muted-foreground">
+                <p className="font-normal text-foreground mb-1">Contact</p>
+                {contacts.map((contact) => (
+                  <div key={contact.id}>
+                    {contact.name && <span className="text-foreground">{contact.name}: </span>}
+                    {contact.link && (
+                      <a href={contact.link} target="_blank" rel="noopener noreferrer" className="hover:text-foreground transition-colors underline">
+                        {contact.link}
+                      </a>
+                    )}
+                  </div>
+                ))}
               </div>
-              <div>
-                <p className="font-normal text-foreground mb-1 mt-3">Contact</p>
-                <p><a href={`tel:${siteConfig.contact.phone}`} className="hover:text-foreground transition-colors">{siteConfig.contact.phone}</a></p>
-                <p><a href={`mailto:${siteConfig.contact.email}`} className="hover:text-foreground transition-colors">{siteConfig.contact.email}</a></p>
-              </div>
-            </address>
+            ) : (
+              <address className="not-italic space-y-2 text-sm font-light text-muted-foreground">
+                <div>
+                  <p className="font-normal text-foreground mb-1">Visit Us</p>
+                  <p>{siteConfig.contact.address.street}</p>
+                  <p>{siteConfig.contact.address.city}, {siteConfig.contact.address.state} {siteConfig.contact.address.zip}</p>
+                </div>
+                <div>
+                  <p className="font-normal text-foreground mb-1 mt-3">Contact</p>
+                  <p><a href={`tel:${siteConfig.contact.phone}`} className="hover:text-foreground transition-colors">{siteConfig.contact.phone}</a></p>
+                  <p><a href={`mailto:${siteConfig.contact.email}`} className="hover:text-foreground transition-colors">{siteConfig.contact.email}</a></p>
+                </div>
+              </address>
+            )}
           </div>
 
           <nav aria-label="Footer navigation" className="grid grid-cols-1 md:grid-cols-3 gap-8">
