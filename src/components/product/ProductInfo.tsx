@@ -169,7 +169,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <Button 
           className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none tracking-wide"
           onClick={() => {
-            const url = buildWhatsAppUrl([{ name: product.name, price: product.price, quantity, slug: "pantheon" }]);
+            const url = buildWhatsAppUrl([{ name: product.name, price: product.price, quantity, slug: product.slug }]);
             window.open(url, "_blank");
           }}
         >
