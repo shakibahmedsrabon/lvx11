@@ -35,6 +35,42 @@ export type Database = {
         }
         Relationships: []
       }
+      Products: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          duration: number | null
+          id: number
+          image: string | null
+          price: number | null
+          stock: boolean | null
+          title: string | null
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          duration?: number | null
+          id?: number
+          image?: string | null
+          price?: number | null
+          stock?: boolean | null
+          title?: string | null
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          duration?: number | null
+          id?: number
+          image?: string | null
+          price?: number | null
+          stock?: boolean | null
+          title?: string | null
+        }
+        Relationships: []
+      }
       "Refund and exchange policy": {
         Row: {
           created_at: string

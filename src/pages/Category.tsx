@@ -6,11 +6,13 @@ import FilterSortBar from "../components/category/FilterSortBar";
 import ProductGrid from "../components/category/ProductGrid";
 import SEOHead from "../components/SEOHead";
 import { getRouteMeta } from "@/config/routes";
+import { useProductsByCategory } from "@/hooks/useProducts";
 
 const Category = () => {
   const { category } = useParams();
   const [searchParams] = useSearchParams();
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const { products } = useProductsByCategory(category || "all");
 
   const meta = getRouteMeta("category", { category: category || "all" });
 
@@ -21,7 +23,7 @@ const Category = () => {
       <FilterSortBar
         filtersOpen={filtersOpen}
         setFiltersOpen={setFiltersOpen}
-        itemCount={24}
+        itemCount={products.length}
       />
       <ProductGrid />
     </MainLayout>

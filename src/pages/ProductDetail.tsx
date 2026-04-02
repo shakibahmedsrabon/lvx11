@@ -7,7 +7,7 @@ import ProductDescription from "../components/product/ProductDescription";
 import ProductCarousel from "../components/content/ProductCarousel";
 import SEOHead from "../components/SEOHead";
 import { getRouteMeta } from "@/config/routes";
-import { products } from "@/data/products";
+import { useProduct } from "@/hooks/useProducts";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -19,15 +19,25 @@ import {
 
 const ProductDetail = () => {
   const { productId } = useParams();
-  const numericProductId = Number(productId);
-  const product =
-    products.find((p) => p.slug === productId) ||
-    (Number.isInteger(numericProductId)
-      ? products.find((p) => p.id === numericProductId)
-      : undefined) ||
-    products[0];
+  const { product, loading } = useProduct(productId);
 
-  const meta = getRouteMeta("product", { productName: product.name });
+  if (loading) {
+    return (
+      <MainLayout>
+        <div className="w-full px-6 py-12 text-center text-muted-foreground">Loading...</div>
+      </MainLayout>
+    );
+  }
+
+  if (!product) {
+    return (
+      <MainLayout>
+        <div className="w-full px-6 py-12 text-center text-muted-foreground">Product not found.</div>
+      </MainLayout>
+    );
+  }
+
+  const meta = getRouteMeta("product", { productName: product.title });
 
   return (
     <MainLayout>
@@ -38,14 +48,15 @@ const ProductDetail = () => {
         jsonLd={{
           "@context": "https://schema.org",
           "@type": "Product",
-          name: "Pantheon",
-          category: "Earrings",
-          brand: { "@type": "Brand", name: "Linea" },
+          name: product.title,
+          category: product.category,
           offers: {
             "@type": "Offer",
-            priceCurrency: "EUR",
-            price: "2850",
-            availability: "https://schema.org/InStock",
+            priceCurrency: "BDT",
+            price: String(product.priceNumeric),
+            availability: product.stock
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
           },
         }}
       />
@@ -62,19 +73,19 @@ const ProductDetail = () => {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
-                  <AppLink href="/category/earrings">Earrings</AppLink>
+                  <AppLink href={`/category/${product.category.toLowerCase()}`}>{product.category}</AppLink>
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
-                <BreadcrumbPage>Pantheon</BreadcrumbPage>
+                <BreadcrumbPage>{product.title}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
-          <ProductImageGallery />
+          <ProductImageGallery product={product} />
           <div className="lg:pl-12 mt-8 lg:mt-0 lg:sticky lg:top-6 lg:h-fit">
             <ProductInfo product={product} />
             <ProductDescription />
@@ -85,13 +96,6 @@ const ProductDetail = () => {
       <section className="w-full mt-16 lg:mt-24" aria-label="Recommended products">
         <div className="mb-4 px-6">
           <h2 className="text-sm font-light text-foreground">You might also like</h2>
-        </div>
-        <ProductCarousel />
-      </section>
-
-      <section className="w-full" aria-label="More from this category">
-        <div className="mb-4 px-6">
-          <h2 className="text-sm font-light text-foreground">Our other Earrings</h2>
         </div>
         <ProductCarousel />
       </section>

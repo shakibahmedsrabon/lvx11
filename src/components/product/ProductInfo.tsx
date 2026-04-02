@@ -13,7 +13,7 @@ import {
 import { Minus, Plus, Heart } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import { Product } from "@/data/products";
+import { Product } from "@/hooks/useProducts";
 
 interface ProductInfoProps {
   product: Product;
@@ -26,7 +26,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
   const cartProduct = {
     id: product.id,
-    name: product.name,
+    name: product.title,
     price: product.price,
     image: product.image,
     category: product.category,
@@ -46,7 +46,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     }
     toast({
       title: "Added to bag",
-      description: `${product.name} (×${quantity}) has been added to your bag.`,
+      description: `${product.title} (×${quantity}) has been added to your bag.`,
     });
     setQuantity(1);
   };
@@ -56,13 +56,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     toggleFavorite(cartProduct);
     toast({
       title: isFavorite(product.id) ? "Removed from favorites" : "Added to favorites",
-      description: `${product.name} has been ${isFavorite(product.id) ? "removed from" : "added to"} your favorites.`,
+      description: `${product.title} has been ${isFavorite(product.id) ? "removed from" : "added to"} your favorites.`,
     });
   };
 
   return (
     <div className="space-y-6">
-      {/* Breadcrumb - Show only on desktop */}
       <div className="hidden lg:block">
         <Breadcrumb>
           <BreadcrumbList>
@@ -74,23 +73,22 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <AppLink href="/category/earrings">Earrings</AppLink>
+                <AppLink href={`/category/${product.category.toLowerCase()}`}>{product.category}</AppLink>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>Pantheon</BreadcrumbPage>
+              <BreadcrumbPage>{product.title}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
 
-      {/* Product title and price */}
       <div className="space-y-2">
         <div className="flex justify-between items-start">
           <div>
             <p className="text-sm font-light text-muted-foreground mb-1">{product.category}</p>
-            <h1 className="text-2xl md:text-3xl font-light text-foreground">{product.name}</h1>
+            <h1 className="text-2xl md:text-3xl font-light text-foreground">{product.title}</h1>
           </div>
           <div className="text-right">
             <p className="text-xl font-light text-foreground">{product.price}</p>
@@ -98,30 +96,24 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
       </div>
 
-      {/* Product details */}
-      <div className="space-y-4 py-4 border-b border-border">
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Material</h3>
-          <p className="text-sm font-light text-muted-foreground">18k Gold Plated Sterling Silver</p>
+      {product.description && (
+        <div className="space-y-4 py-4 border-b border-border">
+          <p className="text-sm font-light text-muted-foreground">{product.description}</p>
         </div>
-        
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Dimensions</h3>
-          <p className="text-sm font-light text-muted-foreground">2.5cm x 1.2cm</p>
-        </div>
-        
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Weight</h3>
-          <p className="text-sm font-light text-muted-foreground">4.2g per earring</p>
-        </div>
-        
-        <div className="space-y-2">
-          <h3 className="text-sm font-light text-foreground">Editor's notes</h3>
-          <p className="text-sm font-light text-muted-foreground italic">"A modern interpretation of classical architecture, these earrings bridge timeless elegance with contemporary minimalism."</p>
-        </div>
-      </div>
+      )}
 
-      {/* Quantity and Add to Cart */}
+      {product.duration && (
+        <div className="py-2">
+          <p className="text-sm font-light text-muted-foreground">Duration: {product.duration} days</p>
+        </div>
+      )}
+
+      {!product.stock && (
+        <div className="py-2">
+          <p className="text-sm font-medium text-destructive">Out of Stock</p>
+        </div>
+      )}
+
       <div className="space-y-4">
         <div className="flex items-center gap-4">
           <span className="text-sm font-light text-foreground">Quantity</span>
@@ -150,6 +142,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             onClick={handleAddToCart}
             className="p-2 text-foreground hover:text-muted-foreground transition-colors relative"
             aria-label="Add to bag"
+            disabled={!product.stock}
           >
             <div className="relative w-5 h-5">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
@@ -177,12 +170,13 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
 
         <Button 
           className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none tracking-wide"
+          disabled={!product.stock}
           onClick={() => {
-            const url = buildWhatsAppUrl([{ name: product.name, price: product.price, quantity, slug: product.slug }]);
+            const url = buildWhatsAppUrl([{ name: product.title, price: product.price, quantity, slug: product.slug }]);
             window.open(url, "_blank");
           }}
         >
-          Buy Now
+          {product.stock ? "Buy Now" : "Out of Stock"}
         </Button>
       </div>
     </div>
