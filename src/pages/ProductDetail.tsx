@@ -7,6 +7,7 @@ import ProductDescription from "../components/product/ProductDescription";
 import ProductCarousel from "../components/content/ProductCarousel";
 import SEOHead from "../components/SEOHead";
 import { getRouteMeta } from "@/config/routes";
+import { products } from "@/data/products";
 import {
   Breadcrumb,
   BreadcrumbItem,
