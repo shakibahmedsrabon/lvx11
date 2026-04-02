@@ -52,6 +52,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   };
 
   const handleToggleFavorite = () => {
+    vibrate(15);
     toggleFavorite(cartProduct);
     toast({
       title: isFavorite(product.id) ? "Removed from favorites" : "Added to favorites",
