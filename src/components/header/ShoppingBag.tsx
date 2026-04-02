@@ -57,13 +57,13 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, on
               </button>
             )}
             <button
-          <button
-            onClick={onClose}
-            className="p-2 text-foreground hover:text-muted-foreground transition-colors"
-            aria-label="Close"
-          >
-            <X size={20} />
-          </button>
+              onClick={onClose}
+              className="p-2 text-foreground hover:text-muted-foreground transition-colors"
+              aria-label="Close"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
         
         {/* Content */}
