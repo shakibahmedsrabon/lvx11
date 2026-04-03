@@ -63,11 +63,11 @@ const FilterSortBar = ({ filtersOpen, setFiltersOpen, itemCount }: FilterSortBar
                   <div>
                     <h3 className="text-sm font-light mb-4 text-foreground">Category</h3>
                     <div className="space-y-3">
-                      {categories.map((category) => (
-                        <div key={category} className="flex items-center space-x-3">
-                          <Checkbox id={category} className="border-border data-[state=checked]:bg-foreground data-[state=checked]:border-foreground" />
-                          <Label htmlFor={category} className="text-sm font-light text-foreground cursor-pointer">
-                            {category}
+                      {categoryNames.map((name) => (
+                        <div key={name} className="flex items-center space-x-3">
+                          <Checkbox id={name} className="border-border data-[state=checked]:bg-foreground data-[state=checked]:border-foreground" />
+                          <Label htmlFor={name} className="text-sm font-light text-foreground cursor-pointer">
+                            {name}
                           </Label>
                         </div>
                       ))}
