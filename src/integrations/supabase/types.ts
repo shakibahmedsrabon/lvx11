@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      Channels: {
+        Row: {
+          id: number
+          link: string | null
+          name: string | null
+        }
+        Insert: {
+          id?: number
+          link?: string | null
+          name?: string | null
+        }
+        Update: {
+          id?: number
+          link?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
       Connects: {
         Row: {
           id: number
