@@ -40,6 +40,9 @@ export interface Product {
   image: string;
   description?: string;
   stock: boolean;
+  /** True if product was created within the last 7 days */
+  isNew: boolean;
+  createdAt: string;
 }
 
 /**
