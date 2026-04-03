@@ -24,7 +24,7 @@ const Footer = () => {
 
   useEffect(() => {
     const fetchContacts = async () => {
-      const { data, error } = await (supabase as any).from('Contacts').select('*');
+      const { data, error } = await (supabase as any).from('Connects').select('*');
       if (!error && data) setContacts(data);
     };
     fetchContacts();
@@ -109,7 +109,18 @@ const Footer = () => {
             <div>
               <h4 className="text-sm font-normal mb-4">Connect</h4>
               <ul className="space-y-2">
-                {footerLinks.connect.map((link) => (
+                {contacts.length > 0 ? contacts.map((contact) => (
+                  <li key={contact.id}>
+                    <a
+                      href={contact.link || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {contact.name}
+                    </a>
+                  </li>
+                )) : footerLinks.connect.map((link) => (
                   <li key={link.href}>
                     <AppLink
                       href={link.href}
