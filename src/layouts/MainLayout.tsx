@@ -14,7 +14,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <main id="main-content" className="pt-6">
+      <main id="main-content">
         {children}
       </main>
       <Footer />
