@@ -12,9 +12,10 @@ Deno.serve(async (req) => {
   }
 
   try {
+    // Connect to the EXTERNAL Supabase project
     const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+      "https://jqxesguuoxgithnqdtgl.supabase.co",
+      Deno.env.get("EXTERNAL_SUPABASE_SERVICE_ROLE_KEY")!
     );
 
     const body = await req.json();
