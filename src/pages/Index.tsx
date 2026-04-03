@@ -1,4 +1,5 @@
 import MainLayout from "../layouts/MainLayout";
+import HeroSlider from "../components/content/HeroSlider";
 import LargeHero from "../components/content/LargeHero";
 import ProductCarousel from "../components/content/ProductCarousel";
 import SEOHead from "../components/SEOHead";
@@ -39,6 +40,7 @@ const Index = () => {
       {siteConfig && (
         <h1 className="sr-only">{siteConfig.name} - {siteConfig.slong}</h1>
       )}
+      <HeroSlider />
       <ProductCarousel />
       <LargeHero />
     </MainLayout>
