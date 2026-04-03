@@ -1,5 +1,6 @@
 import { ArrowRight, X } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
 import ShoppingBag from "./ShoppingBag";
@@ -10,8 +11,10 @@ import { useCategories } from "@/hooks/useCategories";
 const Navigation = () => {
   const { config: siteConfig } = useSiteConfig();
   const { categories: dbCategories } = useCategories();
+  const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
@@ -214,33 +217,56 @@ const Navigation = () => {
         <div className="absolute top-full left-0 right-0 bg-nav border-b border-border z-50">
           <div className="px-6 py-8">
             <div className="max-w-2xl mx-auto">
-              <div className="relative mb-8">
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  navigate(`/explore${searchValue.trim() ? `?q=${encodeURIComponent(searchValue.trim())}` : ""}`);
+                  setIsSearchOpen(false);
+                  setSearchValue("");
+                }}
+                className="relative mb-8"
+              >
                 <div className="flex items-center border-b border-border pb-2">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5 text-nav-foreground mr-3">
                     <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                   </svg>
-                  <label htmlFor="search-input" className="sr-only">Search for jewelry</label>
+                  <label htmlFor="search-input" className="sr-only">Search products</label>
                   <input
                     id="search-input"
                     type="search"
-                    placeholder="Search for jewelry..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    placeholder="Search products..."
                     className="flex-1 bg-transparent text-nav-foreground placeholder:text-nav-foreground/60 outline-none text-lg"
                     autoFocus
                   />
                 </div>
-              </div>
+              </form>
               <div>
-                <h3 className="text-nav-foreground text-sm font-light mb-4">Popular Searches</h3>
+                <h3 className="text-nav-foreground text-sm font-light mb-4">Browse Categories</h3>
                 <div className="flex flex-wrap gap-3">
-                  {popularSearches.map((search, index) => (
+                  {(dbCategories.length > 0 ? dbCategories.map(c => c.name) : popularSearches).map((item, index) => (
                     <button
                       key={index}
                       className="text-nav-foreground hover:text-nav-hover text-sm font-light py-2 px-4 border border-border rounded-full transition-colors duration-200 hover:border-nav-hover"
+                      onClick={() => {
+                        navigate(`/explore?cat=${encodeURIComponent(item)}`);
+                        setIsSearchOpen(false);
+                      }}
                     >
-                      {search}
+                      {item}
                     </button>
                   ))}
                 </div>
+                <button
+                  onClick={() => {
+                    navigate("/explore");
+                    setIsSearchOpen(false);
+                  }}
+                  className="mt-6 text-nav-foreground hover:text-nav-hover text-sm font-light underline underline-offset-4 transition-colors duration-200"
+                >
+                  View all products →
+                </button>
               </div>
             </div>
           </div>

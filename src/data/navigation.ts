@@ -18,7 +18,7 @@ export interface NavItem {
 export const navItems: NavItem[] = [
   {
     name: "Shop",
-    href: "/category/shop",
+    href: "/explore",
     submenuItems: ["Rings", "Necklaces", "Earrings", "Bracelets", "Watches"],
     images: [
       { src: "/rings-collection.png", alt: "Rings Collection", label: "Rings" },
