@@ -40,6 +40,7 @@ const Index = () => {
       {siteConfig && (
         <h1 className="sr-only">{siteConfig.name} - {siteConfig.slong}</h1>
       )}
+      <HeroSlider />
       <ProductCarousel />
       <LargeHero />
     </MainLayout>
