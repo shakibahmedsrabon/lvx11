@@ -96,13 +96,23 @@ const Footer = () => {
             <div>
               <h4 className="text-sm font-normal mb-4">Support</h4>
               <ul className="space-y-2">
-                {footerLinks.support.map((link, i) => (
-                  <li key={`${link.href}-${i}`}>
-                    <AppLink href={link.href} className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors">
-                      {link.label}
-                    </AppLink>
-                  </li>
-                ))}
+                {contacts
+                  .filter((c) => {
+                    const name = c.name?.toLowerCase() || '';
+                    return name === 'phone' || name === 'whatsapp';
+                  })
+                  .map((contact) => (
+                    <li key={contact.id}>
+                      <a
+                        href={contact.link || '#'}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {contact.name}
+                      </a>
+                    </li>
+                  ))}
               </ul>
             </div>
 
