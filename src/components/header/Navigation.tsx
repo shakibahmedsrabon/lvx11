@@ -17,6 +17,17 @@ const Navigation = () => {
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
   
   const { cartItems, favorites, updateQuantity, clearCart, toggleFavorite, totalItems } = useCart();
+
+  // Merge DB categories into navItems for "Shop"
+  const dynamicNavItems = useMemo(() => {
+    if (dbCategories.length === 0) return navItems;
+    return navItems.map((item) => {
+      if (item.name === "Shop") {
+        return { ...item, submenuItems: dbCategories.map((c) => c.name) };
+      }
+      return item;
+    });
+  }, [dbCategories]);
   
   // Preload dropdown images for faster display
   useEffect(() => {
