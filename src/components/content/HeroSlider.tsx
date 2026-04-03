@@ -113,7 +113,7 @@ const HeroSlider = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden select-none"
+      className="relative w-full overflow-hidden select-none mb-8 md:mb-12"
       style={{ height: "clamp(280px, 56vw, 520px)" }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
