@@ -11,8 +11,10 @@ import { useCategories } from "@/hooks/useCategories";
 const Navigation = () => {
   const { config: siteConfig } = useSiteConfig();
   const { categories: dbCategories } = useCategories();
+  const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
