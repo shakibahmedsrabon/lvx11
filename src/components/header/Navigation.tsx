@@ -1,5 +1,6 @@
 import { ArrowRight, X } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
 import ShoppingBag from "./ShoppingBag";
