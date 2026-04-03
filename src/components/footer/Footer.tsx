@@ -62,6 +62,8 @@ const Footer = () => {
               </p>
             )}
 
+            <NewsletterSubscribe />
+
             {contacts.length > 0 ? (
               <div className="space-y-2 text-sm font-light text-muted-foreground">
                 <p className="font-normal text-foreground mb-1">Contact</p>
