@@ -30,7 +30,7 @@ const CustomerCare = () => {
 
   useEffect(() => {
     const fetchContacts = async () => {
-      const { data, error } = await (supabase as any).from('Contacts').select('*');
+      const { data, error } = await (supabase as any).from('Connects').select('*');
       if (!error && data) setContacts(data);
       setLoading(false);
     };

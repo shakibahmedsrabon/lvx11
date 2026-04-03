@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      Connects: {
+        Row: {
+          id: number
+          link: string
+          name: string
+        }
+        Insert: {
+          id?: number
+          link: string
+          name: string
+        }
+        Update: {
+          id?: number
+          link?: string
+          name?: string
+        }
+        Relationships: []
+      }
       FAQ: {
         Row: {
           answer: string | null
