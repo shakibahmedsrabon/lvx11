@@ -10,6 +10,12 @@ interface Contact {
   link: string | null;
 }
 
+interface Channel {
+  id: number;
+  name: string | null;
+  link: string | null;
+}
+
 const cleanContactDisplay = (value: string): string => {
   return value
     .replace(/^mailto:/i, '')
