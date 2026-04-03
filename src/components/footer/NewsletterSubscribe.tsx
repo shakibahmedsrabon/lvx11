@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 
 const STORAGE_KEY = "newsletter_subscribed";
 
@@ -13,6 +13,7 @@ const triggerHaptic = (pattern: number | number[]) => {
 const NewsletterSubscribe = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
@@ -25,7 +26,6 @@ const NewsletterSubscribe = () => {
     const trimmed = email.trim().toLowerCase();
     if (!trimmed || subscribed) return;
 
-    // Frontend validation
     const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail\.com|googlemail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com)$/;
     if (!emailRegex.test(trimmed)) {
       triggerHaptic([100, 50, 100]);
@@ -39,7 +39,6 @@ const NewsletterSubscribe = () => {
     setLoading(true);
     triggerHaptic(30);
     try {
-      // 1s delay for natural feel
       await new Promise(resolve => setTimeout(resolve, 1000));
       const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
       const response = await fetch(
@@ -47,10 +46,10 @@ const NewsletterSubscribe = () => {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: email.trim() }),
+          body: JSON.stringify({ email: trimmed }),
         }
       );
-      
+
       const data = await response.json();
       const error = !response.ok ? data : null;
 
@@ -85,16 +84,21 @@ const NewsletterSubscribe = () => {
             duration: 4000,
           });
         }
+        setLoading(false);
       } else {
-        // Success — gentle double tap
+        // Show tick animation before completing
+        setLoading(false);
+        setSuccess(true);
         triggerHaptic([40, 80, 40]);
         toast.success("Welcome!", {
           description: data?.message || "You've been subscribed successfully.",
           duration: 4000,
         });
-        localStorage.setItem(STORAGE_KEY, "true");
-        setSubscribed(true);
         setEmail("");
+        setTimeout(() => {
+          localStorage.setItem(STORAGE_KEY, "true");
+          setSubscribed(true);
+        }, 1500);
       }
     } catch {
       triggerHaptic([200, 100, 200]);
@@ -102,7 +106,6 @@ const NewsletterSubscribe = () => {
         description: "Please check your internet and try again.",
         duration: 4000,
       });
-    } finally {
       setLoading(false);
     }
   };
@@ -130,19 +133,18 @@ const NewsletterSubscribe = () => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Subscribe to our services"
           required
-          disabled={loading}
+          disabled={loading || success}
           className="flex-1 min-w-0 px-3 py-2 text-sm bg-background border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 transition-all"
         />
         <button
           type="submit"
-          disabled={loading || !email.trim()}
-          className="px-4 py-2 text-sm bg-foreground text-background rounded-md hover:opacity-90 transition-all disabled:opacity-50 whitespace-nowrap flex items-center gap-2 min-w-[100px] justify-center"
+          disabled={loading || success || !email.trim()}
+          className="px-4 py-2 text-sm bg-foreground text-background rounded-md hover:opacity-90 transition-all disabled:opacity-50 whitespace-nowrap flex items-center gap-2 min-w-[100px] justify-center overflow-hidden"
         >
-          {loading ? (
-            <>
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-              <span>Sending</span>
-            </>
+          {success ? (
+            <Check className="h-4 w-4 animate-scale-in" />
+          ) : loading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
             "Subscribe"
           )}
