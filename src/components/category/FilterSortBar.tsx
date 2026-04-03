@@ -18,6 +18,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { useCategories } from "@/hooks/useCategories";
 
 interface FilterSortBarProps {
   filtersOpen: boolean;
@@ -27,8 +28,9 @@ interface FilterSortBarProps {
 
 const FilterSortBar = ({ filtersOpen, setFiltersOpen, itemCount }: FilterSortBarProps) => {
   const [sortBy, setSortBy] = useState("featured");
+  const { categories } = useCategories();
 
-  const categories = ["Earrings", "Bracelets", "Rings", "Necklaces"];
+  const categoryNames = categories.map((c) => c.name);
   const priceRanges = ["Under ৳1,000", "৳1,000 - ৳2,000", "৳2,000 - ৳3,000", "Over ৳3,000"];
   const materials = ["Gold", "Silver", "Rose Gold", "Platinum"];
 
