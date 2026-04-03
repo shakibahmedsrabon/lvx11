@@ -22,11 +22,25 @@ const NewsletterSubscribe = () => {
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || subscribed) return;
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || subscribed) return;
+
+    // Frontend validation
+    const emailRegex = /^[A-Za-z0-9._%+-]+@(gmail\.com|googlemail\.com|outlook\.com|hotmail\.com|live\.com|msn\.com)$/;
+    if (!emailRegex.test(trimmed)) {
+      triggerHaptic([100, 50, 100]);
+      toast.error("Invalid Email", {
+        description: "Only Gmail and Outlook emails are accepted.",
+        duration: 3000,
+      });
+      return;
+    }
 
     setLoading(true);
-    triggerHaptic(30); // Light tap on submit
+    triggerHaptic(30);
     try {
+      // 1s delay for natural feel
+      await new Promise(resolve => setTimeout(resolve, 1000));
       const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
       const response = await fetch(
         `https://${projectId}.supabase.co/functions/v1/subscribe`,

@@ -12,7 +12,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Connect to the EXTERNAL Supabase project
     const supabase = createClient(
       "https://jqxesguuoxgithnqdtgl.supabase.co",
       Deno.env.get("EXTERNAL_SUPABASE_SERVICE_ROLE_KEY")!
@@ -37,24 +36,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-
-    // Rate limit: max 2 subscriptions per IP
-    const { count } = await supabase
-      .from("Subscribers")
-      .select("*", { count: "exact", head: true })
-      .eq("ip", ip);
-
-    if ((count ?? 0) >= 2) {
-      return new Response(
-        JSON.stringify({ error: "rate_limited", message: "Subscription limit reached from this device." }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-      );
-    }
-
-    const { error } = await supabase.from("Subscribers").insert({ email, ip });
+    const { error } = await supabase.from("Subscribers").insert({ email });
 
     if (error) {
+      console.error("Insert error:", JSON.stringify(error));
       if (error.message.includes("duplicate") || error.code === "23505") {
         return new Response(
           JSON.stringify({ error: "duplicate", message: "This email is already subscribed." }),
@@ -69,6 +54,7 @@ Deno.serve(async (req) => {
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {
+    console.error("Server error:", err);
     return new Response(
       JSON.stringify({ error: "server_error", message: "Something went wrong. Please try again." }),
       { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
