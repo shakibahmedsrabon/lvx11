@@ -55,6 +55,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     id: product.id,
     name: product.title,
     price: displayPrice,
+    unitPrice: currentPrice,
+    duration: selectedDuration,
     image: product.image,
     category: product.category,
   };
