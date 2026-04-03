@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "newsletter_subscribed";
 
@@ -26,25 +25,22 @@ const NewsletterSubscribe = () => {
 
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("subscribe", {
-        body: { email: email.trim() },
-      });
+      const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
+      const response = await fetch(
+        `https://${projectId}.supabase.co/functions/v1/subscribe`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: email.trim() }),
+        }
+      );
+      
+      const data = await response.json();
+      const error = !response.ok ? data : null;
 
       if (error) {
-        // Parse the error response
-        let errorBody: any = {};
-        try {
-          // supabase functions.invoke puts the response context in error
-          if (error.context && typeof error.context === "object") {
-            const response = error.context as Response;
-            errorBody = await response.json();
-          }
-        } catch {
-          // fallback
-        }
-
-        const errorType = errorBody?.error || data?.error;
-        const message = errorBody?.message || data?.message || "Something went wrong. Please try again.";
+        const errorType = error.error;
+        const message = error.message || "Something went wrong. Please try again.";
 
         if (errorType === "duplicate") {
           triggerHaptic([100, 50, 100]);
