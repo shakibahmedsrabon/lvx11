@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Category from "./pages/Category";
 import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
+import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
 import OurStory from "./pages/about/OurStory";
 import Sustainability from "./pages/about/Sustainability";
