@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const STORAGE_KEY = "newsletter_subscribed";
 
@@ -24,6 +25,7 @@ const NewsletterSubscribe = () => {
     if (!email.trim() || subscribed) return;
 
     setLoading(true);
+    triggerHaptic(30); // Light tap on submit
     try {
       const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
       const response = await fetch(
@@ -51,7 +53,7 @@ const NewsletterSubscribe = () => {
           localStorage.setItem(STORAGE_KEY, "true");
           setSubscribed(true);
         } else if (errorType === "rate_limited") {
-          triggerHaptic([200, 100, 200]);
+          triggerHaptic([200, 100, 200, 100, 200]);
           toast.error("Limit Reached", {
             description: message,
             duration: 4000,
@@ -70,8 +72,8 @@ const NewsletterSubscribe = () => {
           });
         }
       } else {
-        // Success
-        triggerHaptic(50);
+        // Success — gentle double tap
+        triggerHaptic([40, 80, 40]);
         toast.success("Welcome!", {
           description: data?.message || "You've been subscribed successfully.",
           duration: 4000,
@@ -93,7 +95,7 @@ const NewsletterSubscribe = () => {
 
   if (subscribed) {
     return (
-      <div className="mt-6">
+      <div className="mb-6">
         <p className="text-sm font-light text-muted-foreground">
           ✓ You're subscribed to our newsletter
         </p>
@@ -102,7 +104,7 @@ const NewsletterSubscribe = () => {
   }
 
   return (
-    <div className="mt-6">
+    <div className="mb-6">
       <p className="text-sm font-normal text-foreground mb-2">Newsletter</p>
       <p className="text-xs font-light text-muted-foreground mb-3">
         Subscribe for updates and exclusive offers.
@@ -115,14 +117,21 @@ const NewsletterSubscribe = () => {
           placeholder="Your email"
           required
           disabled={loading}
-          className="flex-1 min-w-0 px-3 py-2 text-sm bg-background border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50"
+          className="flex-1 min-w-0 px-3 py-2 text-sm bg-background border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 transition-all"
         />
         <button
           type="submit"
           disabled={loading || !email.trim()}
-          className="px-4 py-2 text-sm bg-foreground text-background rounded-md hover:opacity-90 transition-opacity disabled:opacity-50 whitespace-nowrap"
+          className="px-4 py-2 text-sm bg-foreground text-background rounded-md hover:opacity-90 transition-all disabled:opacity-50 whitespace-nowrap flex items-center gap-2 min-w-[100px] justify-center"
         >
-          {loading ? "..." : "Subscribe"}
+          {loading ? (
+            <>
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <span>Sending</span>
+            </>
+          ) : (
+            "Subscribe"
+          )}
         </button>
       </form>
     </div>
