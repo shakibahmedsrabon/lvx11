@@ -1,6 +1,6 @@
 import MainLayout from "../layouts/MainLayout";
 import LargeHero from "../components/content/LargeHero";
-import FiftyFiftySection from "../components/content/FiftyFiftySection";
+import ProductCarousel from "../components/content/ProductCarousel";
 import ProductCarousel from "../components/content/ProductCarousel";
 import SEOHead from "../components/SEOHead";
 import { routes } from "@/config/routes";
