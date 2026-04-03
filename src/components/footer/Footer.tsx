@@ -98,8 +98,8 @@ const Footer = () => {
               <ul className="space-y-2">
                 {contacts
                   .filter((c) => {
-                    const name = c.name?.toLowerCase() || '';
-                    return name === 'phone' || name === 'whatsapp';
+                    const link = c.link?.toLowerCase() || '';
+                    return link.startsWith('tel:') || link.includes('wa.me');
                   })
                   .map((contact) => (
                     <li key={contact.id}>
