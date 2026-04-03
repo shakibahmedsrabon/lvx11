@@ -10,6 +10,12 @@ interface Contact {
   link: string | null;
 }
 
+interface Channel {
+  id: number;
+  name: string | null;
+  link: string | null;
+}
+
 const cleanContactDisplay = (value: string): string => {
   return value
     .replace(/^mailto:/i, '')
@@ -21,13 +27,19 @@ const cleanContactDisplay = (value: string): string => {
 const Footer = () => {
   const { config: siteConfig } = useSiteConfig();
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
 
   useEffect(() => {
     const fetchContacts = async () => {
       const { data, error } = await (supabase as any).from('Connects').select('*');
       if (!error && data) setContacts(data);
     };
+    const fetchChannels = async () => {
+      const { data, error } = await (supabase as any).from('Channels').select('*');
+      if (!error && data) setChannels(data);
+    };
     fetchContacts();
+    fetchChannels();
   }, []);
 
   return (
@@ -119,15 +131,15 @@ const Footer = () => {
             <div>
               <h4 className="text-sm font-normal mb-4">Connect</h4>
               <ul className="space-y-2">
-                {contacts.length > 0 ? contacts.map((contact) => (
-                  <li key={contact.id}>
+                {channels.length > 0 ? channels.map((channel) => (
+                  <li key={channel.id}>
                     <a
-                      href={contact.link || '#'}
+                      href={channel.link || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {contact.name}
+                      {channel.name}
                     </a>
                   </li>
                 )) : footerLinks.connect.map((link) => (
