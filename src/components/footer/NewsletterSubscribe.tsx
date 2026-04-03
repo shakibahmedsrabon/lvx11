@@ -114,7 +114,7 @@ const NewsletterSubscribe = () => {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Your email"
+          placeholder="Gmail or Outlook only"
           required
           disabled={loading}
           className="flex-1 min-w-0 px-3 py-2 text-sm bg-background border border-border rounded-md text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:opacity-50 transition-all"
