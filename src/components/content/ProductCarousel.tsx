@@ -31,6 +31,11 @@ const ProductCarousel = () => {
                 <Card className="border-none shadow-none bg-transparent group">
                   <CardContent className="p-0">
                     <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">
+                      {product.isNew && (
+                        <span className="absolute top-2 left-2 z-10 bg-foreground text-background text-[10px] font-medium tracking-wider uppercase px-2 py-0.5">
+                          New
+                        </span>
+                      )}
                       {product.image && (
                         <img
                           src={product.image}

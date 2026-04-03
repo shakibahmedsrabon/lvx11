@@ -40,6 +40,9 @@ export interface Product {
   image: string;
   description?: string;
   stock: boolean;
+  /** True if product was created within the last 7 days */
+  isNew: boolean;
+  createdAt: string;
 }
 
 /**
@@ -103,6 +106,10 @@ const fetchProducts = (): Promise<Product[]> => {
       cached = data.map((row: any) => {
         const prices = parsePriceMap(row.price);
         const availableDurations = getDurations(prices);
+        const createdAt = row.created_at || "";
+        const isNew = createdAt
+          ? (Date.now() - new Date(createdAt).getTime()) < 7 * 24 * 60 * 60 * 1000
+          : false;
         return {
           id: row.id,
           title: row.title || "",
@@ -115,6 +122,8 @@ const fetchProducts = (): Promise<Product[]> => {
           image: row.image || "",
           description: row.description || undefined,
           stock: row.stock ?? true,
+          isNew,
+          createdAt,
         };
       });
       return cached!;
