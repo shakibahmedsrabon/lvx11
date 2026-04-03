@@ -3,6 +3,7 @@ import AppLink from "@/lib/navigation/AppLink";
 import { footerLinks } from "@/data/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
+import NewsletterSubscribe from "./NewsletterSubscribe";
 
 interface Contact {
   id: number;
@@ -60,6 +61,8 @@ const Footer = () => {
                 {siteConfig.slong}
               </p>
             )}
+
+            <NewsletterSubscribe />
 
             {contacts.length > 0 ? (
               <div className="space-y-2 text-sm font-light text-muted-foreground">
