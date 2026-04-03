@@ -55,6 +55,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     id: product.id,
     name: product.title,
     price: displayPrice,
+    unitPrice: currentPrice,
+    duration: selectedDuration,
     image: product.image,
     category: product.category,
   };
@@ -214,10 +216,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           disabled={!product.stock}
           onClick={() => {
             const url = buildWhatsAppUrl([{
-              name: `${product.title} (${selectedDuration} ${selectedDuration === 1 ? "month" : "months"})`,
+              name: product.title,
               price: displayPrice,
               quantity,
               slug: product.slug,
+              duration: selectedDuration,
+              unitPrice: currentPrice,
             }]);
             window.open(url, "_blank");
           }}

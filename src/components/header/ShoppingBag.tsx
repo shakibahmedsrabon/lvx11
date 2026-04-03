@@ -1,12 +1,23 @@
+/**
+ * ShoppingBag — off-canvas cart panel with professional receipt-style summary.
+ *
+ * Each line item shows: product name, duration (months), unit price, qty, and line total.
+ * The footer shows subtotal with a clear breakdown.
+ * WhatsApp checkout message includes duration and pricing details.
+ */
+
 import { X, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import AppLink from "@/lib/navigation/AppLink";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
+import { formatPrice } from "@/hooks/useProducts";
 
 interface CartItem {
   id: number;
   name: string;
   price: string;
+  unitPrice: number;
+  duration: number;
   image: string;
   quantity: number;
   category: string;
@@ -16,7 +27,7 @@ interface ShoppingBagProps {
   isOpen: boolean;
   onClose: () => void;
   cartItems: CartItem[];
-  updateQuantity: (id: number, newQuantity: number) => void;
+  updateQuantity: (id: number, duration: number, newQuantity: number) => void;
   clearCart: () => void;
   onViewFavorites?: () => void;
 }
@@ -24,10 +35,9 @@ interface ShoppingBagProps {
 const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, onViewFavorites }: ShoppingBagProps) => {
   if (!isOpen) return null;
 
-  const subtotal = cartItems.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace('৳', '').replace(',', ''));
-    return sum + (price * item.quantity);
-  }, 0);
+  /** Subtotal = sum of (unitPrice × quantity) for every line item */
+  const subtotal = cartItems.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <div className="fixed inset-0 z-50 h-screen">
@@ -43,8 +53,8 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, on
         <div className="flex items-center justify-between p-6 border-b border-border">
           <div className="flex items-center gap-3">
             <h2 className="text-lg font-light text-foreground">Shopping Bag</h2>
-            {cartItems.length > 0 && (
-              <span className="text-xs text-muted-foreground">({cartItems.reduce((s, i) => s + i.quantity, 0)})</span>
+            {totalItems > 0 && (
+              <span className="text-xs text-muted-foreground">({totalItems})</span>
             )}
           </div>
           <div className="flex items-center gap-2">
@@ -68,7 +78,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, on
         
         {/* Content */}
         <div className="flex-1 flex flex-col p-6">
-          {/* Mobile favorites toggle - only show on mobile */}
+          {/* Mobile favorites toggle */}
           {onViewFavorites && (
             <div className="md:hidden mb-6 pb-6 border-b border-border">
               <button
@@ -94,54 +104,78 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, on
             <>
               {/* Cart items */}
               <div className="flex-1 overflow-y-auto space-y-6 mb-6">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex gap-4">
-                    <div className="w-20 h-20 bg-muted/10 rounded-lg overflow-hidden">
-                      <img 
-                        src={item.image} 
-                        alt={item.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div className="flex-1">
-                      <div className="flex justify-between items-start mb-2">
-                        <div>
-                          <p className="text-sm font-light text-muted-foreground">{item.category}</p>
-                          <h3 className="text-sm font-medium text-foreground">{item.name}</h3>
-                        </div>
-                        <p className="text-sm font-light text-foreground">{item.price}</p>
+                {cartItems.map((item) => {
+                  const lineTotal = item.unitPrice * item.quantity;
+                  return (
+                    <div key={`${item.id}-${item.duration}`} className="flex gap-4">
+                      <div className="w-20 h-20 bg-muted/10 rounded-lg overflow-hidden flex-shrink-0">
+                        <img 
+                          src={item.image} 
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
                       </div>
-                      <div className="flex items-center gap-2 mt-3">
-                        <div className="flex items-center border border-border">
-                          <button 
-                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                            className="p-2 hover:bg-muted/50 transition-colors"
-                            aria-label="Decrease quantity"
-                          >
-                            <Minus size={14} />
-                          </button>
-                          <span className="px-3 py-2 text-sm font-light min-w-[40px] text-center">
-                            {item.quantity}
-                          </span>
-                          <button 
-                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                            className="p-2 hover:bg-muted/50 transition-colors"
-                            aria-label="Increase quantity"
-                          >
-                            <Plus size={14} />
-                          </button>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex justify-between items-start mb-1">
+                          <div className="min-w-0">
+                            <p className="text-xs font-light text-muted-foreground">{item.category}</p>
+                            <h3 className="text-sm font-medium text-foreground truncate">{item.name}</h3>
+                          </div>
+                          <p className="text-sm font-medium text-foreground ml-2 flex-shrink-0">
+                            {formatPrice(lineTotal)}
+                          </p>
+                        </div>
+                        {/* Duration + unit price */}
+                        <p className="text-xs text-muted-foreground">
+                          {item.duration} {item.duration === 1 ? "month" : "months"} · {formatPrice(item.unitPrice)}
+                        </p>
+                        {/* Quantity controls */}
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="flex items-center border border-border">
+                            <button 
+                              onClick={() => updateQuantity(item.id, item.duration, item.quantity - 1)}
+                              className="p-1.5 hover:bg-muted/50 transition-colors"
+                              aria-label="Decrease quantity"
+                            >
+                              <Minus size={12} />
+                            </button>
+                            <span className="px-2.5 py-1 text-xs font-light min-w-[28px] text-center">
+                              {item.quantity}
+                            </span>
+                            <button 
+                              onClick={() => updateQuantity(item.id, item.duration, item.quantity + 1)}
+                              className="p-1.5 hover:bg-muted/50 transition-colors"
+                              aria-label="Increase quantity"
+                            >
+                              <Plus size={12} />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               
-              {/* Subtotal and checkout */}
-              <div className="border-t border-border pt-6 space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm font-light text-foreground">Subtotal</span>
-                  <span className="text-sm font-medium text-foreground">৳{subtotal.toLocaleString('en-EU', { minimumFractionDigits: 2 })}</span>
+              {/* Receipt summary */}
+              <div className="border-t border-border pt-4 space-y-3">
+                {/* Line item breakdown */}
+                <div className="space-y-1.5">
+                  {cartItems.map((item) => (
+                    <div key={`${item.id}-${item.duration}-summary`} className="flex justify-between text-xs text-muted-foreground">
+                      <span className="truncate mr-2">
+                        {item.name} × {item.quantity} ({item.duration}mo)
+                      </span>
+                      <span className="flex-shrink-0">{formatPrice(item.unitPrice * item.quantity)}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="border-t border-border pt-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm font-light text-foreground">Subtotal</span>
+                    <span className="text-sm font-medium text-foreground">{formatPrice(subtotal)}</span>
+                  </div>
                 </div>
                 
                 <p className="text-xs text-muted-foreground">
@@ -153,7 +187,13 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, on
                   size="lg"
                   onClick={() => {
                     const url = buildWhatsAppUrl(
-                      cartItems.map(item => ({ name: item.name, price: item.price, quantity: item.quantity }))
+                      cartItems.map(item => ({
+                        name: item.name,
+                        price: formatPrice(item.unitPrice),
+                        quantity: item.quantity,
+                        duration: item.duration,
+                        unitPrice: item.unitPrice,
+                      }))
                     );
                     window.open(url, "_blank");
                     onClose();
