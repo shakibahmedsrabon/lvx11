@@ -147,19 +147,19 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="border-t border-border -mx-6 px-6 pt-2">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <p className="text-sm font-light text-foreground mb-1 md:mb-0">
-            Copyright© 2025-{new Date().getFullYear()} {siteConfig?.name || ''}. All Rights Reserved.
+      <div className="border-t border-border -mx-6 px-6 pt-4 pb-4">
+        <div className="flex flex-col items-center text-center gap-3 md:flex-row md:justify-between md:text-left">
+          <p className="text-xs font-light text-muted-foreground">
+            © 2025–{new Date().getFullYear()} {siteConfig?.name || ''}. All Rights Reserved.
           </p>
-          <div className="flex space-x-6">
-            <AppLink href="/privacy-policy" className="text-sm font-light text-foreground hover:text-muted-foreground transition-colors">
+          <div className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+            <AppLink href="/privacy-policy" className="text-xs font-light text-muted-foreground hover:text-foreground transition-colors">
               Privacy Policy
             </AppLink>
-            <AppLink href="/terms-of-service" className="text-sm font-light text-foreground hover:text-muted-foreground transition-colors">
+            <AppLink href="/terms-of-service" className="text-xs font-light text-muted-foreground hover:text-foreground transition-colors">
               Terms of Service
             </AppLink>
-            <AppLink href="/refund-exchange-policy" className="text-sm font-light text-foreground hover:text-muted-foreground transition-colors">
+            <AppLink href="/refund-exchange-policy" className="text-xs font-light text-muted-foreground hover:text-foreground transition-colors">
               Refund & Exchange
             </AppLink>
           </div>
