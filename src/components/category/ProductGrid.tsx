@@ -1,13 +1,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import AppLink from "@/lib/navigation/AppLink";
 import Pagination from "./Pagination";
-import { useProductsByCategory, formatPrice } from "@/hooks/useProducts";
-import { useParams } from "@/lib/navigation";
+import { formatPrice, type Product } from "@/hooks/useProducts";
+import { PackageSearch } from "lucide-react";
 
-const ProductGrid = () => {
-  const { category } = useParams();
-  const { products, loading } = useProductsByCategory(category || "all");
+interface ProductGridProps {
+  products: Product[];
+  loading: boolean;
+}
 
+const ProductGrid = ({ products, loading }: ProductGridProps) => {
   if (loading) {
     return (
       <section className="w-full px-6 mb-16">
@@ -27,7 +29,15 @@ const ProductGrid = () => {
   if (products.length === 0) {
     return (
       <section className="w-full px-6 mb-16">
-        <p className="text-center text-muted-foreground py-12">No products found.</p>
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <PackageSearch className="h-12 w-12 text-muted-foreground/40 mb-4" />
+          <h3 className="text-lg font-light text-foreground mb-2">
+            No products found
+          </h3>
+          <p className="text-sm font-light text-muted-foreground max-w-sm">
+            Try adjusting your filters or browse all products to find what you're looking for.
+          </p>
+        </div>
       </section>
     );
   }
