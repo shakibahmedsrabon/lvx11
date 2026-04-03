@@ -1,9 +1,7 @@
 import MainLayout from "../layouts/MainLayout";
 import LargeHero from "../components/content/LargeHero";
 import FiftyFiftySection from "../components/content/FiftyFiftySection";
-import OneThirdTwoThirdsSection from "../components/content/OneThirdTwoThirdsSection";
 import ProductCarousel from "../components/content/ProductCarousel";
-import EditorialSection from "../components/content/EditorialSection";
 import SEOHead from "../components/SEOHead";
 import { routes } from "@/config/routes";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
@@ -45,8 +43,6 @@ const Index = () => {
       <FiftyFiftySection />
       <ProductCarousel />
       <LargeHero />
-      <OneThirdTwoThirdsSection />
-      <EditorialSection />
     </MainLayout>
   );
 };
