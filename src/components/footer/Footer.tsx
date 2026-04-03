@@ -27,13 +27,19 @@ const cleanContactDisplay = (value: string): string => {
 const Footer = () => {
   const { config: siteConfig } = useSiteConfig();
   const [contacts, setContacts] = useState<Contact[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([]);
 
   useEffect(() => {
     const fetchContacts = async () => {
       const { data, error } = await (supabase as any).from('Connects').select('*');
       if (!error && data) setContacts(data);
     };
+    const fetchChannels = async () => {
+      const { data, error } = await (supabase as any).from('Channels').select('*');
+      if (!error && data) setChannels(data);
+    };
     fetchContacts();
+    fetchChannels();
   }, []);
 
   return (
