@@ -131,15 +131,15 @@ const Footer = () => {
             <div>
               <h4 className="text-sm font-normal mb-4">Connect</h4>
               <ul className="space-y-2">
-                {contacts.length > 0 ? contacts.map((contact) => (
-                  <li key={contact.id}>
+                {channels.length > 0 ? channels.map((channel) => (
+                  <li key={channel.id}>
                     <a
-                      href={contact.link || '#'}
+                      href={channel.link || '#'}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {contact.name}
+                      {channel.name}
                     </a>
                   </li>
                 )) : footerLinks.connect.map((link) => (
