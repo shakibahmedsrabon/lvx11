@@ -1,8 +1,11 @@
 import { ArrowRight, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
 import ShoppingBag from "./ShoppingBag";
+import { useCart } from "@/contexts/CartContext";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { useCategories } from "@/hooks/useCategories";
 import { useCart } from "@/contexts/CartContext";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 
