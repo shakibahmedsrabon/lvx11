@@ -6,8 +6,6 @@ import ShoppingBag from "./ShoppingBag";
 import { useCart } from "@/contexts/CartContext";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { useCategories } from "@/hooks/useCategories";
-import { useCart } from "@/contexts/CartContext";
-import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 const Navigation = () => {
   const { config: siteConfig } = useSiteConfig();
