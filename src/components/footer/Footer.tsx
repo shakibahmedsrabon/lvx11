@@ -91,19 +91,7 @@ const Footer = () => {
             )}
           </div>
 
-          <nav aria-label="Footer navigation" className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-              <h4 className="text-sm font-normal mb-4">Shop</h4>
-              <ul className="space-y-2">
-                {footerLinks.shop.map((link) => (
-                  <li key={link.href}>
-                    <AppLink href={link.href} className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors">
-                      {link.label}
-                    </AppLink>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          <nav aria-label="Footer navigation" className="grid grid-cols-1 md:grid-cols-2 gap-8">
 
             <div>
               <h4 className="text-sm font-normal mb-4">Support</h4>
