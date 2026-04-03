@@ -27,6 +27,15 @@ Deno.serve(async (req) => {
       );
     }
 
+    const allowedDomains = ["gmail.com", "googlemail.com", "outlook.com", "hotmail.com", "live.com", "msn.com"];
+    const domain = email.split("@")[1];
+    if (!allowedDomains.includes(domain)) {
+      return new Response(
+        JSON.stringify({ error: "invalid_email", message: "Only Gmail and Outlook emails are accepted." }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 
     // Rate limit: max 2 subscriptions per IP
