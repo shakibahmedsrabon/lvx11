@@ -150,10 +150,7 @@ const Footer = () => {
       <div className="border-t border-border -mx-6 px-6 pt-2">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm font-light text-foreground mb-1 md:mb-0">
-            © 2024 Linea. All rights reserved. Template made by{" "}
-            <a href="https://www.liljeros.co" target="_blank" rel="noopener noreferrer" className="hover:text-muted-foreground transition-colors underline">
-              Rickard Liljeros
-            </a>
+            Copyright© 2025-{new Date().getFullYear()} {siteConfig?.name || ''}. All Rights Reserved.
           </p>
           <div className="flex space-x-6">
             <AppLink href="/privacy-policy" className="text-sm font-light text-foreground hover:text-muted-foreground transition-colors">
