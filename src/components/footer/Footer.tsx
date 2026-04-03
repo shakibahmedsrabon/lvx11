@@ -129,7 +129,7 @@ const Footer = () => {
             </div>
 
             <div>
-              <h4 className="text-sm font-normal mb-4">Connect</h4>
+              <h4 className="text-sm font-normal mb-4">Channels</h4>
               <ul className="space-y-2">
                 {channels.length > 0 ? channels.map((channel) => (
                   <li key={channel.id}>
