@@ -1,13 +1,15 @@
 import { ArrowRight, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
 import ShoppingBag from "./ShoppingBag";
 import { useCart } from "@/contexts/CartContext";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
+import { useCategories } from "@/hooks/useCategories";
 
 const Navigation = () => {
   const { config: siteConfig } = useSiteConfig();
+  const { categories: dbCategories } = useCategories();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
@@ -15,6 +17,17 @@ const Navigation = () => {
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
   
   const { cartItems, favorites, updateQuantity, clearCart, toggleFavorite, totalItems } = useCart();
+
+  // Merge DB categories into navItems for "Shop"
+  const dynamicNavItems = useMemo(() => {
+    if (dbCategories.length === 0) return navItems;
+    return navItems.map((item) => {
+      if (item.name === "Shop") {
+        return { ...item, submenuItems: dbCategories.map((c) => c.name) };
+      }
+      return item;
+    });
+  }, [dbCategories]);
   
   // Preload dropdown images for faster display
   useEffect(() => {
@@ -62,7 +75,7 @@ const Navigation = () => {
 
         {/* Left navigation - Hidden on tablets and mobile */}
         <div className="hidden lg:flex space-x-8">
-          {navItems.map((item) => (
+          {dynamicNavItems.map((item) => (
             <div
               key={item.name}
               className="relative"
@@ -145,7 +158,7 @@ const Navigation = () => {
             <div className="flex justify-between w-full">
               <div className="flex-1">
                 <ul className="space-y-2">
-                   {navItems
+                   {dynamicNavItems
                      .find(item => item.name === activeDropdown)
                      ?.submenuItems.map((subItem, index) => (
                       <li key={index}>
@@ -160,7 +173,7 @@ const Navigation = () => {
                 </ul>
               </div>
               <div className="flex space-x-6">
-                {navItems
+                {dynamicNavItems
                   .find(item => item.name === activeDropdown)
                   ?.images.map((image, index) => {
                     let linkTo = "/";
@@ -239,7 +252,7 @@ const Navigation = () => {
         <div className="lg:hidden absolute top-full left-0 right-0 bg-nav border-b border-border z-50">
           <div className="px-6 py-8">
             <div className="space-y-6">
-              {navItems.map((item) => (
+              {dynamicNavItems.map((item) => (
                 <div key={item.name}>
                   <AppLink
                     href={item.href}
