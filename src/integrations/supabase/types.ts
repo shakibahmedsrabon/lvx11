@@ -152,6 +152,24 @@ export type Database = {
         }
         Relationships: []
       }
+      Subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          ip: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          ip?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          ip?: string | null
+        }
+        Relationships: []
+      }
       "Terms of Service": {
         Row: {
           content: string | null
