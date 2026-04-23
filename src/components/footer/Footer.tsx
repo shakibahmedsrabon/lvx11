@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import AppLink from "@/lib/navigation/AppLink";
-import { footerLinks } from "@/data/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 import NewsletterSubscribe from "./NewsletterSubscribe";
