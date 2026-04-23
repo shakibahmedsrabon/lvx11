@@ -3,6 +3,7 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReviewProduct from "./ReviewProduct";
 import type { Product } from "@/hooks/useProducts";
+import { useReviews } from "@/hooks/useReviews";
 
 interface ProductDescriptionProps {
   product?: Product;
@@ -27,9 +28,11 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isDescriptionBnOpen, setIsDescriptionBnOpen] = useState(false);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
+  const { reviews, average, refetch } = useReviews();
 
   const description = product?.description?.trim();
   const descriptionBn = product?.description_bn?.trim();
+  const avgDisplay = average > 0 ? average.toFixed(1) : "0.0";
 
   return (
     <div className="space-y-0 mt-8 border-t border-border">
@@ -91,12 +94,12 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
           className="w-full h-14 px-0 justify-between hover:bg-transparent font-light rounded-none"
         >
           <div className="flex items-center gap-3">
-            <span>Customer Reviews</span>
+            <span>Customer Reviews ({reviews.length})</span>
             <div className="flex items-center">
               {[1, 2, 3, 4, 5].map((star) => (
-                <CustomStar key={star} filled={star <= 4.8} />
+                <CustomStar key={star} filled={star <= Math.round(average)} />
               ))}
-              <span className="text-sm font-light text-muted-foreground ml-1">4.8</span>
+              <span className="text-sm font-light text-muted-foreground ml-1">{avgDisplay}</span>
             </div>
           </div>
           {isReviewsOpen ? (
@@ -107,54 +110,49 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
         </Button>
         {isReviewsOpen && (
           <div className="pb-6 space-y-6">
-            <ReviewProduct />
+            <ReviewProduct onSubmitted={refetch} />
 
-            <div className="space-y-6">
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <CustomStar key={star} filled={true} />
-                    ))}
+            {reviews.length === 0 ? (
+              <p className="text-sm font-light text-muted-foreground">
+                No reviews yet. Be the first to share your thoughts.
+              </p>
+            ) : (
+              <div className="space-y-6">
+                {reviews.map((r) => (
+                  <div key={r.id} className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      {r.profile ? (
+                        <img
+                          src={r.profile}
+                          alt={r.FullName || "Reviewer"}
+                          className="w-8 h-8 rounded-full object-cover"
+                          onError={(e) => ((e.currentTarget.style.display = "none"))}
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-xs font-light">
+                          {(r.FullName || "A").charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <CustomStar key={star} filled={star <= (r.star || 0)} />
+                          ))}
+                        </div>
+                        <span className="text-sm font-light text-muted-foreground">
+                          {r.FullName || "Anonymous"}
+                        </span>
+                      </div>
+                    </div>
+                    {r.description && (
+                      <p className="text-sm font-light text-muted-foreground leading-relaxed">
+                        {r.description}
+                      </p>
+                    )}
                   </div>
-                  <span className="text-sm font-light text-muted-foreground">Sarah M.</span>
-                </div>
-                <p className="text-sm font-light text-muted-foreground leading-relaxed">
-                  "Absolutely stunning earrings! The quality is exceptional and they go with everything.
-                  The architectural design is so unique and I get compliments every time I wear them."
-                </p>
+                ))}
               </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <CustomStar key={star} filled={star <= 4} />
-                    ))}
-                  </div>
-                  <span className="text-sm font-light text-muted-foreground">Emma T.</span>
-                </div>
-                <p className="text-sm font-light text-muted-foreground leading-relaxed">
-                  "Beautiful craftsmanship and comfortable to wear all day. The gold plating has held up
-                  perfectly after months of regular wear. Highly recommend!"
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <CustomStar key={star} filled={true} />
-                    ))}
-                  </div>
-                  <span className="text-sm font-light text-muted-foreground">Jessica R.</span>
-                </div>
-                <p className="text-sm font-light text-muted-foreground leading-relaxed">
-                  "These earrings are a work of art. The minimalist design is elegant and sophisticated.
-                  Perfect weight and the packaging was beautiful too."
-                </p>
-              </div>
-            </div>
+            )}
           </div>
         )}
       </div>
