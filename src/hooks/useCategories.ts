@@ -28,6 +28,7 @@ const fetchCategories = (): Promise<Category[]> => {
         .map((row: any) => ({
           id: row.id,
           name: row.name,
+          images: row.images ?? null,
         }));
       return cached!;
     });
