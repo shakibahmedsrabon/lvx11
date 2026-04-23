@@ -18,6 +18,7 @@
     --nav-background: 0 0% 100%;
     --nav-foreground: 0 0% 20%;
     --nav-hover: 0 0% 5%;
+    --nav-glass: 0 0% 100% / 0.9;
     
     /* Interactive elements */
     --primary: 0 0% 9%;
@@ -72,8 +73,9 @@
   }
 
   /* ===========================================================
-     THEME: AUTO (default) — follows OS prefers-color-scheme.
-     Light = pure white / dark = pure black, nav matches bg.
+     THEME: AUTO — follows OS prefers-color-scheme.
+     Light = pure white, dark = pure black. Nav uses translucent
+     glass tinted to match the surface.
      =========================================================== */
   @media (prefers-color-scheme: dark) {
     :root[data-theme="auto"] {
@@ -84,6 +86,7 @@
       --nav-background: 0 0% 0%;
       --nav-foreground: 0 0% 85%;
       --nav-hover: 0 0% 100%;
+      --nav-glass: 0 0% 0% / 0.55;
       --primary: 0 0% 100%;
       --primary-foreground: 0 0% 0%;
       --primary-hover: 0 0% 90%;
@@ -106,67 +109,100 @@
   }
 
   /* ===========================================================
-     THEME: CYAN-CRIMSON — #08D9D6 / #252A34 / #FF2E63 / #EAEAEA
-     Dark editorial palette with cyan + crimson accents.
+     THEME: DARK — pure black & white forced dark mode
+     =========================================================== */
+  :root[data-theme="dark"] {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --status-bar: 0 0% 0%;
+    --status-bar-foreground: 0 0% 100%;
+    --nav-background: 0 0% 0%;
+    --nav-foreground: 0 0% 85%;
+    --nav-hover: 0 0% 100%;
+    --nav-glass: 0 0% 0% / 0.55;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --primary-hover: 0 0% 90%;
+    --secondary: 0 0% 10%;
+    --secondary-foreground: 0 0% 90%;
+    --muted: 0 0% 10%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 12%;
+    --accent-foreground: 0 0% 100%;
+    --border: 0 0% 18%;
+    --input: 0 0% 18%;
+    --ring: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+  }
+
+  /* ===========================================================
+     THEME: CYAN-CRIMSON — darker, with purple pop accents
+     Base #1a1f2e, cyan #08D9D6, crimson #FF2E63, purple #8b5cf6
      =========================================================== */
   :root[data-theme="cyan-crimson"] {
-    --background: 220 18% 17%;          /* #252A34 */
-    --foreground: 0 0% 92%;             /* #EAEAEA */
+    --background: 222 28% 11%;          /* darker than #252A34 */
+    --foreground: 0 0% 94%;
 
-    --status-bar: 220 20% 12%;
-    --status-bar-foreground: 0 0% 92%;
+    --status-bar: 222 30% 7%;
+    --status-bar-foreground: 0 0% 94%;
 
-    --nav-background: 220 18% 17%;      /* match bg */
-    --nav-foreground: 0 0% 88%;
-    --nav-hover: 179 93% 44%;           /* #08D9D6 */
+    --nav-background: 222 28% 11%;
+    --nav-foreground: 0 0% 90%;
+    --nav-hover: 179 93% 50%;
+    --nav-glass: 222 30% 7% / 0.6;
 
     --primary: 179 93% 44%;             /* cyan #08D9D6 */
-    --primary-foreground: 220 18% 12%;
-    --primary-hover: 179 93% 50%;
+    --primary-foreground: 222 30% 8%;
+    --primary-hover: 179 93% 52%;
 
-    --secondary: 220 18% 22%;
-    --secondary-foreground: 0 0% 92%;
+    --secondary: 258 60% 22%;           /* deep purple */
+    --secondary-foreground: 0 0% 96%;
 
-    --muted: 220 16% 24%;
-    --muted-foreground: 0 0% 70%;
+    --muted: 222 22% 18%;
+    --muted-foreground: 0 0% 72%;
 
-    --accent: 344 100% 59%;             /* crimson #FF2E63 */
+    --accent: 258 90% 66%;              /* purple pop #8b5cf6 */
     --accent-foreground: 0 0% 100%;
 
-    --border: 220 14% 28%;
-    --input: 220 14% 28%;
-    --ring: 179 93% 44%;
+    --border: 222 22% 22%;
+    --input: 222 22% 22%;
+    --ring: 258 90% 66%;
 
-    --card: 220 18% 19%;
-    --card-foreground: 0 0% 92%;
+    --card: 222 26% 14%;
+    --card-foreground: 0 0% 94%;
 
-    --popover: 220 18% 19%;
-    --popover-foreground: 0 0% 92%;
+    --popover: 222 26% 14%;
+    --popover-foreground: 0 0% 94%;
 
-    --destructive: 344 100% 59%;
+    --destructive: 344 100% 59%;        /* crimson #FF2E63 */
     --destructive-foreground: 0 0% 100%;
   }
 
   /* ===========================================================
      THEME: TEAL-SLATE — #222831 / #393E46 / #00ADB5 / #EEEEEE
-     Calm slate palette with teal accent.
      =========================================================== */
   :root[data-theme="teal-slate"] {
-    --background: 213 18% 16%;          /* #222831 */
-    --foreground: 0 0% 93%;             /* #EEEEEE */
+    --background: 213 18% 16%;
+    --foreground: 0 0% 93%;
 
     --status-bar: 213 20% 12%;
     --status-bar-foreground: 0 0% 93%;
 
-    --nav-background: 213 18% 16%;      /* match bg */
+    --nav-background: 213 18% 16%;
     --nav-foreground: 0 0% 88%;
-    --nav-hover: 184 100% 35%;          /* #00ADB5 */
+    --nav-hover: 184 100% 35%;
+    --nav-glass: 213 20% 12% / 0.6;
 
-    --primary: 184 100% 35%;            /* teal #00ADB5 */
+    --primary: 184 100% 35%;
     --primary-foreground: 213 18% 12%;
     --primary-hover: 184 100% 40%;
 
-    --secondary: 215 12% 25%;           /* #393E46 */
+    --secondary: 215 12% 25%;
     --secondary-foreground: 0 0% 93%;
 
     --muted: 215 12% 25%;
@@ -189,7 +225,7 @@
     --destructive-foreground: 0 0% 100%;
   }
 
-  /* Keep .dark utility working — mirror auto dark (pure black) */
+  /* Keep .dark utility working — mirror Dark theme */
   .dark {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
@@ -198,6 +234,7 @@
     --nav-background: 0 0% 0%;
     --nav-foreground: 0 0% 85%;
     --nav-hover: 0 0% 100%;
+    --nav-glass: 0 0% 0% / 0.55;
     --primary: 0 0% 100%;
     --primary-foreground: 0 0% 0%;
     --primary-hover: 0 0% 90%;

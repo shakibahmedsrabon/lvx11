@@ -4,7 +4,8 @@ import { useState, useEffect, useRef } from "react";
 
 const OPTIONS: { value: Theme; label: string; Icon: typeof Sun }[] = [
   { value: "auto", label: "System", Icon: Sun },
-  { value: "cyan-crimson", label: "Cyan Crimson", Icon: Palette },
+  { value: "dark", label: "Dark", Icon: Moon },
+  { value: "cyan-crimson", label: "Cyan Purple", Icon: Palette },
   { value: "teal-slate", label: "Teal Slate", Icon: Waves },
 ];
 
