@@ -1,4 +1,4 @@
-import { ArrowRight, X } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import AppLink from "@/lib/navigation/AppLink";
@@ -15,11 +15,10 @@ const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
-  const [offCanvasType, setOffCanvasType] = useState<'favorites' | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
   
-  const { cartItems, favorites, updateQuantity, clearCart, toggleFavorite, totalItems } = useCart();
+  const { cartItems, updateQuantity, clearCart, totalItems } = useCart();
 
   // Merge DB categories into navItems for "Shop" (names + latest 2 images)
   const dynamicNavItems = useMemo(() => {
@@ -126,20 +125,6 @@ const Navigation = () => {
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
-          </button>
-          <button 
-            className="hidden lg:block p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
-            aria-label="Favorites"
-            onClick={() => setOffCanvasType('favorites')}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-            </svg>
-            {favorites.length > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-foreground text-background text-[0.6rem] rounded-full flex items-center justify-center">
-                {favorites.length}
-              </span>
-            )}
           </button>
           <button 
             className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
@@ -318,69 +303,7 @@ const Navigation = () => {
         cartItems={cartItems}
         updateQuantity={updateQuantity}
         clearCart={clearCart}
-        onViewFavorites={() => {
-          setIsShoppingBagOpen(false);
-          setOffCanvasType('favorites');
-        }}
       />
-      
-      {/* Favorites Off-canvas overlay */}
-      {offCanvasType === 'favorites' && (
-        <div className="fixed inset-0 z-50 h-screen">
-          <div 
-            className="absolute inset-0 bg-black/50 h-screen"
-            onClick={() => setOffCanvasType(null)}
-          />
-          <div className="absolute right-0 top-0 h-screen w-96 bg-background border-l border-border animate-slide-in-right flex flex-col">
-            <div className="flex items-center justify-between p-6 border-b border-border">
-              <h2 className="text-lg font-light text-foreground">Your Favorites</h2>
-              <button
-                onClick={() => setOffCanvasType(null)}
-                className="p-2 text-foreground hover:text-muted-foreground transition-colors"
-                aria-label="Close"
-              >
-                <X size={20} />
-              </button>
-            </div>
-            <div className="flex-1 flex flex-col p-6">
-              {favorites.length === 0 ? (
-                <div className="flex-1 flex items-center justify-center">
-                  <p className="text-muted-foreground text-sm text-center">
-                    You haven't added any favorites yet.<br />
-                    Browse our collection and click the heart icon to save items you love.
-                  </p>
-                </div>
-              ) : (
-                <div className="flex-1 overflow-y-auto space-y-6">
-                  {favorites.map((item) => (
-                    <div key={item.id} className="flex gap-4">
-                      <div className="w-20 h-20 bg-muted/10 rounded-lg overflow-hidden">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
-                      </div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start">
-                          <div>
-                            <p className="text-sm font-light text-muted-foreground">{item.category}</p>
-                            <h3 className="text-sm font-medium text-foreground">{item.name}</h3>
-                          </div>
-                          <button
-                            onClick={() => toggleFavorite(item)}
-                            className="p-1 text-foreground hover:text-muted-foreground transition-colors"
-                            aria-label="Remove from favorites"
-                          >
-                            <X size={16} />
-                          </button>
-                        </div>
-                        <p className="text-sm font-light text-foreground mt-1">{item.price}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </nav>
   );
 };
