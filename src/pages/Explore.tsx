@@ -177,6 +177,11 @@ const Explore = () => {
     }
   }, [routeCategory, categoryNames]);
 
+  // Reset to page 1 on filter / search change (must be before any early return)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, searchQuery, pageSize]);
+
   // If product detail route, render inline detail view
   if (productId) {
     return (
@@ -238,10 +243,6 @@ const Explore = () => {
     (safePage - 1) * pageSize,
     safePage * pageSize
   );
-
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filters, searchQuery, pageSize]);
 
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
