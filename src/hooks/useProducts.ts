@@ -151,11 +151,17 @@ export const useProducts = () => {
   return { products, loading };
 };
 
-/** Find a single product by ID or slug */
+/** Find a single product by ID or slug (supports `slug`, numeric id, or `slug-id`) */
 export const useProduct = (idOrSlug: string | undefined) => {
   const { products, loading } = useProducts();
+  // Try direct slug, numeric id, or trailing -<id> suffix (e.g. "tennis-bracelet-12")
+  const trailingIdMatch = idOrSlug?.match(/-(\d+)$/);
+  const trailingId = trailingIdMatch ? Number(trailingIdMatch[1]) : NaN;
   const product = products.find(
-    (p) => p.slug === idOrSlug || p.id === Number(idOrSlug)
+    (p) =>
+      p.slug === idOrSlug ||
+      p.id === Number(idOrSlug) ||
+      p.id === trailingId
   );
   return { product, loading };
 };
