@@ -36,6 +36,20 @@ const cleanContactDisplay = (value: string): string => {
     .trim();
 };
 
+// Priority order for contact methods — lower number = higher priority
+const contactPriority = (link: string | null): number => {
+  const l = (link || '').toLowerCase();
+  if (l.startsWith('tel:')) return 0;
+  if (l.includes('wa.me') || l.includes('whatsapp')) return 1;
+  if (l.startsWith('mailto:')) return 2;
+  return 3;
+};
+
+const byName = <T extends { name?: string | null; Name?: string | null }>(a: T, b: T) =>
+  ((a.name ?? a.Name) || '').localeCompare((b.name ?? b.Name) || '', undefined, {
+    sensitivity: 'base',
+  });
+
 const Footer = () => {
   const { config: siteConfig } = useSiteConfig();
   const [contacts, setContacts] = useState<Contact[]>([]);
@@ -46,15 +60,26 @@ const Footer = () => {
   useEffect(() => {
     const fetchAll = async () => {
       const [contactsRes, channelsRes, groupsRes, socialsRes] = await Promise.all([
-        (supabase as any).from('Connects').select('*'),
-        (supabase as any).from('Channels').select('*'),
-        (supabase as any).from('Groups').select('*'),
-        (supabase as any).from('Social Platforms').select('*'),
+        (supabase as any).from('Connects').select('*').order('id'),
+        (supabase as any).from('Channels').select('*').order('id'),
+        (supabase as any).from('Groups').select('*').order('id'),
+        (supabase as any).from('Social Platforms').select('*').order('id'),
       ]);
-      if (!contactsRes.error && contactsRes.data) setContacts(contactsRes.data);
-      if (!channelsRes.error && channelsRes.data) setChannels(channelsRes.data);
-      if (!groupsRes.error && groupsRes.data) setGroups(groupsRes.data);
-      if (!socialsRes.error && socialsRes.data) setSocials(socialsRes.data);
+      if (!contactsRes.error && contactsRes.data) {
+        const sorted = [...contactsRes.data].sort(
+          (a: Contact, b: Contact) => contactPriority(a.link) - contactPriority(b.link),
+        );
+        setContacts(sorted);
+      }
+      if (!channelsRes.error && channelsRes.data) {
+        setChannels([...channelsRes.data].sort(byName));
+      }
+      if (!groupsRes.error && groupsRes.data) {
+        setGroups([...groupsRes.data].sort(byName));
+      }
+      if (!socialsRes.error && socialsRes.data) {
+        setSocials([...socialsRes.data].sort(byName));
+      }
     };
     fetchAll();
   }, []);
