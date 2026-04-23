@@ -131,7 +131,7 @@ const HeroSlider = () => {
                 src={slide.image}
                 alt={slide.alt}
                 loading={i === 0 ? "eager" : "lazy"}
-                fetchPriority={i === 0 ? "high" : "low"}
+                
                 decoding="async"
                 onLoad={() =>
                   setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
