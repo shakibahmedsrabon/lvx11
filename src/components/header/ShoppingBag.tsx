@@ -209,7 +209,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart, on
                   onClick={onClose}
                   asChild
                 >
-                  <AppLink href="/category/shop">
+                  <AppLink href="/explore">
                     Continue Shopping
                   </AppLink>
                 </Button>

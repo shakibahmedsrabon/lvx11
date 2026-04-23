@@ -1,28 +1,145 @@
 import { useState, useEffect, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useParams, useNavigate } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import SEOHead from "../components/SEOHead";
 import CategoryHeader from "../components/category/CategoryHeader";
 import FilterSortBar from "../components/category/FilterSortBar";
 import ProductGrid from "../components/category/ProductGrid";
 import SliderPagination from "../components/category/SliderPagination";
-import { useProducts, type Product } from "@/hooks/useProducts";
+import ProductImageGallery from "../components/product/ProductImageGallery";
+import ProductInfo from "../components/product/ProductInfo";
+import ProductDescription from "../components/product/ProductDescription";
+import ProductCarousel from "../components/content/ProductCarousel";
+import AppLink from "@/lib/navigation/AppLink";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { useProducts, useProduct } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
-import { Search } from "lucide-react";
-import type { ActiveFilters } from "@/pages/Category";
+import { Search, ArrowLeft } from "lucide-react";
+import type { ActiveFilters } from "@/components/category/FilterSortBar";
 
 const ITEMS_PER_PAGE_MOBILE = 8;
 const ITEMS_PER_PAGE_DESKTOP = 12;
 
+const slugify = (s: string) => s.toLowerCase().replace(/\s+/g, "-");
+
+/* ---------- Inline product detail view ---------- */
+const InlineProductDetail = ({ productId }: { productId: string }) => {
+  const navigate = useNavigate();
+  const { product, loading } = useProduct(productId);
+
+  if (loading) {
+    return (
+      <div className="w-full px-6 py-12 text-center text-muted-foreground">
+        Loading...
+      </div>
+    );
+  }
+
+  if (!product) {
+    return (
+      <div className="w-full px-6 py-12 text-center text-muted-foreground">
+        Product not found.
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <SEOHead
+        title={`${product.title} - Linea Jewelry`}
+        description={`Discover the ${product.title} from Linea.`}
+        type="product"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "Product",
+          name: product.title,
+          category: product.category,
+          offers: {
+            "@type": "Offer",
+            priceCurrency: "BDT",
+            price: String(product.basePrice),
+            availability: product.stock
+              ? "https://schema.org/InStock"
+              : "https://schema.org/OutOfStock",
+          },
+        }}
+      />
+
+      <section className="w-full px-6 mb-6">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <AppLink href="/">Home</AppLink>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <AppLink href="/explore">Explore</AppLink>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <AppLink href={`/explore/${slugify(product.category)}`}>
+                  {product.category}
+                </AppLink>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{product.title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
+        <button
+          onClick={() => navigate(-1)}
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back
+        </button>
+      </section>
+
+      <section className="w-full px-6" aria-label="Product details">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+          <ProductImageGallery product={product} />
+          <div className="lg:pl-12 mt-8 lg:mt-0 lg:sticky lg:top-6 lg:h-fit">
+            <ProductInfo product={product} />
+            <ProductDescription />
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full mt-16 lg:mt-24" aria-label="Recommended products">
+        <div className="mb-4 px-6">
+          <h2 className="text-sm font-light text-foreground">You might also like</h2>
+        </div>
+        <ProductCarousel />
+      </section>
+    </>
+  );
+};
+
+/* ---------- Main Explore page ---------- */
 const Explore = () => {
+  const { category: routeCategory, productId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialQuery = searchParams.get("q") || "";
-  const initialCategory = searchParams.get("cat") || "";
 
   const [searchQuery, setSearchQuery] = useState(initialQuery);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [filters, setFilters] = useState<ActiveFilters>({
-    categories: initialCategory ? [initialCategory] : [],
+    categories: [],
     priceRange: null,
     sortBy: "featured",
   });
@@ -47,11 +164,37 @@ const Explore = () => {
     return [...new Set(products.map((p) => p.category))].filter(Boolean);
   }, [dbCategories, products]);
 
-  // Filter + sort products (same logic as Category page)
-  const filteredProducts = useMemo(() => {
+  // Sync route category to filters
+  useEffect(() => {
+    if (routeCategory) {
+      const decoded = decodeURIComponent(routeCategory);
+      const matched = categoryNames.find(
+        (c) => slugify(c) === decoded.toLowerCase()
+      );
+      setFilters((f) => ({ ...f, categories: matched ? [matched] : [decoded] }));
+    } else {
+      setFilters((f) => ({ ...f, categories: [] }));
+    }
+  }, [routeCategory, categoryNames]);
+
+  // Reset to page 1 on filter / search change (must be before any early return)
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, searchQuery, pageSize]);
+
+  // If product detail route, render inline detail view
+  if (productId) {
+    return (
+      <MainLayout>
+        <InlineProductDetail productId={productId} />
+      </MainLayout>
+    );
+  }
+
+  // Filter + sort products
+  const filteredProducts = (() => {
     let result = [...products];
 
-    // Search
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
@@ -62,7 +205,6 @@ const Explore = () => {
       );
     }
 
-    // Category filter
     if (filters.categories.length > 0) {
       result = result.filter((p) =>
         filters.categories.some(
@@ -71,7 +213,6 @@ const Explore = () => {
       );
     }
 
-    // Price range filter
     if (filters.priceRange) {
       result = result.filter((p) => {
         const price = p.basePrice;
@@ -85,7 +226,6 @@ const Explore = () => {
       });
     }
 
-    // Sorting
     switch (filters.sortBy) {
       case "price-low": result.sort((a, b) => a.basePrice - b.basePrice); break;
       case "price-high": result.sort((a, b) => b.basePrice - a.basePrice); break;
@@ -94,22 +234,16 @@ const Explore = () => {
     }
 
     return result;
-  }, [products, searchQuery, filters]);
+  })();
 
   // Pagination
   const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
   const safePage = Math.min(currentPage, totalPages);
-  const visibleProducts = useMemo(
-    () => filteredProducts.slice((safePage - 1) * pageSize, safePage * pageSize),
-    [filteredProducts, safePage, pageSize]
+  const visibleProducts = filteredProducts.slice(
+    (safePage - 1) * pageSize,
+    safePage * pageSize
   );
 
-  // Reset to page 1 on filter / search change
-  useEffect(() => {
-    setCurrentPage(1);
-  }, [filters, searchQuery, pageSize]);
-
-  // Sync URL params
   const handleSearchChange = (value: string) => {
     setSearchQuery(value);
     const params = new URLSearchParams(searchParams);
@@ -118,25 +252,19 @@ const Explore = () => {
     setSearchParams(params, { replace: true });
   };
 
-  const handleCategoryPill = (cat: string) => {
-    const isActive = filters.categories.length === 1 && filters.categories[0].toLowerCase() === cat.toLowerCase();
-    const newCats = isActive ? [] : [cat];
-    setFilters({ ...filters, categories: newCats });
-    const params = new URLSearchParams(searchParams);
-    if (newCats.length > 0) params.set("cat", newCats[0]);
-    else params.delete("cat");
-    setSearchParams(params, { replace: true });
-  };
+  const headingCategory = filters.categories[0];
+  const headingLabel = headingCategory
+    ? headingCategory.charAt(0).toUpperCase() + headingCategory.slice(1)
+    : "Explore";
 
   return (
     <MainLayout>
       <SEOHead
-        title="Explore - E Product Hub BD"
+        title={`${headingLabel} - E Product Hub BD`}
         description="Browse all digital subscriptions, streaming services, and AI tools."
       />
 
-      {/* Breadcrumb */}
-      <CategoryHeader category="Explore" />
+      <CategoryHeader category={headingLabel} />
 
       {/* Search bar */}
       <div className="w-full px-6 mb-4">
@@ -162,43 +290,40 @@ const Explore = () => {
         </div>
       </div>
 
-      {/* Category pills */}
+      {/* Category pills — navigate to /explore or /explore/:category */}
       {categoryNames.length > 0 && (
         <div className="w-full px-6 mb-4">
           <div className="flex flex-wrap gap-2">
-            <button
-              onClick={() => {
-                setFilters({ ...filters, categories: [] });
-                const params = new URLSearchParams(searchParams);
-                params.delete("cat");
-                setSearchParams(params, { replace: true });
-              }}
+            <AppLink
+              href="/explore"
               className={`text-sm font-light py-1.5 px-4 rounded-full border transition-all duration-200 ${
-                filters.categories.length === 0
+                !routeCategory
                   ? "bg-foreground text-background border-foreground"
                   : "bg-transparent text-foreground border-border hover:border-foreground"
               }`}
             >
               All
-            </button>
-            {categoryNames.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategoryPill(cat)}
-                className={`text-sm font-light py-1.5 px-4 rounded-full border transition-all duration-200 ${
-                  filters.categories.some((c) => c.toLowerCase() === cat.toLowerCase())
-                    ? "bg-foreground text-background border-foreground"
-                    : "bg-transparent text-foreground border-border hover:border-foreground"
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+            </AppLink>
+            {categoryNames.map((cat) => {
+              const active = routeCategory && decodeURIComponent(routeCategory).toLowerCase() === slugify(cat);
+              return (
+                <AppLink
+                  key={cat}
+                  href={`/explore/${slugify(cat)}`}
+                  className={`text-sm font-light py-1.5 px-4 rounded-full border transition-all duration-200 ${
+                    active
+                      ? "bg-foreground text-background border-foreground"
+                      : "bg-transparent text-foreground border-border hover:border-foreground"
+                  }`}
+                >
+                  {cat}
+                </AppLink>
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Same Filter/Sort bar as Category page */}
       <FilterSortBar
         filtersOpen={filtersOpen}
         setFiltersOpen={setFiltersOpen}
@@ -207,10 +332,8 @@ const Explore = () => {
         setFilters={setFilters}
       />
 
-      {/* Product grid (paginated) */}
       <ProductGrid products={visibleProducts} loading={loading} />
 
-      {/* Samsung-style slider pagination */}
       {!loading && filteredProducts.length > 0 && (
         <SliderPagination
           currentPage={safePage}

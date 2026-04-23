@@ -32,7 +32,7 @@ export const buildWhatsAppUrl = (items: WhatsAppItem[]) => {
     const lineTotal = (item.unitPrice || 0) * qty;
     grandTotal += lineTotal;
 
-    const productUrl = item.slug ? `${SITE_URL}/product/${item.slug}` : "";
+    const productUrl = item.slug ? `${SITE_URL}/explore/product/${item.slug}` : "";
     message += `${idx + 1}. ${item.name}\n`;
     message += `   Duration: ${durLabel} · ${item.price}/ea\n`;
     if (qty > 1) message += `   Qty: ${qty}\n`;

@@ -141,7 +141,7 @@ const FilterSortBar = ({
                       Category
                     </h3>
                     <div className="space-y-3">
-                      {/* Static "All" option — clears category filters and routes to /shop */}
+                      {/* Static "All" option — clears category filters and routes to /explore */}
                       <div className="flex items-center space-x-3">
                         <Checkbox
                           id="cat-all"
@@ -151,7 +151,7 @@ const FilterSortBar = ({
                             setDraftPrice(null);
                             setFilters({ ...filters, categories: [], priceRange: null });
                             setFiltersOpen(false);
-                            navigate("/shop");
+                            navigate("/explore");
                           }}
                           className="border-border data-[state=checked]:bg-foreground data-[state=checked]:border-foreground"
                         />
