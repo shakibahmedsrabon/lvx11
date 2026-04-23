@@ -71,44 +71,123 @@
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  .dark {
-    --background: 0 0% 9%;
-    --foreground: 0 0% 98%;
-    
-    --status-bar: 0 0% 0%;
-    --status-bar-foreground: 0 0% 100%;
-    
-    --nav-background: 0 0% 9%;
-    --nav-foreground: 0 0% 80%;
-    --nav-hover: 0 0% 95%;
-    
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --primary-hover: 0 0% 90%;
-    
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 80%;
-    
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 60%;
-    
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 98%;
-    
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
-    --ring: 0 0% 98%;
-    
-    --card: 0 0% 9%;
-    --card-foreground: 0 0% 98%;
-    
-    --popover: 0 0% 9%;
-    --popover-foreground: 0 0% 98%;
-    
-    --destructive: 0 62% 50%;
+  /* ===========================================================
+     THEME: AUTO (default) — follows OS prefers-color-scheme.
+     This block is the light side; the @media query below flips
+     to dark automatically when data-theme="auto".
+     =========================================================== */
+  @media (prefers-color-scheme: dark) {
+    :root[data-theme="auto"] {
+      --background: 0 0% 9%;
+      --foreground: 0 0% 98%;
+      --status-bar: 0 0% 0%;
+      --status-bar-foreground: 0 0% 100%;
+      --nav-background: 0 0% 9%;
+      --nav-foreground: 0 0% 80%;
+      --nav-hover: 0 0% 95%;
+      --primary: 0 0% 98%;
+      --primary-foreground: 0 0% 9%;
+      --primary-hover: 0 0% 90%;
+      --secondary: 0 0% 15%;
+      --secondary-foreground: 0 0% 80%;
+      --muted: 0 0% 15%;
+      --muted-foreground: 0 0% 60%;
+      --accent: 0 0% 15%;
+      --accent-foreground: 0 0% 98%;
+      --border: 0 0% 20%;
+      --input: 0 0% 20%;
+      --ring: 0 0% 98%;
+      --card: 0 0% 9%;
+      --card-foreground: 0 0% 98%;
+      --popover: 0 0% 9%;
+      --popover-foreground: 0 0% 98%;
+      --destructive: 0 62% 50%;
+      --destructive-foreground: 0 0% 98%;
+    }
+  }
+
+  /* ===========================================================
+     THEME: COLORFUL — pink + purple light playful palette
+     =========================================================== */
+  :root[data-theme="colorful"] {
+    --background: 312 100% 98%;
+    --foreground: 280 60% 15%;
+
+    --status-bar: 280 70% 25%;
+    --status-bar-foreground: 312 100% 98%;
+
+    --nav-background: 312 100% 99%;
+    --nav-foreground: 280 50% 25%;
+    --nav-hover: 290 80% 45%;
+
+    --primary: 290 80% 50%;
+    --primary-foreground: 312 100% 98%;
+    --primary-hover: 290 80% 42%;
+
+    --secondary: 320 80% 94%;
+    --secondary-foreground: 280 60% 25%;
+
+    --muted: 315 50% 95%;
+    --muted-foreground: 280 25% 45%;
+
+    --accent: 330 90% 92%;
+    --accent-foreground: 290 80% 30%;
+
+    --border: 310 50% 88%;
+    --input: 310 50% 88%;
+    --ring: 290 80% 50%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 280 60% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 280 60% 15%;
+
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
   }
-}
+
+  /* ===========================================================
+     THEME: PURPLE DARK — deep purple immersive dark palette
+     =========================================================== */
+  :root[data-theme="purple-dark"],
+  .dark {
+    --background: 270 50% 8%;
+    --foreground: 290 30% 95%;
+
+    --status-bar: 270 60% 5%;
+    --status-bar-foreground: 290 30% 95%;
+
+    --nav-background: 270 50% 10%;
+    --nav-foreground: 290 25% 85%;
+    --nav-hover: 290 90% 75%;
+
+    --primary: 285 90% 70%;
+    --primary-foreground: 270 50% 8%;
+    --primary-hover: 285 90% 78%;
+
+    --secondary: 270 40% 18%;
+    --secondary-foreground: 290 30% 92%;
+
+    --muted: 270 35% 16%;
+    --muted-foreground: 290 20% 65%;
+
+    --accent: 290 50% 22%;
+    --accent-foreground: 290 90% 88%;
+
+    --border: 270 40% 22%;
+    --input: 270 40% 22%;
+    --ring: 285 90% 70%;
+
+    --card: 270 50% 11%;
+    --card-foreground: 290 30% 95%;
+
+    --popover: 270 50% 11%;
+    --popover-foreground: 290 30% 95%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 98%;
+  }
 
 @layer base {
   * {
