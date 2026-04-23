@@ -271,32 +271,103 @@ const Navigation = () => {
                   />
                 </div>
               </form>
-              <div>
-                <h3 className="text-nav-foreground text-sm font-light mb-4">Browse Categories</h3>
-                <div className="flex flex-wrap gap-3">
-                  {(dbCategories.length > 0 ? dbCategories.map(c => c.name) : popularSearches).map((item, index) => (
-                    <button
-                      key={index}
-                      className="text-nav-foreground hover:text-nav-hover text-sm font-light py-2 px-4 border border-border rounded-full transition-colors duration-200 hover:border-nav-hover"
-                      onClick={() => {
-                        navigate(`/explore?cat=${encodeURIComponent(item)}`);
-                        setIsSearchOpen(false);
-                      }}
-                    >
-                      {item}
-                    </button>
-                  ))}
+              {/* Live results when typing */}
+              {debouncedQuery.length >= 2 ? (
+                <div className="space-y-6">
+                  {suggestions.length > 0 && (
+                    <div>
+                      <h3 className="text-nav-foreground/60 text-xs uppercase tracking-wider font-light mb-3">Suggestions</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {suggestions.map((s) => (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => setSearchValue(s)}
+                            className="text-nav-foreground hover:text-nav-hover text-sm font-light py-1.5 px-3 border border-border rounded-full transition-colors duration-200 hover:border-nav-hover"
+                          >
+                            {s}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  <div>
+                    <h3 className="text-nav-foreground/60 text-xs uppercase tracking-wider font-light mb-3">
+                      Products {productMatches.length > 0 && `(${productMatches.length})`}
+                    </h3>
+                    {productMatches.length > 0 ? (
+                      <ul className="divide-y divide-border">
+                        {productMatches.map((p) => (
+                          <li key={p.id}>
+                            <button
+                              type="button"
+                              onClick={() => goToProduct(p)}
+                              className="w-full flex items-center gap-4 py-3 text-left hover:bg-nav-hover/5 transition-colors duration-150 -mx-2 px-2 rounded"
+                            >
+                              {p.image && (
+                                <img
+                                  src={p.image}
+                                  alt={p.title}
+                                  loading="lazy"
+                                  className="w-12 h-12 object-cover rounded"
+                                />
+                              )}
+                              <div className="flex-1 min-w-0">
+                                <div className="text-nav-foreground text-sm font-light truncate">{p.title}</div>
+                                <div className="text-nav-foreground/60 text-xs truncate">{p.category}</div>
+                              </div>
+                              <div className="text-nav-foreground text-sm font-light shrink-0">
+                                {formatPrice(p.basePrice)}
+                              </div>
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-nav-foreground/60 text-sm font-light">No products match "{debouncedQuery}".</p>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      navigate(`/explore?q=${encodeURIComponent(debouncedQuery)}`);
+                      setIsSearchOpen(false);
+                      setSearchValue("");
+                    }}
+                    className="text-nav-foreground hover:text-nav-hover text-sm font-light underline underline-offset-4 transition-colors duration-200"
+                  >
+                    See all results for "{debouncedQuery}" →
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    navigate("/explore");
-                    setIsSearchOpen(false);
-                  }}
-                  className="mt-6 text-nav-foreground hover:text-nav-hover text-sm font-light underline underline-offset-4 transition-colors duration-200"
-                >
-                  View all products →
-                </button>
-              </div>
+              ) : (
+                <div>
+                  <h3 className="text-nav-foreground text-sm font-light mb-4">Browse Categories</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {(dbCategories.length > 0 ? dbCategories.map(c => c.name) : popularSearches).map((item, index) => (
+                      <button
+                        key={index}
+                        className="text-nav-foreground hover:text-nav-hover text-sm font-light py-2 px-4 border border-border rounded-full transition-colors duration-200 hover:border-nav-hover"
+                        onClick={() => {
+                          navigate(`/explore?cat=${encodeURIComponent(item)}`);
+                          setIsSearchOpen(false);
+                        }}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    onClick={() => {
+                      navigate("/explore");
+                      setIsSearchOpen(false);
+                    }}
+                    className="mt-6 text-nav-foreground hover:text-nav-hover text-sm font-light underline underline-offset-4 transition-colors duration-200"
+                  >
+                    View all products →
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
