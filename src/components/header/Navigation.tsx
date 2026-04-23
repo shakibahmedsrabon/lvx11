@@ -198,7 +198,7 @@ const Navigation = () => {
                       if (image.label === "Rings") linkTo = "/explore/rings";
                       else if (image.label === "Earrings") linkTo = "/explore/earrings";
                     } else if (activeDropdown === "New in") {
-                      linkTo = "/explore/new-in";
+                      linkTo = `/explore/${image.label.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
                     } else if (activeDropdown === "About") {
                       linkTo = "/about/our-story";
                     }
