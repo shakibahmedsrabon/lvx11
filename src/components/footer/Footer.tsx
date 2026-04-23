@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import AppLink from "@/lib/navigation/AppLink";
-import { footerLinks } from "@/data/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 import NewsletterSubscribe from "./NewsletterSubscribe";
@@ -23,6 +22,12 @@ interface Group {
   link: string | null;
 }
 
+interface SocialPlatform {
+  id: number;
+  Name: string | null;
+  Link: string | null;
+}
+
 const cleanContactDisplay = (value: string): string => {
   return value
     .replace(/^mailto:/i, '')
@@ -36,17 +41,20 @@ const Footer = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
+  const [socials, setSocials] = useState<SocialPlatform[]>([]);
 
   useEffect(() => {
     const fetchAll = async () => {
-      const [contactsRes, channelsRes, groupsRes] = await Promise.all([
+      const [contactsRes, channelsRes, groupsRes, socialsRes] = await Promise.all([
         (supabase as any).from('Connects').select('*'),
         (supabase as any).from('Channels').select('*'),
         (supabase as any).from('Groups').select('*'),
+        (supabase as any).from('Social Platforms').select('*'),
       ]);
       if (!contactsRes.error && contactsRes.data) setContacts(contactsRes.data);
       if (!channelsRes.error && channelsRes.data) setChannels(channelsRes.data);
       if (!groupsRes.error && groupsRes.data) setGroups(groupsRes.data);
+      if (!socialsRes.error && socialsRes.data) setSocials(socialsRes.data);
     };
     fetchAll();
   }, []);
@@ -142,15 +150,16 @@ const Footer = () => {
             <div>
               <h4 className="text-sm font-normal mb-4">Social Platforms</h4>
               <ul className="space-y-2">
-                {footerLinks.connect.map((link) => (
-                  <li key={link.href}>
-                    <AppLink
-                      href={link.href}
-                      {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                {socials.map((s) => (
+                  <li key={s.id}>
+                    <a
+                      href={s.Link || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {link.label}
-                    </AppLink>
+                      {s.Name}
+                    </a>
                   </li>
                 ))}
               </ul>
