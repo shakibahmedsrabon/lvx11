@@ -8,8 +8,6 @@ interface SliderPaginationProps {
 }
 
 const SliderPagination = ({ currentPage, totalPages, onPageChange }: SliderPaginationProps) => {
-  if (totalPages <= 1) return null;
-
   // Build compact page list with ellipsis (Samsung-style)
   const pages = useMemo(() => {
     const items: (number | "...")[] = [];
@@ -28,6 +26,8 @@ const SliderPagination = ({ currentPage, totalPages, onPageChange }: SliderPagin
     }
     return items;
   }, [currentPage, totalPages]);
+
+  if (totalPages <= 1) return null;
 
   const go = (p: number) => {
     if (p < 1 || p > totalPages || p === currentPage) return;
