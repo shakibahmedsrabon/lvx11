@@ -2,17 +2,13 @@ import { useState, useMemo } from "react";
 import { useParams, useSearchParams } from "@/lib/navigation";
 import MainLayout from "../layouts/MainLayout";
 import CategoryHeader from "../components/category/CategoryHeader";
-import FilterSortBar from "../components/category/FilterSortBar";
+import FilterSortBar, { type ActiveFilters } from "../components/category/FilterSortBar";
 import ProductGrid from "../components/category/ProductGrid";
 import SEOHead from "../components/SEOHead";
 import { getRouteMeta } from "@/config/routes";
 import { useProductsByCategory, type Product } from "@/hooks/useProducts";
 
-export interface ActiveFilters {
-  categories: string[];
-  priceRange: string | null;
-  sortBy: string;
-}
+export type { ActiveFilters };
 
 const Category = () => {
   const { category } = useParams();

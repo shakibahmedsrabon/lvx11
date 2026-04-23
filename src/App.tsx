@@ -8,6 +8,7 @@ import SkipToContent from "./components/SkipToContent";
 import { CartProvider } from "./contexts/CartContext";
 import Index from "./pages/Index";
 import Category from "./pages/Category";
+import Shop from "./pages/Shop";
 import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
 import Explore from "./pages/Explore";
@@ -35,6 +36,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/category/:category" element={<Category />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/shop/:category" element={<Shop />} />
             <Route path="/product/:productId" element={<ProductDetail />} />
             <Route path="/explore" element={<Explore />} />
             <Route path="/checkout" element={<Checkout />} />
