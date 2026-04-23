@@ -50,7 +50,7 @@ const HeroSlider = () => {
         .order("id", { ascending: true });
 
       if (!mounted || error || !data) return;
-      const dbSlides: Slide[] = (data as { id: number; images: string | null }[])
+      const dbSlides: Slide[] = (data as unknown as { id: number; images: string | null }[])
         .filter((r) => r.images && r.images.trim().length > 0)
         .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }));
 
