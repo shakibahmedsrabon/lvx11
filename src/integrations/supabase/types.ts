@@ -161,6 +161,33 @@ export type Database = {
         }
         Relationships: []
       }
+      Reviews: {
+        Row: {
+          created_at: string
+          description: string | null
+          FullName: string | null
+          id: number
+          profile: string | null
+          star: number | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          FullName?: string | null
+          id?: number
+          profile?: string | null
+          star?: number | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          FullName?: string | null
+          id?: number
+          profile?: string | null
+          star?: number | null
+        }
+        Relationships: []
+      }
       "Site config": {
         Row: {
           description: string | null
