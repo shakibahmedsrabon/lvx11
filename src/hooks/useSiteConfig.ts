@@ -19,7 +19,7 @@ const fetchConfig = (): Promise<SiteConfigData | null> => {
 
   fetchPromise = (supabase as any)
     .from("Site config")
-    .select("*")
+    .select("title, name, slong, description, logo")
     .limit(1)
     .single()
     .then(({ data, error }: any) => {
