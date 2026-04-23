@@ -89,6 +89,24 @@ export type Database = {
         }
         Relationships: []
       }
+      Groups: {
+        Row: {
+          id: number
+          link: string | null
+          name: string | null
+        }
+        Insert: {
+          id?: number
+          link?: string | null
+          name?: string | null
+        }
+        Update: {
+          id?: number
+          link?: string | null
+          name?: string | null
+        }
+        Relationships: []
+      }
       Products: {
         Row: {
           category: string
