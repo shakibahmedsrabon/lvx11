@@ -39,6 +39,7 @@ export interface Product {
   currency: string;
   image: string;
   description?: string;
+  description_bn?: string;
   stock: boolean;
   /** True if product was created within the last 7 days */
   isNew: boolean;
@@ -121,6 +122,7 @@ const fetchProducts = (): Promise<Product[]> => {
           currency: "BDT",
           image: row.image || "",
           description: row.description || undefined,
+          description_bn: row.description_bn || undefined,
           stock: row.stock ?? true,
           isNew,
           createdAt,
