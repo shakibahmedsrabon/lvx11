@@ -4,7 +4,7 @@
  */
 
 export const categorySlug = (cat: string) =>
-  cat.toLowerCase().replace(/\s+/g, "-");
+  cat.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 export const exploreCategoryUrl = (cat: string) =>
   `/explore/${encodeURIComponent(categorySlug(cat))}`;

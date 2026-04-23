@@ -27,7 +27,8 @@ import type { ActiveFilters } from "@/components/category/FilterSortBar";
 const ITEMS_PER_PAGE_MOBILE = 8;
 const ITEMS_PER_PAGE_DESKTOP = 12;
 
-const slugify = (s: string) => s.toLowerCase().replace(/\s+/g, "-");
+const slugify = (s: string) =>
+  s.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
 /* ---------- Inline product detail view ---------- */
 const InlineProductDetail = ({ productId }: { productId: string }) => {
