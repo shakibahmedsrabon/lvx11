@@ -3,6 +3,7 @@ import HeroSlider from "../components/content/HeroSlider";
 import ProductCarousel from "../components/content/ProductCarousel";
 import TopProductsCarousel from "../components/content/TopProductsCarousel";
 import FaqSection from "../components/content/FaqSection";
+import PromoBanner from "../components/content/PromoBanner";
 import SEOHead from "../components/SEOHead";
 import { routes } from "@/config/routes";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
@@ -43,6 +44,7 @@ const Index = () => {
       )}
       <HeroSlider />
       <TopProductsCarousel />
+      <PromoBanner />
       <ProductCarousel />
       <FaqSection />
     </MainLayout>
