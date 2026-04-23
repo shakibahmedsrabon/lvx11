@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, useCallback, ReactNode } from "react";
 
-export type Theme = "auto" | "colorful" | "purple-dark";
+export type Theme = "auto" | "cyan-crimson" | "teal-slate";
 
 interface ThemeContextValue {
   theme: Theme;
@@ -13,22 +13,23 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 const applyTheme = (theme: Theme) => {
   const root = document.documentElement;
-  // Remove any prior theme attribute, set new one
   root.setAttribute("data-theme", theme);
-  // For "auto", let the prefers-color-scheme media query inside CSS take over.
-  // For explicit dark themes, also set .dark class so existing dark utilities still work.
-  if (theme === "purple-dark") {
-    root.classList.add("dark");
-  } else {
-    root.classList.remove("dark");
-  }
-  // Update theme-color meta for native UI (status bar)
+  // Both custom themes are dark; auto follows OS. .dark class kept in sync
+  // so existing dark: utilities continue to work.
+  const isDark =
+    theme === "cyan-crimson" ||
+    theme === "teal-slate" ||
+    (theme === "auto" &&
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches);
+  root.classList.toggle("dark", isDark);
+
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
     const colorMap: Record<Theme, string> = {
-      auto: "#ffffff",
-      colorful: "#fdf2ff",
-      "purple-dark": "#1a0b2e",
+      auto: isDark ? "#000000" : "#ffffff",
+      "cyan-crimson": "#252A34",
+      "teal-slate": "#222831",
     };
     meta.setAttribute("content", colorMap[theme]);
   }
@@ -38,7 +39,7 @@ const getInitialTheme = (): Theme => {
   if (typeof window === "undefined") return "auto";
   try {
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
-    if (stored === "auto" || stored === "colorful" || stored === "purple-dark") {
+    if (stored === "auto" || stored === "cyan-crimson" || stored === "teal-slate") {
       return stored;
     }
   } catch {
@@ -51,19 +52,18 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setThemeState] = useState<Theme>(() => getInitialTheme());
   const [resolvedScheme, setResolvedScheme] = useState<"light" | "dark">("light");
 
-  // Apply on mount & whenever theme changes
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
 
-  // Track system preference for "auto" mode
   useEffect(() => {
     const mq = window.matchMedia("(prefers-color-scheme: dark)");
     const update = () => {
       if (theme === "auto") {
         setResolvedScheme(mq.matches ? "dark" : "light");
+        applyTheme("auto"); // re-sync .dark class on OS change
       } else {
-        setResolvedScheme(theme === "purple-dark" ? "dark" : "light");
+        setResolvedScheme("dark");
       }
     };
     update();
@@ -93,5 +93,5 @@ export const useTheme = () => {
   return ctx;
 };
 
-// Inline script content for index.html — applies theme before paint to avoid FOUC.
-export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('${STORAGE_KEY}')||'auto';document.documentElement.setAttribute('data-theme',t);if(t==='purple-dark')document.documentElement.classList.add('dark');}catch(e){}})();`;
+// Inline script — applies theme + .dark class before paint to prevent FOUC.
+export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem('${STORAGE_KEY}')||'auto';document.documentElement.setAttribute('data-theme',t);var d=t==='cyan-crimson'||t==='teal-slate'||(t==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);if(d)document.documentElement.classList.add('dark');}catch(e){}})();`;

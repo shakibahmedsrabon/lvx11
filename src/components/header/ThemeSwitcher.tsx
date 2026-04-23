@@ -1,11 +1,11 @@
 import { useTheme, type Theme } from "@/hooks/useTheme";
-import { Sun, Moon, Sparkles } from "lucide-react";
+import { Sun, Moon, Palette, Waves } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 
 const OPTIONS: { value: Theme; label: string; Icon: typeof Sun }[] = [
   { value: "auto", label: "System", Icon: Sun },
-  { value: "colorful", label: "Colorful", Icon: Sparkles },
-  { value: "purple-dark", label: "Purple Dark", Icon: Moon },
+  { value: "cyan-crimson", label: "Cyan Crimson", Icon: Palette },
+  { value: "teal-slate", label: "Teal Slate", Icon: Waves },
 ];
 
 const ThemeSwitcher = () => {
@@ -28,7 +28,8 @@ const ThemeSwitcher = () => {
   }, [open]);
 
   const Current = OPTIONS.find((o) => o.value === theme) ?? OPTIONS[0];
-  const ActiveIcon = theme === "auto" ? (resolvedScheme === "dark" ? Moon : Sun) : Current.Icon;
+  const ActiveIcon =
+    theme === "auto" ? (resolvedScheme === "dark" ? Moon : Sun) : Current.Icon;
 
   return (
     <div ref={ref} className="relative">
