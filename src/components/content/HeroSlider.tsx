@@ -41,10 +41,8 @@ const HeroSlider = () => {
         .filter((r) => r.images && r.images.trim().length > 0)
         .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }));
 
-      if (dbSlides.length > 0) {
-        setSlides(dbSlides);
-        setCurrent(0);
-      }
+      setSlides(dbSlides);
+      setCurrent(0);
     })();
     return () => {
       mounted = false;
