@@ -85,6 +85,8 @@ const HeroSlider = () => {
     }
   };
 
+  if (slides.length === 0) return null;
+
   return (
     <section
       ref={containerRef}
