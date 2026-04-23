@@ -30,18 +30,39 @@ const HeroSlider = () => {
   const touchDeltaRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Fetch from Sliders table
+  // Two-stage fetch: first slide arrives fast (LCP-optimized), rest streams in.
   useEffect(() => {
     let mounted = true;
+    const seen = new Set<string>();
+
+    // Stage 1: fetch only the first slide for a fast paint
     (async () => {
-      const { data, error } = await supabase
+      const { data: firstRows } = await supabase
         .from("Sliders" as any)
         .select("id, images")
-        .order("id", { ascending: true });
+        .order("id", { ascending: true })
+        .limit(1);
 
-      if (!mounted || error || !data) return;
-      const seen = new Set<string>();
-      const dbSlides: Slide[] = (data as unknown as { id: number; images: string | null }[])
+      if (!mounted || !firstRows) return;
+      const first = (firstRows as unknown as { id: number; images: string | null }[])
+        .filter((r) => r.images && r.images.trim().length > 0)
+        .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }));
+
+      first.forEach((s) => seen.add(s.image));
+      if (first.length > 0) {
+        setSlides(first);
+        setCurrent(0);
+      }
+
+      // Stage 2: fetch the remaining slides
+      const { data: rest } = await supabase
+        .from("Sliders" as any)
+        .select("id, images")
+        .order("id", { ascending: true })
+        .range(1, 20);
+
+      if (!mounted || !rest) return;
+      const more = (rest as unknown as { id: number; images: string | null }[])
         .filter((r) => r.images && r.images.trim().length > 0)
         .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }))
         .filter((s) => {
@@ -50,9 +71,9 @@ const HeroSlider = () => {
           return true;
         });
 
-      setSlides(dbSlides);
-      setCurrent(0);
+      if (more.length > 0) setSlides((prev) => [...prev, ...more]);
     })();
+
     return () => {
       mounted = false;
     };
