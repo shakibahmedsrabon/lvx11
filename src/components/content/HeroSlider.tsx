@@ -239,7 +239,7 @@ const HeroSlider = () => {
               className="h-full bg-white/60"
               style={{
                 width: `${((current + 1) / total) * 100}%`,
-                transition: `width ${TRANSITION_DURATION}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
+                transition: `width ${TRANSITION_DURATION}ms ${EASE_SNAPPY}`,
                 willChange: "width",
               }}
             />
