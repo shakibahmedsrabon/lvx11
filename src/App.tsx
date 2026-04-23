@@ -15,6 +15,7 @@ import Sustainability from "./pages/about/Sustainability";
 import SizeGuide from "./pages/about/SizeGuide";
 import CustomerCare from "./pages/about/CustomerCare";
 import StoreLocator from "./pages/about/StoreLocator";
+import Faq from "./pages/about/Faq";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import RefundExchangePolicy from "./pages/RefundExchangePolicy";
