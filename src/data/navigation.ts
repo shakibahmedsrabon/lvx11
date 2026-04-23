@@ -53,7 +53,6 @@ export const popularSearches = [
 
 export const footerLinks = {
   shop: [
-    { label: "New In", href: "/explore/new-in" },
     { label: "Rings", href: "/explore/rings" },
     { label: "Earrings", href: "/explore/earrings" },
     { label: "Bracelets", href: "/explore/bracelets" },
