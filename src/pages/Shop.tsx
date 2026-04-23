@@ -1,7 +1,7 @@
 import { useState, useMemo } from "react";
 import { useParams } from "@/lib/navigation";
 import MainLayout from "../layouts/MainLayout";
-import FilterSortBar from "../components/category/FilterSortBar";
+import FilterSortBar, { type ActiveFilters } from "../components/category/FilterSortBar";
 import InfiniteProductGrid from "../components/category/InfiniteProductGrid";
 import SEOHead from "../components/SEOHead";
 import AppLink from "@/lib/navigation/AppLink";
@@ -14,12 +14,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { useProductsByCategory } from "@/hooks/useProducts";
-
-export interface ActiveFilters {
-  categories: string[];
-  priceRange: string | null;
-  sortBy: string;
-}
 
 const Shop = () => {
   const { category } = useParams();

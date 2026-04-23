@@ -20,7 +20,11 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useCategories } from "@/hooks/useCategories";
 import { useProducts } from "@/hooks/useProducts";
-import type { ActiveFilters } from "@/pages/Category";
+export interface ActiveFilters {
+  categories: string[];
+  priceRange: string | null;
+  sortBy: string;
+}
 
 interface FilterSortBarProps {
   filtersOpen: boolean;
