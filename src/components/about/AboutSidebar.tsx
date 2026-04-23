@@ -5,6 +5,7 @@ const aboutPages = [
   { name: 'Sustainability', path: '/about/sustainability' },
   { name: 'Size Guide', path: '/about/size-guide' },
   { name: 'Customer Care', path: '/about/customer-care' },
+  { name: 'FAQ', path: '/about/faq' },
   { name: 'Store Locator', path: '/about/store-locator' }
 ];
 

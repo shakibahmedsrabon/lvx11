@@ -15,6 +15,7 @@ import Sustainability from "./pages/about/Sustainability";
 import SizeGuide from "./pages/about/SizeGuide";
 import CustomerCare from "./pages/about/CustomerCare";
 import StoreLocator from "./pages/about/StoreLocator";
+import Faq from "./pages/about/Faq";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import RefundExchangePolicy from "./pages/RefundExchangePolicy";
@@ -42,6 +43,7 @@ const App = () => (
             <Route path="/about/size-guide" element={<SizeGuide />} />
             <Route path="/about/customer-care" element={<CustomerCare />} />
             <Route path="/about/store-locator" element={<StoreLocator />} />
+            <Route path="/about/faq" element={<Faq />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
             <Route path="/refund-exchange-policy" element={<RefundExchangePolicy />} />

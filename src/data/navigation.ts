@@ -34,6 +34,7 @@ export const navItems: NavItem[] = [
       "Sustainability",
       "Size Guide",
       "Customer Care",
+      "FAQ",
       "Store Locator",
     ],
     images: [
