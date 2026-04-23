@@ -1,67 +1,32 @@
 /**
- * HeroSlider — Samsung-style GPU-accelerated hero carousel.
- *
- * Features:
- * - Smooth CSS translate3d transitions (will-change: transform) for 120fps
- * - Auto-play with play/pause toggle
- * - Dot indicators with active scale animation
- * - Left/right arrow navigation
- * - Touch swipe support
- * - Slide crossfade + slide hybrid transition
+ * HeroSlider — Samsung-style GPU-accelerated full-bleed image carousel.
  */
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
+import hero1 from "@/assets/hero/hero-1.jpg";
+import hero2 from "@/assets/hero/hero-2.jpg";
+import hero3 from "@/assets/hero/hero-3.jpg";
+import hero4 from "@/assets/hero/hero-4.jpg";
+import hero5 from "@/assets/hero/hero-5.jpg";
 
 interface Slide {
   id: number;
-  title: string;
-  subtitle: string;
-  cta: string;
-  bgColor: string;
+  image: string;
+  alt: string;
 }
 
-const DUMMY_SLIDES: Slide[] = [
-  {
-    id: 1,
-    title: "New Arrivals",
-    subtitle: "Discover our latest collection of handcrafted jewelry",
-    cta: "Shop Now",
-    bgColor: "from-[hsl(var(--primary)/0.08)] to-[hsl(var(--primary)/0.02)]",
-  },
-  {
-    id: 2,
-    title: "Summer Collection",
-    subtitle: "Light and elegant pieces for the warm season",
-    cta: "Explore",
-    bgColor: "from-[hsl(var(--accent)/0.15)] to-[hsl(var(--accent)/0.03)]",
-  },
-  {
-    id: 3,
-    title: "Exclusive Offers",
-    subtitle: "Limited time deals on premium pieces",
-    cta: "View Deals",
-    bgColor: "from-[hsl(var(--secondary)/0.2)] to-[hsl(var(--secondary)/0.05)]",
-  },
-  {
-    id: 4,
-    title: "Wedding Edit",
-    subtitle: "Timeless elegance for your special day",
-    cta: "Discover",
-    bgColor: "from-[hsl(var(--muted)/0.5)] to-[hsl(var(--muted)/0.1)]",
-  },
-  {
-    id: 5,
-    title: "Gift Guide",
-    subtitle: "Find the perfect piece for every occasion",
-    cta: "Browse",
-    bgColor: "from-[hsl(var(--primary)/0.06)] to-[hsl(var(--accent)/0.06)]",
-  },
+const SLIDES: Slide[] = [
+  { id: 1, image: hero1, alt: "Gold pendant necklace on silk fabric" },
+  { id: 2, image: hero2, alt: "Delicate gold earring on marble" },
+  { id: 3, image: hero3, alt: "Diamond solitaire ring on dark velvet" },
+  { id: 4, image: hero4, alt: "Pearl and diamond bridal bracelet" },
+  { id: 5, image: hero5, alt: "Gift wrapped jewelry box with ribbon" },
 ];
 
 const AUTO_PLAY_INTERVAL = 4500;
-const TRANSITION_DURATION = 600; // ms
+const TRANSITION_DURATION = 600;
 
 const HeroSlider = () => {
   const [current, setCurrent] = useState(0);
@@ -72,7 +37,7 @@ const HeroSlider = () => {
   const touchDeltaRef = useRef(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const total = DUMMY_SLIDES.length;
+  const total = SLIDES.length;
 
   const goTo = useCallback(
     (index: number) => {
@@ -87,7 +52,6 @@ const HeroSlider = () => {
   const next = useCallback(() => goTo(current + 1), [current, goTo]);
   const prev = useCallback(() => goTo(current - 1), [current, goTo]);
 
-  // Auto-play
   useEffect(() => {
     if (!isPlaying) return;
     timerRef.current = setTimeout(next, AUTO_PLAY_INTERVAL);
@@ -96,7 +60,6 @@ const HeroSlider = () => {
     };
   }, [isPlaying, current, next]);
 
-  // Touch handlers
   const onTouchStart = (e: React.TouchEvent) => {
     touchStartRef.current = e.touches[0].clientX;
     touchDeltaRef.current = 0;
@@ -113,22 +76,20 @@ const HeroSlider = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden select-none mb-8 md:mb-12"
+      className="relative w-full overflow-hidden select-none mb-8 md:mb-12 bg-muted/20"
       style={{ height: "clamp(280px, 56vw, 520px)" }}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
+      aria-roledescription="carousel"
     >
-      {/* Slides */}
-      {DUMMY_SLIDES.map((slide, i) => {
+      {/* Image slides */}
+      {SLIDES.map((slide, i) => {
         const isActive = i === current;
         return (
           <div
             key={slide.id}
-            className={cn(
-              "absolute inset-0 flex items-center justify-center bg-gradient-to-br",
-              slide.bgColor
-            )}
+            className="absolute inset-0"
             style={{
               willChange: "transform, opacity",
               transform: `translate3d(${(i - current) * 100}%, 0, 0)`,
@@ -138,60 +99,52 @@ const HeroSlider = () => {
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
             }}
+            aria-hidden={!isActive}
           >
-            <div
-              className="text-center px-6 max-w-xl mx-auto"
+            <img
+              src={slide.image}
+              alt={slide.alt}
+              width={1920}
+              height={1088}
+              loading={i === 0 ? "eager" : "lazy"}
+              decoding="async"
+              className="w-full h-full object-cover"
               style={{
-                willChange: "transform, opacity",
-                transform: isActive
-                  ? "translate3d(0, 0, 0) scale(1)"
-                  : "translate3d(0, 20px, 0) scale(0.97)",
-                opacity: isActive ? 1 : 0,
-                transition: `all ${TRANSITION_DURATION + 150}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
-                transitionDelay: isActive ? "100ms" : "0ms",
+                willChange: "transform",
+                transform: isActive ? "scale(1)" : "scale(1.04)",
+                transition: `transform ${TRANSITION_DURATION + 600}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
               }}
-            >
-              <h2 className="text-3xl md:text-5xl lg:text-6xl font-light text-foreground mb-3 tracking-tight">
-                {slide.title}
-              </h2>
-              <p className="text-sm md:text-base font-light text-muted-foreground mb-6 max-w-sm mx-auto">
-                {slide.subtitle}
-              </p>
-              <button className="px-8 py-3 text-sm font-light tracking-widest uppercase border border-foreground text-foreground hover:bg-foreground hover:text-background transition-colors duration-300">
-                {slide.cta}
-              </button>
-            </div>
+            />
+            {/* Subtle bottom gradient to keep controls readable */}
+            <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
           </div>
         );
       })}
 
-      {/* Bottom controls bar */}
+      {/* Bottom controls */}
       <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center gap-3 pb-5 md:pb-7">
-        {/* Left arrow */}
         <button
           onClick={prev}
-          className="w-8 h-8 flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors duration-200"
+          className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
           aria-label="Previous slide"
         >
           <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
         </button>
 
-        {/* Dots */}
         <div className="flex items-center gap-2.5">
-          {DUMMY_SLIDES.map((_, i) => (
+          {SLIDES.map((_, i) => (
             <button
               key={i}
               onClick={() => goTo(i)}
               aria-label={`Go to slide ${i + 1}`}
               className="relative flex items-center justify-center p-1"
             >
-              {/* Outer ring for active */}
               <span
                 className={cn(
-                  "block rounded-full transition-all duration-500 ease-out",
+                  "block rounded-full",
                   i === current
-                    ? "w-3 h-3 bg-foreground scale-100"
-                    : "w-2.5 h-2.5 border border-foreground/30 bg-transparent hover:border-foreground/60 scale-100"
+                    ? "w-3 h-3 bg-white"
+                    : "w-2.5 h-2.5 border border-white/50 bg-transparent hover:border-white"
                 )}
                 style={{
                   willChange: "transform",
@@ -204,33 +157,27 @@ const HeroSlider = () => {
           ))}
         </div>
 
-        {/* Right arrow */}
         <button
           onClick={next}
-          className="w-8 h-8 flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors duration-200"
+          className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
           aria-label="Next slide"
         >
           <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
         </button>
 
-        {/* Play / Pause */}
         <button
           onClick={() => setIsPlaying((p) => !p)}
-          className="ml-2 w-8 h-8 flex items-center justify-center text-foreground/50 hover:text-foreground transition-colors duration-200"
+          className="ml-2 w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
           aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
         >
-          {isPlaying ? (
-            <Pause className="w-4 h-4" strokeWidth={1.5} />
-          ) : (
-            <Play className="w-4 h-4" strokeWidth={1.5} />
-          )}
+          {isPlaying ? <Pause className="w-4 h-4" strokeWidth={1.5} /> : <Play className="w-4 h-4" strokeWidth={1.5} />}
         </button>
       </div>
 
       {/* Progress bar */}
-      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-foreground/5 z-10">
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/10 z-10">
         <div
-          className="h-full bg-foreground/20"
+          className="h-full bg-white/60"
           style={{
             width: `${((current + 1) / total) * 100}%`,
             transition: `width ${TRANSITION_DURATION}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
