@@ -7,23 +7,23 @@ const PromoBanner = () => {
 
   return (
     <section className="w-full px-6 py-12">
-      <div className="relative w-full overflow-hidden rounded-lg">
+      <div className="w-full">
         {banner.image && (
           <img
             src={banner.image}
             alt={banner.title || "Promotional banner"}
             loading="lazy"
-            className="w-full h-[300px] md:h-[400px] object-cover"
+            className="w-full h-auto object-cover rounded-lg"
           />
         )}
-        <div className="absolute inset-0 bg-black/40 flex flex-col items-center justify-center text-center px-6">
+        <div className="mt-6 text-center">
           {banner.title && (
-            <h2 className="text-3xl md:text-5xl font-light text-white mb-4">
+            <h2 className="text-2xl md:text-4xl font-light text-foreground mb-3">
               {banner.title}
             </h2>
           )}
           {banner.description && (
-            <p className="text-base md:text-lg text-white/90 max-w-2xl font-light">
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto font-light">
               {banner.description}
             </p>
           )}
