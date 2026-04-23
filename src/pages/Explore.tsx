@@ -306,7 +306,7 @@ const Explore = () => {
               All
             </AppLink>
             {categoryNames.map((cat) => {
-              const active = routeCategory && decodeURIComponent(routeCategory).toLowerCase() === slugify(cat);
+              const active = routeCategory && slugify(decodeURIComponent(routeCategory)) === slugify(cat);
               return (
                 <AppLink
                   key={cat}
