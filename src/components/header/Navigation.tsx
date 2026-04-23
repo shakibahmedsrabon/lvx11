@@ -202,7 +202,7 @@ const Navigation = () => {
                           alt={image.alt}
                           className="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-90"
                         />
-                        {(activeDropdown === "Shop" || activeDropdown === "New in" || activeDropdown === "About") && (
+                        {(activeDropdown === "Shop" || activeDropdown === "About") && (
                           <div className="absolute bottom-2 left-2 text-white text-xs font-light flex items-center gap-1">
                             <span>{image.label}</span>
                             <ArrowRight size={12} />
