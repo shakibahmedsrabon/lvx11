@@ -18,6 +18,7 @@ import StoreLocator from "./pages/about/StoreLocator";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import RefundExchangePolicy from "./pages/RefundExchangePolicy";
+import Trademark from "./pages/Trademark";
 
 const queryClient = new QueryClient();
 
