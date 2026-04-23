@@ -43,17 +43,6 @@ const Navigation = () => {
     });
   }, [dbCategories]);
 
-  // Preload dropdown images for faster display
-  useEffect(() => {
-    const imagesToPreload = [
-      "/founders.png",
-    ];
-    
-    imagesToPreload.forEach(src => {
-      const img = new Image();
-      img.src = src;
-    });
-  }, []);
 
   return (
     <nav 
