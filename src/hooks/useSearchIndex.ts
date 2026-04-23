@@ -17,12 +17,12 @@ export function useSearchIndex() {
     queryKey: ["search-index"],
     queryFn: async (): Promise<SearchIndexData | null> => {
       const { data, error } = await (supabase as any)
-        .from("SearchIndex")
-        .select("keywords")
+        .from("search")
+        .select("search")
         .eq("id", 1)
         .maybeSingle();
-      if (error || !data?.keywords) return null;
-      return data.keywords as SearchIndexData;
+      if (error || !data?.search) return null;
+      return data.search as SearchIndexData;
     },
     staleTime: 60 * 60 * 1000, // 1 hour
     gcTime: 60 * 60 * 1000,
