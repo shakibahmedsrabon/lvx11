@@ -22,6 +22,9 @@ const HeroSlider = () => {
   const [current, setCurrent] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  // Tracks how many slides have been allowed to begin loading. Loads sequentially
+  // so the browser doesn't try to fetch every hero image at once on first paint.
+  const [loadedCount, setLoadedCount] = useState(1);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchStartRef = useRef(0);
   const touchDeltaRef = useRef(0);
