@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -50,6 +51,7 @@ const FilterSortBar = ({
 }: FilterSortBarProps) => {
   const { categories: dbCategories } = useCategories();
   const { products: allProducts } = useProducts();
+  const navigate = useNavigate();
 
   // Use DB categories if available, otherwise derive from products
   const categoryNames =
@@ -139,6 +141,27 @@ const FilterSortBar = ({
                       Category
                     </h3>
                     <div className="space-y-3">
+                      {/* Static "All" option — clears category filters and routes to /shop */}
+                      <div className="flex items-center space-x-3">
+                        <Checkbox
+                          id="cat-all"
+                          checked={draftCategories.length === 0}
+                          onCheckedChange={() => {
+                            setDraftCategories([]);
+                            setDraftPrice(null);
+                            setFilters({ ...filters, categories: [], priceRange: null });
+                            setFiltersOpen(false);
+                            navigate("/shop");
+                          }}
+                          className="border-border data-[state=checked]:bg-foreground data-[state=checked]:border-foreground"
+                        />
+                        <Label
+                          htmlFor="cat-all"
+                          className="text-sm font-light text-foreground cursor-pointer"
+                        >
+                          All
+                        </Label>
+                      </div>
                       {categoryNames.map((name) => (
                         <div key={name} className="flex items-center space-x-3">
                           <Checkbox
