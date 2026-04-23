@@ -166,7 +166,7 @@ const Navigation = () => {
                      ?.submenuItems.map((subItem, index) => (
                       <li key={index}>
                         <AppLink 
-                          href={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                          href={activeDropdown === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/explore/${subItem.toLowerCase().replace(/\s+/g, '-')}`}
                           className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-sm font-light block py-2"
                         >
                           {subItem}
@@ -181,11 +181,10 @@ const Navigation = () => {
                   ?.images.map((image, index) => {
                     let linkTo = "/";
                     if (activeDropdown === "Shop") {
-                      if (image.label === "Rings") linkTo = "/category/rings";
-                      else if (image.label === "Earrings") linkTo = "/category/earrings";
+                      if (image.label === "Rings") linkTo = "/explore/rings";
+                      else if (image.label === "Earrings") linkTo = "/explore/earrings";
                     } else if (activeDropdown === "New in") {
-                      if (image.label === "Arcus Bracelet") linkTo = "/product/arcus-bracelet";
-                      else if (image.label === "Span Bracelet") linkTo = "/product/span-bracelet";
+                      linkTo = "/explore/new-in";
                     } else if (activeDropdown === "About") {
                       linkTo = "/about/our-story";
                     }
@@ -291,7 +290,7 @@ const Navigation = () => {
                      {item.submenuItems.map((subItem, subIndex) => (
                        <AppLink
                          key={subIndex}
-                         href={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/category/${subItem.toLowerCase()}`}
+                         href={item.name === "About" ? `/about/${subItem.toLowerCase().replace(/\s+/g, '-')}` : `/explore/${subItem.toLowerCase().replace(/\s+/g, '-')}`}
                          className="text-nav-foreground/70 hover:text-nav-hover text-sm font-light block py-1"
                          onClick={() => setIsMobileMenuOpen(false)}
                        >

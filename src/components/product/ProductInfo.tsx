@@ -103,7 +103,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbLink asChild>
-                <AppLink href={`/category/${product.category.toLowerCase()}`}>{product.category}</AppLink>
+                <AppLink href={`/explore/${encodeURIComponent(product.category.toLowerCase().replace(/\s+/g, '-'))}`}>{product.category}</AppLink>
               </BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

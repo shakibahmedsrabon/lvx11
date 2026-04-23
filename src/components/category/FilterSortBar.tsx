@@ -151,7 +151,7 @@ const FilterSortBar = ({
                             setDraftPrice(null);
                             setFilters({ ...filters, categories: [], priceRange: null });
                             setFiltersOpen(false);
-                            navigate("/shop");
+                            navigate("/explore");
                           }}
                           className="border-border data-[state=checked]:bg-foreground data-[state=checked]:border-foreground"
                         />

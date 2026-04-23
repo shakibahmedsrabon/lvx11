@@ -1,5 +1,6 @@
 /**
  * Navigation data — separated for easy migration.
+ * All product/category links route through /explore/...
  */
 
 export interface NavImage {
@@ -27,7 +28,7 @@ export const navItems: NavItem[] = [
   },
   {
     name: "New in",
-    href: "/category/new-in",
+    href: "/explore/new-in",
     submenuItems: [
       "This Week's Arrivals",
       "Spring Collection",
@@ -67,11 +68,11 @@ export const popularSearches = [
 
 export const footerLinks = {
   shop: [
-    { label: "New In", href: "/category/new-in" },
-    { label: "Rings", href: "/category/rings" },
-    { label: "Earrings", href: "/category/earrings" },
-    { label: "Bracelets", href: "/category/bracelets" },
-    { label: "Necklaces", href: "/category/necklaces" },
+    { label: "New In", href: "/explore/new-in" },
+    { label: "Rings", href: "/explore/rings" },
+    { label: "Earrings", href: "/explore/earrings" },
+    { label: "Bracelets", href: "/explore/bracelets" },
+    { label: "Necklaces", href: "/explore/necklaces" },
   ],
   support: [
     { label: "Size Guide", href: "/about/size-guide" },
