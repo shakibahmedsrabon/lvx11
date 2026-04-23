@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
 import ShoppingBag from "./ShoppingBag";
+import ThemeSwitcher from "./ThemeSwitcher";
 import { useCart } from "@/contexts/CartContext";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { useCategories } from "@/hooks/useCategories";
@@ -199,7 +200,8 @@ const Navigation = () => {
         </div>
 
         {/* Right icons */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-1">
+          <ThemeSwitcher />
           <button 
             className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
             aria-label="Search"
