@@ -46,6 +46,7 @@ const Index = () => {
       <TopProductsCarousel />
       <ProductCarousel />
       <LargeHero />
+      <FaqSection />
     </MainLayout>
   );
 };
