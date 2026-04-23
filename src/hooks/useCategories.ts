@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export interface Category {
   id: number;
   name: string;
+  images: string | null;
 }
 
 let cached: Category[] | null = null;
