@@ -108,6 +108,9 @@ const HeroSlider = () => {
     >
       {slides.map((slide, i) => {
         const isActive = i === current;
+        // Sequential loading: only render slides up to loadedCount.
+        // Each <img> onLoad bumps loadedCount, kicking off the next one.
+        const shouldRender = i < loadedCount;
         return (
           <div
             key={slide.id}
@@ -123,18 +126,27 @@ const HeroSlider = () => {
             }}
             aria-hidden={!isActive}
           >
-            <img
-              src={slide.image}
-              alt={slide.alt}
-              loading={i === 0 ? "eager" : "lazy"}
-              decoding="async"
-              className="w-full h-full object-cover"
-              style={{
-                willChange: "transform",
-                transform: isActive ? "scale(1)" : "scale(1.04)",
-                transition: `transform ${TRANSITION_DURATION + 600}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
-              }}
-            />
+            {shouldRender && (
+              <img
+                src={slide.image}
+                alt={slide.alt}
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : "low"}
+                decoding="async"
+                onLoad={() =>
+                  setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
+                }
+                onError={() =>
+                  setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
+                }
+                className="w-full h-full object-cover"
+                style={{
+                  willChange: "transform",
+                  transform: isActive ? "scale(1)" : "scale(1.04)",
+                  transition: `transform ${TRANSITION_DURATION + 600}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
+                }}
+              />
+            )}
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
           </div>
         );
