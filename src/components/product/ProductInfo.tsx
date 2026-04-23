@@ -21,7 +21,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Minus, Plus, Heart } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { Product, formatPrice } from "@/hooks/useProducts";
@@ -35,7 +35,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   /** Index into product.availableDurations — default is 0 (first/shortest duration) */
   const [durationIndex, setDurationIndex] = useState(0);
-  const { addToCart, toggleFavorite, isFavorite, getItemQuantity } = useCart();
+  const { addToCart, getItemQuantity } = useCart();
   const { toast } = useToast();
 
   const selectedDuration = product.availableDurations[durationIndex];
@@ -78,15 +78,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       description: `${product.title} (${selectedDuration} mo × ${quantity}) added.`,
     });
     setQuantity(1);
-  };
-
-  const handleToggleFavorite = () => {
-    vibrate([30, 20, 50]);
-    toggleFavorite(cartProduct);
-    toast({
-      title: isFavorite(product.id) ? "Removed from favorites" : "Added to favorites",
-      description: `${product.title} has been ${isFavorite(product.id) ? "removed from" : "added to"} your favorites.`,
-    });
   };
 
   return (
@@ -162,7 +153,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
       )}
 
-      {/* Quantity selector + Add to cart + Favorite */}
+      {/* Quantity selector + Add to cart */}
       <div className="space-y-4">
         <div className="flex items-center gap-4">
           <span className="text-sm font-light text-foreground">Quantity</span>
@@ -200,13 +191,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                 {getItemQuantity(product.id) > 9 ? '9+' : getItemQuantity(product.id)}
               </span>
             )}
-          </button>
-          <button
-            onClick={handleToggleFavorite}
-            className="p-2 text-foreground hover:text-muted-foreground transition-colors"
-            aria-label={isFavorite(product.id) ? "Remove from favorites" : "Add to favorites"}
-          >
-            <Heart className="w-5 h-5" fill={isFavorite(product.id) ? "currentColor" : "none"} />
           </button>
         </div>
 

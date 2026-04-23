@@ -25,23 +25,12 @@ export interface CartItem {
   category: string;
 }
 
-export interface FavoriteItem {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
-  category: string;
-}
-
 interface CartContextType {
   cartItems: CartItem[];
-  favorites: FavoriteItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
   updateQuantity: (id: number, duration: number, newQuantity: number) => void;
   removeFromCart: (id: number, duration: number) => void;
   clearCart: () => void;
-  toggleFavorite: (item: FavoriteItem) => void;
-  isFavorite: (id: number) => boolean;
   getItemQuantity: (id: number) => number;
   totalItems: number;
 }
@@ -49,12 +38,6 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_KEY = "linea-cart";
-const FAVORITES_KEY = "linea-favorites";
-
-/** Composite key for cart items: same product + different duration = different line item */
-function cartKey(id: number, duration: number) {
-  return `${id}-${duration}`;
-}
 
 function loadFromStorage<T>(key: string, fallback: T): T {
   try {
@@ -69,17 +52,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() =>
     loadFromStorage<CartItem[]>(CART_KEY, [])
   );
-  const [favorites, setFavorites] = useState<FavoriteItem[]>(() =>
-    loadFromStorage<FavoriteItem[]>(FAVORITES_KEY, [])
-  );
 
   useEffect(() => {
     localStorage.setItem(CART_KEY, JSON.stringify(cartItems));
   }, [cartItems]);
-
-  useEffect(() => {
-    localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
-  }, [favorites]);
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCartItems((prev) => {
@@ -119,16 +95,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
-  const toggleFavorite = (item: FavoriteItem) => {
-    setFavorites((prev) => {
-      const exists = prev.find((f) => f.id === item.id);
-      if (exists) return prev.filter((f) => f.id !== item.id);
-      return [...prev, item];
-    });
-  };
-
-  const isFavorite = (id: number) => favorites.some((f) => f.id === id);
-
   /** Total quantity across all durations for a given product id */
   const getItemQuantity = (id: number) => {
     return cartItems
@@ -144,13 +110,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     <CartContext.Provider
       value={{
         cartItems,
-        favorites,
         addToCart,
         updateQuantity,
         removeFromCart,
         clearCart,
-        toggleFavorite,
-        isFavorite,
         getItemQuantity,
         totalItems,
       }}
