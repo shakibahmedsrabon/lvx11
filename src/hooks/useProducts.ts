@@ -97,7 +97,7 @@ const fetchProducts = (): Promise<Product[]> => {
 
   fetchPromise = (supabase as any)
     .from("Products")
-    .select("*")
+    .select("id, title, category, description, description_bn, price, image, stock, created_at")
     .order("id", { ascending: true })
     .then(({ data, error }: any) => {
       if (error || !data) {
