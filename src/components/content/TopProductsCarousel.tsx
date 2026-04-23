@@ -42,13 +42,16 @@ const TopProductsCarousel = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     const load = async () => {
+      // Step 1: fetch only the Top Products mapping (small table, 2 cols)
       const { data: tops, error: topErr } = await (supabase as any)
         .from("Top Products")
-        .select("*")
+        .select("post_id, top")
         .order("top", { ascending: true })
         .limit(10);
 
+      if (cancelled) return;
       if (topErr || !tops || tops.length === 0) {
         setLoading(false);
         return;
@@ -63,10 +66,13 @@ const TopProductsCarousel = () => {
         return;
       }
 
+      // Step 2: fetch ONLY the columns we render, ONLY for the IDs we need.
       const { data: products } = await (supabase as any)
         .from("Products")
-        .select("*")
+        .select("id, title, category, price, image")
         .in("id", ids);
+
+      if (cancelled) return;
 
       const productMap = new Map<number, ProductRow>();
       (products as ProductRow[] | null)?.forEach((p) => productMap.set(p.id, p));
@@ -81,7 +87,6 @@ const TopProductsCarousel = () => {
           const prices = parsePriceMap(p.price);
           const durations = getDurations(prices);
           const basePrice = prices[durations[0]] || 0;
-          // Unique URL: /explore/{category-slug}/{title-slug}-{id}
           const titleSlug = slugify(title);
           const productSlug = `${titleSlug}-${p.id}`;
           const categorySlug = category ? slugify(category) : "all";
@@ -103,6 +108,9 @@ const TopProductsCarousel = () => {
     };
 
     load();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   if (loading || items.length === 0) return null;

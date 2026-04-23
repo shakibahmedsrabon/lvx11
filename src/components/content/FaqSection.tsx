@@ -21,7 +21,7 @@ const FaqSection = () => {
   useEffect(() => {
     (supabase as any)
       .from("FAQ")
-      .select("*")
+      .select("id, question, answer")
       .order("id", { ascending: true })
       .limit(5)
       .then(({ data, error }: any) => {

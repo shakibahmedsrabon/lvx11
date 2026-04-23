@@ -16,7 +16,7 @@ export const useBanner = () => {
   useEffect(() => {
     (supabase as any)
       .from("Banner")
-      .select("*")
+      .select("id, title, description, image, created_at")
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle()
