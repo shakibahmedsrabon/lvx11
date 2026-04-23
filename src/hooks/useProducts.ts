@@ -122,6 +122,7 @@ const fetchProducts = (): Promise<Product[]> => {
           currency: "BDT",
           image: row.image || "",
           description: row.description || undefined,
+          description_bn: row.description_bn || undefined,
           stock: row.stock ?? true,
           isNew,
           createdAt,
