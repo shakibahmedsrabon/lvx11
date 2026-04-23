@@ -41,17 +41,20 @@ const Footer = () => {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [channels, setChannels] = useState<Channel[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
+  const [socials, setSocials] = useState<SocialPlatform[]>([]);
 
   useEffect(() => {
     const fetchAll = async () => {
-      const [contactsRes, channelsRes, groupsRes] = await Promise.all([
+      const [contactsRes, channelsRes, groupsRes, socialsRes] = await Promise.all([
         (supabase as any).from('Connects').select('*'),
         (supabase as any).from('Channels').select('*'),
         (supabase as any).from('Groups').select('*'),
+        (supabase as any).from('Social Platforms').select('*'),
       ]);
       if (!contactsRes.error && contactsRes.data) setContacts(contactsRes.data);
       if (!channelsRes.error && channelsRes.data) setChannels(channelsRes.data);
       if (!groupsRes.error && groupsRes.data) setGroups(groupsRes.data);
+      if (!socialsRes.error && socialsRes.data) setSocials(socialsRes.data);
     };
     fetchAll();
   }, []);
