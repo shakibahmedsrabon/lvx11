@@ -22,6 +22,12 @@ interface Group {
   link: string | null;
 }
 
+interface SocialPlatform {
+  id: number;
+  Name: string | null;
+  Link: string | null;
+}
+
 const cleanContactDisplay = (value: string): string => {
   return value
     .replace(/^mailto:/i, '')
