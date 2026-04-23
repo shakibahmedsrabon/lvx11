@@ -207,11 +207,8 @@ const Explore = () => {
     }
 
     if (filters.categories.length > 0) {
-      result = result.filter((p) =>
-        filters.categories.some(
-          (c) => c.toLowerCase() === p.category.toLowerCase()
-        )
-      );
+      const wantedSlugs = filters.categories.map(slugify);
+      result = result.filter((p) => wantedSlugs.includes(slugify(p.category)));
     }
 
     if (filters.priceRange) {
