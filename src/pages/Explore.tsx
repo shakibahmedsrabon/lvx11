@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useProducts, useProduct } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
+import { useSearchIndex, getSuggestions } from "@/hooks/useSearchIndex";
 import { Search, ArrowLeft } from "lucide-react";
 import type { ActiveFilters } from "@/components/category/FilterSortBar";
 
