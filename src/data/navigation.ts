@@ -20,47 +20,15 @@ export const navItems: NavItem[] = [
   {
     name: "Shop",
     href: "/explore",
-    submenuItems: ["Rings", "Necklaces", "Earrings", "Bracelets", "Watches"],
-    images: [
-      { src: "/rings-collection.png", alt: "Rings Collection", label: "Rings" },
-      { src: "/earrings-collection.png", alt: "Earrings Collection", label: "Earrings" },
-    ],
+    submenuItems: [],
+    images: [],
   },
   {
     name: "About",
     href: "/about/faq",
-    submenuItems: [
-      "FAQ",
-    ],
-    images: [
-      { src: "/founders.png", alt: "Company Founders", label: "Read our story" },
-    ],
+    submenuItems: ["FAQ"],
+    images: [],
   },
 ];
 
-export const popularSearches = [
-  "Gold Rings",
-  "Silver Necklaces",
-  "Pearl Earrings",
-  "Designer Bracelets",
-  "Wedding Rings",
-  "Vintage Collection",
-];
-
-export const footerLinks = {
-  shop: [
-    { label: "Rings", href: "/explore/rings" },
-    { label: "Earrings", href: "/explore/earrings" },
-    { label: "Bracelets", href: "/explore/bracelets" },
-    { label: "Necklaces", href: "/explore/necklaces" },
-  ],
-  support: [
-    { label: "FAQ", href: "/about/faq" },
-    { label: "Returns & Exchanges", href: "/refund-exchange-policy" },
-  ],
-  connect: [
-    { label: "Instagram", href: "https://instagram.com", external: true },
-    { label: "Pinterest", href: "https://pinterest.com", external: true },
-    { label: "Newsletter", href: "#newsletter" },
-  ],
-};
+export const popularSearches: string[] = [];

@@ -7,7 +7,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import SkipToContent from "./components/SkipToContent";
 import { CartProvider } from "./contexts/CartContext";
 import Index from "./pages/Index";
-import Checkout from "./pages/Checkout";
+
 import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
 import Faq from "./pages/about/Faq";
@@ -32,7 +32,7 @@ const App = () => (
             <Route path="/explore" element={<Explore />} />
             <Route path="/explore/:category" element={<Explore />} />
             <Route path="/explore/:category/:productId" element={<Explore />} />
-            <Route path="/checkout" element={<Checkout />} />
+            
             <Route path="/about/faq" element={<Faq />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />

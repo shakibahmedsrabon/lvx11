@@ -29,11 +29,6 @@ export const routes: Record<string, RouteMeta> = {
     description: "Discover the {productName} from Linea. Minimalist jewelry crafted with timeless elegance.",
     jsonLdType: "Product",
   },
-  checkout: {
-    path: "/checkout",
-    title: "Checkout - E Product Hub BD",
-    description: "Complete your purchase at E Product Hub BD.",
-  },
   privacyPolicy: {
     path: "/privacy-policy",
     title: "Privacy Policy - E Product Hub BD",
