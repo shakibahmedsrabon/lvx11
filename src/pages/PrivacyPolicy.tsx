@@ -10,7 +10,7 @@ const PrivacyPolicy = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = "Privacy Policy - Linea Jewelry";
+    document.title = "Privacy Policy - E Product Hub BD";
 
     const fetchData = async () => {
       const { data, error } = await (supabase as any)

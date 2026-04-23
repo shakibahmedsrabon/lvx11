@@ -4,7 +4,7 @@
  */
 
 export const siteConfig = {
-  name: "Linea Jewelry",
+  name: "E Product Hub BD",
   tagline: "Minimalist jewelry crafted for the modern individual",
   url: typeof window !== "undefined" ? window.location.origin : "https://lineajewelry.com",
   logo: "/LINEA-1.svg",

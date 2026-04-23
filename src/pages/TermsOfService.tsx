@@ -9,7 +9,7 @@ const TermsOfService = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = "Terms of Service - Linea Jewelry";
+    document.title = "Terms of Service - E Product Hub BD";
 
     const fetchData = async () => {
       const { data, error } = await (supabase as any)

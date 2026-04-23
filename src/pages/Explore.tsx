@@ -54,7 +54,7 @@ const InlineProductDetail = ({ productId }: { productId: string }) => {
   return (
     <>
       <SEOHead
-        title={`${product.title} - Linea Jewelry`}
+        title={`${product.title} - E Product Hub BD`}
         description={`Discover the ${product.title} from Linea.`}
         type="product"
         jsonLd={{
