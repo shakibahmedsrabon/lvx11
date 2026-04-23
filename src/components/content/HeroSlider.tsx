@@ -22,6 +22,9 @@ const HeroSlider = () => {
   const [current, setCurrent] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  // Tracks how many slides have been allowed to begin loading. Loads sequentially
+  // so the browser doesn't try to fetch every hero image at once on first paint.
+  const [loadedCount, setLoadedCount] = useState(1);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const touchStartRef = useRef(0);
   const touchDeltaRef = useRef(0);
@@ -37,9 +40,15 @@ const HeroSlider = () => {
         .order("id", { ascending: true });
 
       if (!mounted || error || !data) return;
+      const seen = new Set<string>();
       const dbSlides: Slide[] = (data as unknown as { id: number; images: string | null }[])
         .filter((r) => r.images && r.images.trim().length > 0)
-        .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }));
+        .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }))
+        .filter((s) => {
+          if (seen.has(s.image)) return false;
+          seen.add(s.image);
+          return true;
+        });
 
       setSlides(dbSlides);
       setCurrent(0);
@@ -99,6 +108,9 @@ const HeroSlider = () => {
     >
       {slides.map((slide, i) => {
         const isActive = i === current;
+        // Sequential loading: only render slides up to loadedCount.
+        // Each <img> onLoad bumps loadedCount, kicking off the next one.
+        const shouldRender = i < loadedCount;
         return (
           <div
             key={slide.id}
@@ -114,18 +126,27 @@ const HeroSlider = () => {
             }}
             aria-hidden={!isActive}
           >
-            <img
-              src={slide.image}
-              alt={slide.alt}
-              loading={i === 0 ? "eager" : "lazy"}
-              decoding="async"
-              className="w-full h-full object-cover"
-              style={{
-                willChange: "transform",
-                transform: isActive ? "scale(1)" : "scale(1.04)",
-                transition: `transform ${TRANSITION_DURATION + 600}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
-              }}
-            />
+            {shouldRender && (
+              <img
+                src={slide.image}
+                alt={slide.alt}
+                loading={i === 0 ? "eager" : "lazy"}
+                fetchPriority={i === 0 ? "high" : "low"}
+                decoding="async"
+                onLoad={() =>
+                  setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
+                }
+                onError={() =>
+                  setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
+                }
+                className="w-full h-full object-cover"
+                style={{
+                  willChange: "transform",
+                  transform: isActive ? "scale(1)" : "scale(1.04)",
+                  transition: `transform ${TRANSITION_DURATION + 600}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
+                }}
+              />
+            )}
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
           </div>
         );
