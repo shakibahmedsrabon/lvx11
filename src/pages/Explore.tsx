@@ -1,13 +1,14 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import SEOHead from "../components/SEOHead";
 import CategoryHeader from "../components/category/CategoryHeader";
 import FilterSortBar from "../components/category/FilterSortBar";
 import ProductGrid from "../components/category/ProductGrid";
+import SliderPagination from "../components/category/SliderPagination";
 import { useProducts, type Product } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
-import { Search, Loader2 } from "lucide-react";
+import { Search } from "lucide-react";
 import type { ActiveFilters } from "@/pages/Category";
 
 const ITEMS_PER_PAGE_MOBILE = 8;
@@ -25,8 +26,18 @@ const Explore = () => {
     priceRange: null,
     sortBy: "featured",
   });
-  const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE_DESKTOP);
-  const loaderRef = useRef<HTMLDivElement>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(ITEMS_PER_PAGE_DESKTOP);
+
+  // Responsive page size
+  useEffect(() => {
+    const updateSize = () => {
+      setPageSize(window.innerWidth < 768 ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP);
+    };
+    updateSize();
+    window.addEventListener("resize", updateSize);
+    return () => window.removeEventListener("resize", updateSize);
+  }, []);
 
   const { products, loading } = useProducts();
   const { categories: dbCategories } = useCategories();
@@ -85,35 +96,18 @@ const Explore = () => {
     return result;
   }, [products, searchQuery, filters]);
 
-  // Infinite scroll subset
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const safePage = Math.min(currentPage, totalPages);
   const visibleProducts = useMemo(
-    () => filteredProducts.slice(0, visibleCount),
-    [filteredProducts, visibleCount]
+    () => filteredProducts.slice((safePage - 1) * pageSize, safePage * pageSize),
+    [filteredProducts, safePage, pageSize]
   );
-  const hasMore = visibleCount < filteredProducts.length;
 
-  // Reset visible count on filter change
+  // Reset to page 1 on filter / search change
   useEffect(() => {
-    const isMobile = window.innerWidth < 768;
-    setVisibleCount(isMobile ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP);
-  }, [filters, searchQuery]);
-
-  // Infinite scroll observer
-  useEffect(() => {
-    if (!hasMore) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) {
-          const isMobile = window.innerWidth < 768;
-          const increment = isMobile ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE_DESKTOP;
-          setVisibleCount((prev) => prev + increment);
-        }
-      },
-      { rootMargin: "200px" }
-    );
-    if (loaderRef.current) observer.observe(loaderRef.current);
-    return () => observer.disconnect();
-  }, [hasMore]);
+    setCurrentPage(1);
+  }, [filters, searchQuery, pageSize]);
 
   // Sync URL params
   const handleSearchChange = (value: string) => {
@@ -213,14 +207,16 @@ const Explore = () => {
         setFilters={setFilters}
       />
 
-      {/* Product grid with infinite scroll */}
+      {/* Product grid (paginated) */}
       <ProductGrid products={visibleProducts} loading={loading} />
 
-      {/* Infinite scroll trigger */}
-      {hasMore && !loading && (
-        <div ref={loaderRef} className="flex justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-        </div>
+      {/* Samsung-style slider pagination */}
+      {!loading && filteredProducts.length > 0 && (
+        <SliderPagination
+          currentPage={safePage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
       )}
     </MainLayout>
   );
