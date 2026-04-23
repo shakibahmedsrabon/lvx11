@@ -17,10 +17,58 @@ const Navigation = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
-  
+  const debounceRef = useRef<number | null>(null);
+
   const { cartItems, updateQuantity, clearCart, totalItems } = useCart();
+  const { products } = useProducts();
+  const { data: searchIndex } = useSearchIndex();
+
+  // Debounce input (90ms — instant feel, no render thrash)
+  useEffect(() => {
+    if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    debounceRef.current = window.setTimeout(() => {
+      setDebouncedQuery(searchValue.trim().toLowerCase());
+    }, 90);
+    return () => {
+      if (debounceRef.current) window.clearTimeout(debounceRef.current);
+    };
+  }, [searchValue]);
+
+  // O(1) keyword suggestions from prebuilt index
+  const suggestions = useMemo(
+    () => getSuggestions(searchIndex, debouncedQuery, 6),
+    [searchIndex, debouncedQuery],
+  );
+
+  // Ranked product matches: title-prefix > title-includes > category > description
+  const productMatches = useMemo<Product[]>(() => {
+    if (!debouncedQuery || debouncedQuery.length < 2) return [];
+    const q = debouncedQuery;
+    const scored: { p: Product; score: number }[] = [];
+    for (const p of products) {
+      const title = (p.title || "").toLowerCase();
+      const desc = (p.description || "").toLowerCase();
+      const cat = (p.category || "").toLowerCase();
+      let score = 0;
+      if (title.startsWith(q)) score = 100;
+      else if (title.includes(q)) score = 70;
+      else if (cat.includes(q)) score = 40;
+      else if (desc.includes(q)) score = 20;
+      if (score > 0) scored.push({ p, score });
+    }
+    scored.sort((a, b) => b.score - a.score);
+    return scored.slice(0, 6).map((s) => s.p);
+  }, [products, debouncedQuery]);
+
+  const goToProduct = (p: Product) => {
+    const catSlug = (p.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+    navigate(`/explore/${catSlug}/${p.slug}-${p.id}`);
+    setIsSearchOpen(false);
+    setSearchValue("");
+  };
 
   // Merge DB categories into navItems for "Shop" (names + latest 2 images)
   const dynamicNavItems = useMemo(() => {
