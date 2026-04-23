@@ -170,6 +170,24 @@ export type Database = {
         }
         Relationships: []
       }
+      Sliders: {
+        Row: {
+          created_at: string
+          id: number
+          images: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          images?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          images?: string | null
+        }
+        Relationships: []
+      }
       Subscribers: {
         Row: {
           created_at: string
