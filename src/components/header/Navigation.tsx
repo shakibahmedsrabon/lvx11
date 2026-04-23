@@ -309,29 +309,52 @@ const Navigation = () => {
                     type="search"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
+                    onKeyDown={handleSearchKeyDown}
                     placeholder="Search products..."
                     className="flex-1 bg-transparent text-nav-foreground placeholder:text-nav-foreground/60 outline-none text-lg"
                     autoFocus
+                    role="combobox"
+                    aria-expanded={navItemsList.length > 0}
+                    aria-controls="search-results"
+                    aria-autocomplete="list"
+                    aria-activedescendant={
+                      highlightIndex >= 0 ? `search-opt-${highlightIndex}` : undefined
+                    }
                   />
                 </div>
               </form>
               {/* Live results when typing */}
               {debouncedQuery.length >= 2 ? (
-                <div className="space-y-6">
+                <div className="space-y-6" id="search-results" role="listbox">
                   {suggestions.length > 0 && (
                     <div>
                       <h3 className="text-nav-foreground/60 text-xs uppercase tracking-wider font-light mb-3">Suggestions</h3>
                       <div className="flex flex-wrap gap-2">
-                        {suggestions.map((s) => (
-                          <button
-                            key={s}
-                            type="button"
-                            onClick={() => setSearchValue(s)}
-                            className="text-nav-foreground hover:text-nav-hover text-sm font-light py-1.5 px-3 border border-border rounded-full transition-colors duration-200 hover:border-nav-hover"
-                          >
-                            {s}
-                          </button>
-                        ))}
+                        {suggestions.map((s, i) => {
+                          const idx = i;
+                          const isActive = highlightIndex === idx;
+                          return (
+                            <button
+                              key={s}
+                              id={`search-opt-${idx}`}
+                              type="button"
+                              role="option"
+                              aria-selected={isActive}
+                              onMouseEnter={() => setHighlightIndex(idx)}
+                              onClick={() => {
+                                setSearchValue(s);
+                                setHighlightIndex(-1);
+                              }}
+                              className={`text-sm font-light py-1.5 px-3 border rounded-full transition-colors duration-200 ${
+                                isActive
+                                  ? "bg-nav-hover/10 border-nav-hover text-nav-hover"
+                                  : "text-nav-foreground border-border hover:text-nav-hover hover:border-nav-hover"
+                              }`}
+                            >
+                              {s}
+                            </button>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -342,31 +365,41 @@ const Navigation = () => {
                     </h3>
                     {productMatches.length > 0 ? (
                       <ul className="divide-y divide-border">
-                        {productMatches.map((p) => (
-                          <li key={p.id}>
-                            <button
-                              type="button"
-                              onClick={() => goToProduct(p)}
-                              className="w-full flex items-center gap-4 py-3 text-left hover:bg-nav-hover/5 transition-colors duration-150 -mx-2 px-2 rounded"
-                            >
-                              {p.image && (
-                                <img
-                                  src={p.image}
-                                  alt={p.title}
-                                  loading="lazy"
-                                  className="w-12 h-12 object-cover rounded"
-                                />
-                              )}
-                              <div className="flex-1 min-w-0">
-                                <div className="text-nav-foreground text-sm font-light truncate">{p.title}</div>
-                                <div className="text-nav-foreground/60 text-xs truncate">{p.category}</div>
-                              </div>
-                              <div className="text-nav-foreground text-sm font-light shrink-0">
-                                {formatPrice(p.basePrice)}
-                              </div>
-                            </button>
-                          </li>
-                        ))}
+                        {productMatches.map((p, i) => {
+                          const idx = suggestions.length + i;
+                          const isActive = highlightIndex === idx;
+                          return (
+                            <li key={p.id}>
+                              <button
+                                id={`search-opt-${idx}`}
+                                type="button"
+                                role="option"
+                                aria-selected={isActive}
+                                onMouseEnter={() => setHighlightIndex(idx)}
+                                onClick={() => goToProduct(p)}
+                                className={`w-full flex items-center gap-4 py-3 text-left transition-colors duration-150 -mx-2 px-2 rounded ${
+                                  isActive ? "bg-nav-hover/10" : "hover:bg-nav-hover/5"
+                                }`}
+                              >
+                                {p.image && (
+                                  <img
+                                    src={p.image}
+                                    alt={p.title}
+                                    loading="lazy"
+                                    className="w-12 h-12 object-cover rounded"
+                                  />
+                                )}
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-nav-foreground text-sm font-light truncate">{p.title}</div>
+                                  <div className="text-nav-foreground/60 text-xs truncate">{p.category}</div>
+                                </div>
+                                <div className="text-nav-foreground text-sm font-light shrink-0">
+                                  {formatPrice(p.basePrice)}
+                                </div>
+                              </button>
+                            </li>
+                          );
+                        })}
                       </ul>
                     ) : (
                       <p className="text-nav-foreground/60 text-sm font-light">No products match "{debouncedQuery}".</p>
