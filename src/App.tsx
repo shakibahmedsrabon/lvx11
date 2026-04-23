@@ -7,6 +7,7 @@ import { lazy, Suspense } from "react";
 import ScrollToTop from "./components/ScrollToTop";
 import SkipToContent from "./components/SkipToContent";
 import { CartProvider } from "./contexts/CartContext";
+import { ThemeProvider } from "./hooks/useTheme";
 import Index from "./pages/Index";
 
 // Lazy-load non-critical routes — keeps the initial bundle small for fast first paint.
@@ -30,6 +31,7 @@ const queryClient = new QueryClient({
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
+    <ThemeProvider>
     <TooltipProvider>
       <CartProvider>
         <Toaster />
@@ -56,6 +58,7 @@ const App = () => (
         </BrowserRouter>
       </CartProvider>
     </TooltipProvider>
+    </ThemeProvider>
   </QueryClientProvider>
 );
 
