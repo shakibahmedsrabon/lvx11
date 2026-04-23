@@ -63,11 +63,55 @@ const Navigation = () => {
     return scored.slice(0, 6).map((s) => s.p);
   }, [products, debouncedQuery]);
 
+  // Combined keyboard-navigable list: suggestions first, then products
+  type NavItem =
+    | { kind: "suggestion"; value: string }
+    | { kind: "product"; value: Product };
+  const navItemsList = useMemo<NavItem[]>(() => {
+    if (debouncedQuery.length < 2) return [];
+    return [
+      ...suggestions.map((s) => ({ kind: "suggestion" as const, value: s })),
+      ...productMatches.map((p) => ({ kind: "product" as const, value: p })),
+    ];
+  }, [suggestions, productMatches, debouncedQuery]);
+
+  const [highlightIndex, setHighlightIndex] = useState(-1);
+
+  // Reset highlight when results or overlay state change
+  useEffect(() => {
+    setHighlightIndex(-1);
+  }, [debouncedQuery, isSearchOpen]);
+
   const goToProduct = (p: Product) => {
     const catSlug = (p.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     navigate(`/explore/${catSlug}/${p.slug}-${p.id}`);
     setIsSearchOpen(false);
     setSearchValue("");
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") {
+      setIsSearchOpen(false);
+      setSearchValue("");
+      return;
+    }
+    if (navItemsList.length === 0) return;
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      setHighlightIndex((i) => (i + 1) % navItemsList.length);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      setHighlightIndex((i) => (i <= 0 ? navItemsList.length - 1 : i - 1));
+    } else if (e.key === "Enter" && highlightIndex >= 0) {
+      e.preventDefault();
+      const item = navItemsList[highlightIndex];
+      if (item.kind === "suggestion") {
+        setSearchValue(item.value);
+        setHighlightIndex(-1);
+      } else {
+        goToProduct(item.value);
+      }
+    }
   };
 
   // Merge DB categories into navItems for "Shop" (names + latest 2 images)
