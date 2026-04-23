@@ -21,39 +21,33 @@ const Navigation = () => {
   
   const { cartItems, favorites, updateQuantity, clearCart, toggleFavorite, totalItems } = useCart();
 
-  // Merge DB categories into navItems for "Shop" and "New in"
+  // Merge DB categories into navItems for "Shop" (names + latest 2 images)
   const dynamicNavItems = useMemo(() => {
     if (dbCategories.length === 0) return navItems;
     return navItems.map((item) => {
       if (item.name === "Shop") {
-        return { ...item, submenuItems: dbCategories.map((c) => c.name) };
-      }
-      if (item.name === "New in") {
-        const imagesFromDb = dbCategories
-          .filter((c) => c.images && c.images.trim().length > 4)
-          .map((c) => ({
-            src: c.images as string,
-            alt: c.name,
-            label: c.name,
-          }));
+        const withImages = dbCategories.filter(
+          (c) => c.images && c.images.trim().length > 4
+        );
+        const latestTwo = withImages.slice(-2).map((c) => ({
+          src: c.images as string,
+          alt: c.name,
+          label: c.name,
+        }));
         return {
           ...item,
           submenuItems: dbCategories.map((c) => c.name),
-          images: imagesFromDb.length > 0 ? imagesFromDb : item.images,
+          images: latestTwo.length > 0 ? latestTwo : item.images,
         };
       }
       return item;
     });
   }, [dbCategories]);
-  
+
   // Preload dropdown images for faster display
   useEffect(() => {
     const imagesToPreload = [
-      "/rings-collection.png",
-      "/earrings-collection.png", 
-      "/arcus-bracelet.png",
-      "/span-bracelet.png",
-      "/founders.png"
+      "/founders.png",
     ];
     
     imagesToPreload.forEach(src => {
@@ -194,11 +188,9 @@ const Navigation = () => {
                   .find(item => item.name === activeDropdown)
                   ?.images.map((image, index) => {
                     let linkTo = "/";
+                    const slug = image.label.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
                     if (activeDropdown === "Shop") {
-                      if (image.label === "Rings") linkTo = "/explore/rings";
-                      else if (image.label === "Earrings") linkTo = "/explore/earrings";
-                    } else if (activeDropdown === "New in") {
-                      linkTo = `/explore/${image.label.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+                      linkTo = `/explore/${slug}`;
                     } else if (activeDropdown === "About") {
                       linkTo = "/about/our-story";
                     }
@@ -210,7 +202,7 @@ const Navigation = () => {
                           alt={image.alt}
                           className="w-full h-full object-cover transition-opacity duration-200 group-hover:opacity-90"
                         />
-                        {(activeDropdown === "Shop" || activeDropdown === "New in" || activeDropdown === "About") && (
+                        {(activeDropdown === "Shop" || activeDropdown === "About") && (
                           <div className="absolute bottom-2 left-2 text-white text-xs font-light flex items-center gap-1">
                             <span>{image.label}</span>
                             <ArrowRight size={12} />

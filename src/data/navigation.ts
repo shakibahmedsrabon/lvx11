@@ -27,21 +27,6 @@ export const navItems: NavItem[] = [
     ],
   },
   {
-    name: "New in",
-    href: "/explore/new-in",
-    submenuItems: [
-      "This Week's Arrivals",
-      "Spring Collection",
-      "Featured Designers",
-      "Limited Edition",
-      "Pre-Orders",
-    ],
-    images: [
-      { src: "/arcus-bracelet.png", alt: "Arcus Bracelet", label: "Arcus Bracelet" },
-      { src: "/span-bracelet.png", alt: "Span Bracelet", label: "Span Bracelet" },
-    ],
-  },
-  {
     name: "About",
     href: "/about/our-story",
     submenuItems: [
@@ -68,7 +53,6 @@ export const popularSearches = [
 
 export const footerLinks = {
   shop: [
-    { label: "New In", href: "/explore/new-in" },
     { label: "Rings", href: "/explore/rings" },
     { label: "Earrings", href: "/explore/earrings" },
     { label: "Bracelets", href: "/explore/bracelets" },
