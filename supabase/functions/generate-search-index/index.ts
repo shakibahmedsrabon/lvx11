@@ -117,9 +117,9 @@ Deno.serve(async (req) => {
     const products: Product[] = await productsRes.json();
     const index = buildIndex(products);
 
-    // Upsert single row (id=1) into SearchIndex
+    // Upsert single row (id=1) into public.search
     const upsertRes = await fetch(
-      `${EXTERNAL_SUPABASE_URL}/rest/v1/SearchIndex?on_conflict=id`,
+      `${EXTERNAL_SUPABASE_URL}/rest/v1/search?on_conflict=id`,
       {
         method: "POST",
         headers: {
@@ -131,8 +131,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify([
           {
             id: 1,
-            keywords: index,
-            updated_at: new Date().toISOString(),
+            search: index,
           },
         ]),
       },
@@ -141,7 +140,7 @@ Deno.serve(async (req) => {
     if (!upsertRes.ok) {
       const txt = await upsertRes.text();
       return new Response(
-        JSON.stringify({ error: "Failed to upsert SearchIndex", detail: txt }),
+        JSON.stringify({ error: "Failed to upsert search", detail: txt }),
         { status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
