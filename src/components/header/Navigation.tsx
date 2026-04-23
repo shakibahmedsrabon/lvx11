@@ -177,7 +177,7 @@ const Navigation = () => {
                     if (activeDropdown === "Shop") {
                       linkTo = `/explore/${slug}`;
                     } else if (activeDropdown === "About") {
-                      linkTo = "/about/our-story";
+                      linkTo = "/about/faq";
                     }
                     
                     return (
