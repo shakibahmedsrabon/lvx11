@@ -40,9 +40,15 @@ const HeroSlider = () => {
         .order("id", { ascending: true });
 
       if (!mounted || error || !data) return;
+      const seen = new Set<string>();
       const dbSlides: Slide[] = (data as unknown as { id: number; images: string | null }[])
         .filter((r) => r.images && r.images.trim().length > 0)
-        .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }));
+        .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }))
+        .filter((s) => {
+          if (seen.has(s.image)) return false;
+          seen.add(s.image);
+          return true;
+        });
 
       setSlides(dbSlides);
       setCurrent(0);
