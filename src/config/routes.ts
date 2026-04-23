@@ -34,31 +34,6 @@ export const routes: Record<string, RouteMeta> = {
     title: "Checkout - Linea Jewelry",
     description: "Complete your purchase at Linea Jewelry.",
   },
-  ourStory: {
-    path: "/about/our-story",
-    title: "Our Story - Linea Jewelry",
-    description: "Learn about the story behind Linea Jewelry.",
-  },
-  sustainability: {
-    path: "/about/sustainability",
-    title: "Sustainability - Linea Jewelry",
-    description: "Discover Linea's commitment to sustainable jewelry.",
-  },
-  sizeGuide: {
-    path: "/about/size-guide",
-    title: "Size Guide - Linea Jewelry",
-    description: "Find your perfect fit with our comprehensive size guide.",
-  },
-  customerCare: {
-    path: "/about/customer-care",
-    title: "Customer Care - Linea Jewelry",
-    description: "Get help with orders, shipping, returns, and more.",
-  },
-  storeLocator: {
-    path: "/about/store-locator",
-    title: "Store Locator - Linea Jewelry",
-    description: "Find a Linea Jewelry store near you.",
-  },
   privacyPolicy: {
     path: "/privacy-policy",
     title: "Privacy Policy - Linea Jewelry",

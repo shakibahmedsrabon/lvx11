@@ -28,14 +28,9 @@ export const navItems: NavItem[] = [
   },
   {
     name: "About",
-    href: "/about/our-story",
+    href: "/about/faq",
     submenuItems: [
-      "Our Story",
-      "Sustainability",
-      "Size Guide",
-      "Customer Care",
       "FAQ",
-      "Store Locator",
     ],
     images: [
       { src: "/founders.png", alt: "Company Founders", label: "Read our story" },
@@ -60,11 +55,8 @@ export const footerLinks = {
     { label: "Necklaces", href: "/explore/necklaces" },
   ],
   support: [
-    { label: "Size Guide", href: "/about/size-guide" },
-    { label: "Care Instructions", href: "/about/customer-care" },
+    { label: "FAQ", href: "/about/faq" },
     { label: "Returns & Exchanges", href: "/refund-exchange-policy" },
-    { label: "Shipping", href: "/about/customer-care" },
-    { label: "Contact", href: "/about/customer-care" },
   ],
   connect: [
     { label: "Instagram", href: "https://instagram.com", external: true },

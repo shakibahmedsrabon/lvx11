@@ -10,11 +10,6 @@ import Index from "./pages/Index";
 import Checkout from "./pages/Checkout";
 import Explore from "./pages/Explore";
 import NotFound from "./pages/NotFound";
-import OurStory from "./pages/about/OurStory";
-import Sustainability from "./pages/about/Sustainability";
-import SizeGuide from "./pages/about/SizeGuide";
-import CustomerCare from "./pages/about/CustomerCare";
-import StoreLocator from "./pages/about/StoreLocator";
 import Faq from "./pages/about/Faq";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
@@ -38,11 +33,6 @@ const App = () => (
             <Route path="/explore/:category" element={<Explore />} />
             <Route path="/explore/:category/:productId" element={<Explore />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/about/our-story" element={<OurStory />} />
-            <Route path="/about/sustainability" element={<Sustainability />} />
-            <Route path="/about/size-guide" element={<SizeGuide />} />
-            <Route path="/about/customer-care" element={<CustomerCare />} />
-            <Route path="/about/store-locator" element={<StoreLocator />} />
             <Route path="/about/faq" element={<Faq />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
