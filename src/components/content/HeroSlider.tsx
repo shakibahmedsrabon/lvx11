@@ -7,11 +7,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
-import hero1 from "@/assets/hero/hero-1.jpg";
-import hero2 from "@/assets/hero/hero-2.jpg";
-import hero3 from "@/assets/hero/hero-3.jpg";
-import hero4 from "@/assets/hero/hero-4.jpg";
-import hero5 from "@/assets/hero/hero-5.jpg";
 
 interface Slide {
   id: number | string;
@@ -19,19 +14,11 @@ interface Slide {
   alt: string;
 }
 
-const FALLBACK_SLIDES: Slide[] = [
-  { id: "f1", image: hero1, alt: "Featured collection" },
-  { id: "f2", image: hero2, alt: "Featured collection" },
-  { id: "f3", image: hero3, alt: "Featured collection" },
-  { id: "f4", image: hero4, alt: "Featured collection" },
-  { id: "f5", image: hero5, alt: "Featured collection" },
-];
-
 const AUTO_PLAY_INTERVAL = 4500;
 const TRANSITION_DURATION = 600;
 
 const HeroSlider = () => {
-  const [slides, setSlides] = useState<Slide[]>(FALLBACK_SLIDES);
+  const [slides, setSlides] = useState<Slide[]>([]);
   const [current, setCurrent] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
@@ -54,10 +41,8 @@ const HeroSlider = () => {
         .filter((r) => r.images && r.images.trim().length > 0)
         .map((r) => ({ id: r.id, image: r.images!.trim(), alt: "Featured slide" }));
 
-      if (dbSlides.length > 0) {
-        setSlides(dbSlides);
-        setCurrent(0);
-      }
+      setSlides(dbSlides);
+      setCurrent(0);
     })();
     return () => {
       mounted = false;
@@ -99,6 +84,8 @@ const HeroSlider = () => {
       touchDeltaRef.current < 0 ? next() : prev();
     }
   };
+
+  if (slides.length === 0) return null;
 
   return (
     <section
