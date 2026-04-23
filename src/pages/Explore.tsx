@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { useProducts, useProduct } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
+import { useSearchIndex, getSuggestions } from "@/hooks/useSearchIndex";
 import { Search, ArrowLeft } from "lucide-react";
 import type { ActiveFilters } from "@/components/category/FilterSortBar";
 
@@ -159,6 +160,11 @@ const Explore = () => {
 
   const { products, loading } = useProducts();
   const { categories: dbCategories } = useCategories();
+  const { data: searchIndex } = useSearchIndex();
+  const suggestions = useMemo(
+    () => getSuggestions(searchIndex, searchQuery, 6),
+    [searchIndex, searchQuery],
+  );
 
   const categoryNames = useMemo(() => {
     if (dbCategories.length > 0) return dbCategories.map((c) => c.name);
@@ -288,6 +294,20 @@ const Explore = () => {
               </button>
             )}
           </div>
+          {suggestions.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 mt-2.5" aria-label="Search suggestions">
+              {suggestions.map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => handleSearchChange(s)}
+                  className="text-xs font-light py-1 px-2.5 rounded-full bg-muted/40 text-muted-foreground hover:bg-foreground hover:text-background border border-transparent transition-colors"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
