@@ -21,12 +21,26 @@ const Navigation = () => {
   
   const { cartItems, favorites, updateQuantity, clearCart, toggleFavorite, totalItems } = useCart();
 
-  // Merge DB categories into navItems for "Shop"
+  // Merge DB categories into navItems for "Shop" and "New in"
   const dynamicNavItems = useMemo(() => {
     if (dbCategories.length === 0) return navItems;
     return navItems.map((item) => {
       if (item.name === "Shop") {
         return { ...item, submenuItems: dbCategories.map((c) => c.name) };
+      }
+      if (item.name === "New in") {
+        const imagesFromDb = dbCategories
+          .filter((c) => c.images && c.images.trim().length > 4)
+          .map((c) => ({
+            src: c.images as string,
+            alt: c.name,
+            label: c.name,
+          }));
+        return {
+          ...item,
+          submenuItems: dbCategories.map((c) => c.name),
+          images: imagesFromDb.length > 0 ? imagesFromDb : item.images,
+        };
       }
       return item;
     });
@@ -184,7 +198,7 @@ const Navigation = () => {
                       if (image.label === "Rings") linkTo = "/explore/rings";
                       else if (image.label === "Earrings") linkTo = "/explore/earrings";
                     } else if (activeDropdown === "New in") {
-                      linkTo = "/explore/new-in";
+                      linkTo = `/explore/${image.label.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
                     } else if (activeDropdown === "About") {
                       linkTo = "/about/our-story";
                     }

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 export interface Category {
   id: number;
   name: string;
+  images: string | null;
 }
 
 let cached: Category[] | null = null;
@@ -27,6 +28,7 @@ const fetchCategories = (): Promise<Category[]> => {
         .map((row: any) => ({
           id: row.id,
           name: row.name,
+          images: row.images ?? null,
         }));
       return cached!;
     });
