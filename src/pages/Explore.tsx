@@ -160,6 +160,11 @@ const Explore = () => {
 
   const { products, loading } = useProducts();
   const { categories: dbCategories } = useCategories();
+  const { data: searchIndex } = useSearchIndex();
+  const suggestions = useMemo(
+    () => getSuggestions(searchIndex, searchQuery, 6),
+    [searchIndex, searchQuery],
+  );
 
   const categoryNames = useMemo(() => {
     if (dbCategories.length > 0) return dbCategories.map((c) => c.name);
