@@ -16,14 +16,14 @@ const PromoBanner = () => {
             className="w-full h-auto object-cover rounded-lg"
           />
         )}
-        <div className="mt-6 text-center">
+        <div className="mt-4 text-left">
           {banner.title && (
-            <h2 className="text-2xl md:text-4xl font-light text-foreground mb-3">
+            <h2 className="text-base md:text-lg font-medium text-foreground mb-1">
               {banner.title}
             </h2>
           )}
           {banner.description && (
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto font-light">
+            <p className="text-xs md:text-sm text-muted-foreground font-light">
               {banner.description}
             </p>
           )}
