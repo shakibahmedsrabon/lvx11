@@ -188,11 +188,9 @@ const Navigation = () => {
                   .find(item => item.name === activeDropdown)
                   ?.images.map((image, index) => {
                     let linkTo = "/";
+                    const slug = image.label.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
                     if (activeDropdown === "Shop") {
-                      if (image.label === "Rings") linkTo = "/explore/rings";
-                      else if (image.label === "Earrings") linkTo = "/explore/earrings";
-                    } else if (activeDropdown === "New in") {
-                      linkTo = `/explore/${image.label.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
+                      linkTo = `/explore/${slug}`;
                     } else if (activeDropdown === "About") {
                       linkTo = "/about/our-story";
                     }
