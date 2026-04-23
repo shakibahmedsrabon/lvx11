@@ -15,7 +15,9 @@ interface Slide {
 }
 
 const AUTO_PLAY_INTERVAL = 4500;
-const TRANSITION_DURATION = 600;
+const TRANSITION_DURATION = 700;
+// Apple/Samsung-style snappy ease-out curve (fast start, gentle settle)
+const EASE_SNAPPY = "cubic-bezier(0.22, 1, 0.36, 1)";
 
 const HeroSlider = () => {
   const [slides, setSlides] = useState<Slide[]>([]);
@@ -129,21 +131,24 @@ const HeroSlider = () => {
     >
       {slides.map((slide, i) => {
         const isActive = i === current;
+        const distance = i - current;
+        const isAdjacent = Math.abs(distance) <= 1;
         // Sequential loading: only render slides up to loadedCount.
-        // Each <img> onLoad bumps loadedCount, kicking off the next one.
         const shouldRender = i < loadedCount;
         return (
           <div
             key={slide.id}
             className="absolute inset-0"
             style={{
-              willChange: "transform, opacity",
-              transform: `translate3d(${(i - current) * 100}%, 0, 0)`,
-              transition: `transform ${TRANSITION_DURATION}ms cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity ${TRANSITION_DURATION}ms ease`,
-              opacity: Math.abs(i - current) <= 1 ? 1 : 0,
+              willChange: isAdjacent ? "transform" : "auto",
+              transform: `translate3d(${distance * 100}%, 0, 0)`,
+              transition: `transform ${TRANSITION_DURATION}ms ${EASE_SNAPPY}`,
+              // Hide non-adjacent slides completely to prevent overlay artifacts
+              visibility: isAdjacent ? "visible" : "hidden",
               zIndex: isActive ? 2 : 1,
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
+              WebkitTransform: `translate3d(${distance * 100}%, 0, 0)`,
             }}
             aria-hidden={!isActive}
           >
@@ -152,19 +157,21 @@ const HeroSlider = () => {
                 src={slide.image}
                 alt={slide.alt}
                 loading={i === 0 ? "eager" : "lazy"}
-                
                 decoding="async"
+                draggable={false}
                 onLoad={() =>
                   setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
                 }
                 onError={() =>
                   setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
                 }
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover pointer-events-none"
                 style={{
                   willChange: "transform",
-                  transform: isActive ? "scale(1)" : "scale(1.04)",
-                  transition: `transform ${TRANSITION_DURATION + 600}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`,
+                  transform: isActive ? "translate3d(0,0,0) scale(1)" : "translate3d(0,0,0) scale(1.06)",
+                  transition: `transform ${TRANSITION_DURATION + 400}ms ${EASE_SNAPPY}`,
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
                 }}
               />
             )}
