@@ -150,15 +150,16 @@ const Footer = () => {
             <div>
               <h4 className="text-sm font-normal mb-4">Social Platforms</h4>
               <ul className="space-y-2">
-                {footerLinks.connect.map((link) => (
-                  <li key={link.href}>
-                    <AppLink
-                      href={link.href}
-                      {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                {socials.map((s) => (
+                  <li key={s.id}>
+                    <a
+                      href={s.Link || '#'}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
                     >
-                      {link.label}
-                    </AppLink>
+                      {s.Name}
+                    </a>
                   </li>
                 ))}
               </ul>
