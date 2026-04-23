@@ -18,6 +18,7 @@
     --nav-background: 0 0% 100%;
     --nav-foreground: 0 0% 20%;
     --nav-hover: 0 0% 5%;
+    --nav-glass: 0 0% 100% / 0.9;
     
     /* Interactive elements */
     --primary: 0 0% 9%;
