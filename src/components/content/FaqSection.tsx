@@ -23,7 +23,7 @@ const FaqSection = () => {
       .from("FAQ")
       .select("*")
       .order("id", { ascending: true })
-      .limit(6)
+      .limit(5)
       .then(({ data, error }: any) => {
         if (!error && data) setFaqs(data);
         setLoading(false);
