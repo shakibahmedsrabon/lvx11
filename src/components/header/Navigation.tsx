@@ -1,5 +1,5 @@
-import { ArrowRight } from "lucide-react";
-import { useState, useEffect, useMemo } from "react";
+import { ArrowRight, Search as SearchIcon } from "lucide-react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
@@ -7,6 +7,8 @@ import ShoppingBag from "./ShoppingBag";
 import { useCart } from "@/contexts/CartContext";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { useCategories } from "@/hooks/useCategories";
+import { useProducts, formatPrice, type Product } from "@/hooks/useProducts";
+import { useSearchIndex, getSuggestions } from "@/hooks/useSearchIndex";
 
 const Navigation = () => {
   const { config: siteConfig } = useSiteConfig();
