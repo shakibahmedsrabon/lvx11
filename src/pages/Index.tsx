@@ -3,6 +3,7 @@ import HeroSlider from "../components/content/HeroSlider";
 import LargeHero from "../components/content/LargeHero";
 import ProductCarousel from "../components/content/ProductCarousel";
 import TopProductsCarousel from "../components/content/TopProductsCarousel";
+import FaqSection from "../components/content/FaqSection";
 import SEOHead from "../components/SEOHead";
 import { routes } from "@/config/routes";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
