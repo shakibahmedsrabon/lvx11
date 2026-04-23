@@ -165,14 +165,17 @@ const Explore = () => {
     return [...new Set(products.map((p) => p.category))].filter(Boolean);
   }, [dbCategories, products]);
 
-  // Sync route category to filters
+  // Sync route category to filters (normalize via slugify so URLs like
+  // /explore/ai-&-tools, /explore/AI%20Tools, /explore/ai-tools all map to the
+  // same DB category).
   useEffect(() => {
     if (routeCategory) {
-      const decoded = decodeURIComponent(routeCategory);
-      const matched = categoryNames.find(
-        (c) => slugify(c) === decoded.toLowerCase()
-      );
-      setFilters((f) => ({ ...f, categories: matched ? [matched] : [decoded] }));
+      const routeSlug = slugify(decodeURIComponent(routeCategory));
+      const matched = categoryNames.find((c) => slugify(c) === routeSlug);
+      setFilters((f) => ({
+        ...f,
+        categories: matched ? [matched] : routeSlug ? [routeSlug] : [],
+      }));
     } else {
       setFilters((f) => ({ ...f, categories: [] }));
     }
