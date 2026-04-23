@@ -9,7 +9,7 @@ const RefundExchangePolicy = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    document.title = "Refund & Exchange Policy - Linea Jewelry";
+    document.title = "Refund & Exchange Policy - E Product Hub BD";
 
     const fetchData = async () => {
       const { data, error } = await (supabase as any)

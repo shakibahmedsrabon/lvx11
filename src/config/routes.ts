@@ -20,34 +20,34 @@ export const routes: Record<string, RouteMeta> = {
   },
   category: {
     path: "/category/:category",
-    title: "{category} - Linea Jewelry",
+    title: "{category} - E Product Hub BD",
     description: "Shop our {category} collection. Minimalist jewelry crafted with timeless elegance.",
   },
   product: {
     path: "/product/:productId",
-    title: "{productName} - Linea Jewelry",
+    title: "{productName} - E Product Hub BD",
     description: "Discover the {productName} from Linea. Minimalist jewelry crafted with timeless elegance.",
     jsonLdType: "Product",
   },
   checkout: {
     path: "/checkout",
-    title: "Checkout - Linea Jewelry",
-    description: "Complete your purchase at Linea Jewelry.",
+    title: "Checkout - E Product Hub BD",
+    description: "Complete your purchase at E Product Hub BD.",
   },
   privacyPolicy: {
     path: "/privacy-policy",
-    title: "Privacy Policy - Linea Jewelry",
-    description: "Read Linea Jewelry's privacy policy.",
+    title: "Privacy Policy - E Product Hub BD",
+    description: "Read E Product Hub BD's privacy policy.",
   },
   termsOfService: {
     path: "/terms-of-service",
-    title: "Terms of Service - Linea Jewelry",
-    description: "Read Linea Jewelry's terms of service.",
+    title: "Terms of Service - E Product Hub BD",
+    description: "Read E Product Hub BD's terms of service.",
   },
   refundExchangePolicy: {
     path: "/refund-exchange-policy",
-    title: "Refund & Exchange Policy - Linea Jewelry",
-    description: "Read Linea Jewelry's refund and exchange policy.",
+    title: "Refund & Exchange Policy - E Product Hub BD",
+    description: "Read E Product Hub BD's refund and exchange policy.",
   },
 };
 
