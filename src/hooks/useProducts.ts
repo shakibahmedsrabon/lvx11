@@ -56,12 +56,23 @@ export interface Product {
 export function parseVariants(raw: any): PriceVariant[] {
   // New format: array of variants
   if (Array.isArray(raw)) {
+    // Determine a fallback type: the first explicit type in the list, else "standard".
+    // This handles partially-typed data where some variants omit `type` but logically
+    // belong to the same plan as the first one (e.g. multi-duration "personal" plans).
+    const firstExplicitType = raw.find(
+      (v: any) => typeof v?.type === "string" && v.type.trim() !== ""
+    )?.type;
+    const fallbackType = (firstExplicitType && String(firstExplicitType)) || "standard";
+
     return raw
-      .map((v: any) => ({
-        type: String(v?.type ?? "standard"),
-        amount: typeof v?.amount === "number" ? v.amount : parseFloat(v?.amount ?? "0") || 0,
-        duration: typeof v?.duration === "number" ? v.duration : parseInt(v?.duration ?? "1", 10) || 1,
-      }))
+      .map((v: any) => {
+        const rawType = typeof v?.type === "string" ? v.type.trim() : "";
+        return {
+          type: rawType || fallbackType,
+          amount: typeof v?.amount === "number" ? v.amount : parseFloat(v?.amount ?? "0") || 0,
+          duration: typeof v?.duration === "number" ? v.duration : parseInt(v?.duration ?? "1", 10) || 1,
+        };
+      })
       .filter((v) => v.amount > 0);
   }
   // Legacy object map
