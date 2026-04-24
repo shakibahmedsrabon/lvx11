@@ -19,7 +19,7 @@ const ProductCarousel = () => {
     .slice(0, 12);
 
   return (
-    <section className="w-full mb-16 px-6" aria-label="Explore products">
+    <section className="w-full mb-20 md:mb-24 px-6" aria-label="Explore products">
       <div className="flex items-end justify-between mb-6 md:mb-8">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
