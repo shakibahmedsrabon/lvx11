@@ -136,6 +136,7 @@ const Explore = () => {
   const [filters, setFilters] = useState<ActiveFilters>({
     categories: [],
     priceRange: null,
+    inStockOnly: false,
     sortBy: "featured",
   });
   const [currentPage, setCurrentPage] = useState(1);
