@@ -14,7 +14,7 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['DM Sans', 'sans-serif'],
+        sans: ['DM Sans', 'Li Ador Noirrit', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
