@@ -8,7 +8,33 @@ interface SEOHeadProps {
   image?: string;
   noindex?: boolean;
   jsonLd?: Record<string, unknown>;
+  keywords?: string;
 }
+
+const STOP_WORDS = new Set([
+  "the","a","an","and","or","but","for","of","to","in","on","at","by","with",
+  "from","is","it","as","be","are","was","were","this","that","you","your",
+  "our","we","they","them","his","her","its","all","any","can","will","has",
+  "have","had","not","no","yes","if","so","do","does","get","got","use",
+  "using","used","via","i","me","my","mine","their","there","here","what",
+  "which","who","whom","when","where","why","how","than","then","also","too",
+]);
+
+const extractKeywords = (text: string, max = 20): string => {
+  if (!text) return "";
+  const words = text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .split(/\s+/)
+    .filter((w) => w.length >= 3 && !STOP_WORDS.has(w));
+  const freq = new Map<string, number>();
+  words.forEach((w) => freq.set(w, (freq.get(w) || 0) + 1));
+  return [...freq.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, max)
+    .map(([w]) => w)
+    .join(", ");
+};
 
 const SEOHead = ({
   title = "E Product Hub BD — Trusted Digital Subscriptions in Bangladesh",
@@ -18,6 +44,7 @@ const SEOHead = ({
   image,
   noindex = false,
   jsonLd,
+  keywords,
 }: SEOHeadProps) => {
   useEffect(() => {
     document.title = title;
@@ -34,14 +61,20 @@ const SEOHead = ({
     };
 
     const url = canonical || window.location.origin + window.location.pathname;
+    const kw = keywords || extractKeywords(`${title} ${description}`);
 
     setMeta("description", description);
+    if (kw) setMeta("keywords", kw);
     setMeta("robots", noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1");
     setMeta("og:title", title, true);
     setMeta("og:description", description, true);
     setMeta("og:type", type, true);
     setMeta("og:url", url, true);
-    if (image) setMeta("og:image", image, true);
+    setMeta("og:site_name", "E Product Hub BD", true);
+    if (image) {
+      setMeta("og:image", image, true);
+      setMeta("og:image:alt", title, true);
+    }
     setMeta("twitter:card", "summary_large_image");
     setMeta("twitter:title", title);
     setMeta("twitter:description", description);
@@ -76,7 +109,7 @@ const SEOHead = ({
       const script = document.querySelector('script[data-seo-jsonld]');
       if (script) script.remove();
     };
-  }, [title, description, canonical, type, image, noindex, jsonLd]);
+  }, [title, description, canonical, type, image, noindex, jsonLd, keywords]);
 
   return null;
 };

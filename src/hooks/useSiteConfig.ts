@@ -9,6 +9,7 @@ interface SiteConfigData {
   logo: string;
   logoFull: string;
   showReview: boolean;
+  ogImage: string;
 }
 
 let cached: SiteConfigData | null = null;
@@ -20,7 +21,7 @@ const fetchConfig = (): Promise<SiteConfigData | null> => {
 
   fetchPromise = (supabase as any)
     .from("Site config")
-    .select("title, name, slong, description, logo, show_review")
+    .select('title, name, slong, description, logo, show_review, "og-image"')
     .limit(1)
     .single()
     .then(({ data, error }: any) => {
@@ -36,6 +37,7 @@ const fetchConfig = (): Promise<SiteConfigData | null> => {
         logo: data.logo || "",
         logoFull: data.logo || "",
         showReview: data.show_review !== false,
+        ogImage: data["og-image"] || "",
       };
       return cached;
     });

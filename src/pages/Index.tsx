@@ -36,6 +36,7 @@ const Index = () => {
         <SEOHead
           title={siteConfig.title}
           description={siteConfig.description}
+          image={siteConfig.ogImage || undefined}
           jsonLd={jsonLd}
         />
       )}
