@@ -47,8 +47,9 @@ const TopProductsCarousel = () => {
       // Step 1: fetch only the Top Products mapping (small table, 2 cols)
       const { data: tops, error: topErr } = await (supabase as any)
         .from("Top Products")
-        .select("post_id, top")
-        .order("top", { ascending: true })
+        .select("post_id, top, id")
+        .order("top", { ascending: true, nullsFirst: false })
+        .order("id", { ascending: true })
         .limit(10);
 
       if (cancelled) return;
