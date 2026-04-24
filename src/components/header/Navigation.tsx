@@ -1,6 +1,6 @@
 import { ArrowRight, Search as SearchIcon } from "lucide-react";
 import { useState, useEffect, useMemo, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import AppLink from "@/lib/navigation/AppLink";
 import { navItems, popularSearches } from "@/data/navigation";
 import ShoppingBag from "./ShoppingBag";
@@ -17,13 +17,32 @@ const Navigation = () => {
   const { resolvedScheme } = useTheme();
   const { categories: dbCategories } = useCategories();
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const debounceRef = useRef<number | null>(null);
+
+  // Transparent overlay only on the homepage hero
+  const isHome = location.pathname === "/";
+  const isTransparent = isHome && !isScrolled && !isSearchOpen && !isMobileMenuOpen && !activeDropdown;
+
+  // Track scroll to switch nav from transparent to solid near end of hero
+  useEffect(() => {
+    if (!isHome) return;
+    const onScroll = () => {
+      // Trigger threshold: ~70% of viewport height (near end of hero)
+      const threshold = window.innerHeight * 0.7;
+      setIsScrolled(window.scrollY > threshold);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
 
   const { cartItems, updateQuantity, clearCart, totalItems } = useCart();
   const { products } = useProducts();
@@ -143,20 +162,22 @@ const Navigation = () => {
 
   return (
     <nav
-      className="relative"
+      className="relative transition-colors duration-300"
       style={{
-        backgroundColor: 'hsl(var(--nav-glass))',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        backgroundColor: isTransparent ? 'transparent' : 'hsl(var(--nav-glass))',
+        backdropFilter: isTransparent ? 'none' : 'blur(10px)',
+        WebkitBackdropFilter: isTransparent ? 'none' : 'blur(10px)',
+        color: isTransparent ? '#fff' : undefined,
       }}
     >
       <div className="grid grid-cols-3 items-center h-16 px-6">
         {/* Left: hamburger + search */}
-        <div className="flex items-center justify-start space-x-1">
+        <div className="flex items-center justify-start gap-1 sm:gap-3">
           <button
-            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
+            className="flex items-center gap-1.5 p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
+            style={isTransparent ? { color: '#fff' } : undefined}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -171,15 +192,18 @@ const Navigation = () => {
               <path d={isMobileMenuOpen ? "M6 6L18 18" : "M4 9L20 9"} />
               <path d={isMobileMenuOpen ? "M6 18L18 6" : "M4 15L14 15"} />
             </svg>
+            <span className="hidden sm:inline text-sm font-light">Menu</span>
           </button>
           <button
-            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
+            className="flex items-center gap-1.5 p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
             aria-label="Search"
             onClick={() => setIsSearchOpen(!isSearchOpen)}
+            style={isTransparent ? { color: '#fff' } : undefined}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
+            <span className="hidden sm:inline text-sm font-light">Search</span>
           </button>
         </div>
 
@@ -193,7 +217,7 @@ const Navigation = () => {
                 className="h-6 w-auto"
                 width="120"
                 height="24"
-                style={{ filter: resolvedScheme === "light" ? "invert(1)" : "none" }}
+                style={{ filter: isTransparent ? "none" : (resolvedScheme === "light" ? "invert(1)" : "none") }}
               />
             )}
           </AppLink>
@@ -205,6 +229,7 @@ const Navigation = () => {
             className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
             aria-label="Shopping bag"
             onClick={() => setIsShoppingBagOpen(true)}
+            style={isTransparent ? { color: '#fff' } : undefined}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
@@ -215,7 +240,9 @@ const Navigation = () => {
               </span>
             )}
           </button>
-          <ThemeSwitcher />
+          <div style={isTransparent ? { color: '#fff' } : undefined}>
+            <ThemeSwitcher />
+          </div>
         </div>
       </div>
 
