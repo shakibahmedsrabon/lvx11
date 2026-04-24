@@ -148,8 +148,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
       )}
 
-      {/* Type selector — dynamic from variants. Each card shows type label + lowest price for that type. */}
-      {product.availableTypes.length > 1 && (
+      {/* Type selector — dynamic from variants. Always shown when at least one type exists. */}
+      {product.availableTypes.length > 0 && (
         <div className="py-4 border-b border-border">
           <div className="flex items-baseline justify-between mb-3">
             <span className="text-sm font-light text-foreground">Plan type</span>
