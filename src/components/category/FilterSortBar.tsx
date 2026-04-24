@@ -63,9 +63,10 @@ const FilterSortBar = ({
   // Local draft state so user can pick multiple options before applying
   const [draftCategories, setDraftCategories] = useState<string[]>(filters.categories);
   const [draftPrice, setDraftPrice] = useState<string | null>(filters.priceRange);
+  const [draftInStock, setDraftInStock] = useState<boolean>(filters.inStockOnly);
 
   const activeFilterCount =
-    filters.categories.length + (filters.priceRange ? 1 : 0);
+    filters.categories.length + (filters.priceRange ? 1 : 0) + (filters.inStockOnly ? 1 : 0);
 
   const toggleDraftCategory = (name: string) => {
     setDraftCategories((prev) =>
@@ -78,14 +79,15 @@ const FilterSortBar = ({
   };
 
   const applyFilters = () => {
-    setFilters({ ...filters, categories: draftCategories, priceRange: draftPrice });
+    setFilters({ ...filters, categories: draftCategories, priceRange: draftPrice, inStockOnly: draftInStock });
     setFiltersOpen(false);
   };
 
   const clearAll = () => {
     setDraftCategories([]);
     setDraftPrice(null);
-    setFilters({ ...filters, categories: [], priceRange: null });
+    setDraftInStock(false);
+    setFilters({ ...filters, categories: [], priceRange: null, inStockOnly: false });
     setFiltersOpen(false);
   };
 
@@ -98,6 +100,7 @@ const FilterSortBar = ({
     if (open) {
       setDraftCategories(filters.categories);
       setDraftPrice(filters.priceRange);
+      setDraftInStock(filters.inStockOnly);
     }
     setFiltersOpen(open);
   };
