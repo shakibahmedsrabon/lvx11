@@ -197,6 +197,8 @@ const Navigation = () => {
                 src={siteConfig.logo} 
                 alt={siteConfig?.name || ""} 
                 className="h-6 w-auto"
+                width="120"
+                height="24"
                 style={{ filter: resolvedScheme === "light" ? "invert(1)" : "none" }}
               />
             )}
