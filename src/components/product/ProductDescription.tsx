@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import ReviewProduct from "./ReviewProduct";
 import type { Product } from "@/hooks/useProducts";
 import { useReviews } from "@/hooks/useReviews";
+import { useSiteConfig } from "@/hooks/useSiteConfig";
 
 interface ProductDescriptionProps {
   product?: Product;
@@ -28,7 +29,9 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
   const [isDescriptionOpen, setIsDescriptionOpen] = useState(false);
   const [isDescriptionBnOpen, setIsDescriptionBnOpen] = useState(false);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
-  const { reviews, average, refetch } = useReviews();
+  const { config } = useSiteConfig();
+  const showReview = config?.showReview !== false;
+  const { reviews, average, refetch } = useReviews(showReview ? product?.id : undefined);
 
   const description = product?.description?.trim();
   const descriptionBn = product?.description_bn?.trim();
@@ -87,6 +90,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
       )}
 
       {/* Customer Reviews */}
+      {showReview && (
       <div className="border-b border-border lg:mb-16">
         <Button
           variant="ghost"
@@ -110,7 +114,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
         </Button>
         {isReviewsOpen && (
           <div className="pb-6 space-y-6">
-            <ReviewProduct onSubmitted={refetch} />
+            <ReviewProduct onSubmitted={refetch} productId={product?.id} />
 
             {reviews.length === 0 ? (
               <p className="text-sm font-light text-muted-foreground">
@@ -156,6 +160,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
           </div>
         )}
       </div>
+      )}
     </div>
   );
 };

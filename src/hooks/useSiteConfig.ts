@@ -8,6 +8,7 @@ interface SiteConfigData {
   description: string;
   logo: string;
   logoFull: string;
+  showReview: boolean;
 }
 
 let cached: SiteConfigData | null = null;
@@ -19,7 +20,7 @@ const fetchConfig = (): Promise<SiteConfigData | null> => {
 
   fetchPromise = (supabase as any)
     .from("Site config")
-    .select("title, name, slong, description, logo")
+    .select("title, name, slong, description, logo, show_review")
     .limit(1)
     .single()
     .then(({ data, error }: any) => {
@@ -34,6 +35,7 @@ const fetchConfig = (): Promise<SiteConfigData | null> => {
         description: data.description || "",
         logo: data.logo || "",
         logoFull: data.logo || "",
+        showReview: data.show_review !== false,
       };
       return cached;
     });
