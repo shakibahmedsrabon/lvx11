@@ -14,10 +14,10 @@ interface Slide {
   alt: string;
 }
 
-const AUTO_PLAY_INTERVAL = 4500;
-const TRANSITION_DURATION = 700;
-// Apple/Samsung-style snappy ease-out curve (fast start, gentle settle)
-const EASE_SNAPPY = "cubic-bezier(0.22, 1, 0.36, 1)";
+const AUTO_PLAY_INTERVAL = 5000;
+const TRANSITION_DURATION = 1100;
+// Smooth, gentle ease for a calmer slide change
+const EASE_SNAPPY = "cubic-bezier(0.65, 0, 0.35, 1)";
 
 const HeroSlider = () => {
   const [slides, setSlides] = useState<Slide[]>([]);
@@ -86,8 +86,9 @@ const HeroSlider = () => {
   const goTo = useCallback(
     (index: number) => {
       if (isTransitioning || total === 0) return;
+      if (index < 0 || index >= total) return;
       setIsTransitioning(true);
-      setCurrent((index + total) % total);
+      setCurrent(index);
       setTimeout(() => setIsTransitioning(false), TRANSITION_DURATION);
     },
     [isTransitioning, total]
@@ -98,6 +99,8 @@ const HeroSlider = () => {
 
   useEffect(() => {
     if (!isPlaying || total <= 1) return;
+    // Stop autoplay at the last slide (no loop)
+    if (current >= total - 1) return;
     timerRef.current = setTimeout(next, AUTO_PLAY_INTERVAL);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -181,22 +184,22 @@ const HeroSlider = () => {
 
       {total > 1 && (
         <>
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-between gap-3 px-5 md:px-7 pb-5 md:pb-7">
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-between gap-2 px-4 md:px-6 pb-2 md:pb-3">
             {/* Left spacer to balance the right play/pause button */}
-            <div className="w-8 h-8" />
+            <div className="w-7 h-7" />
 
             {/* Center: Prev + dots + Next */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2">
               <button
                 onClick={prev}
                 disabled={current === 0}
-                className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 disabled:opacity-0 disabled:pointer-events-none"
+                className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 disabled:opacity-0 disabled:pointer-events-none"
                 aria-label="Previous slide"
               >
-                <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
+                <ChevronLeft className="w-4 h-4" strokeWidth={1.5} />
               </button>
 
-              <div className="flex items-center gap-2.5">
+              <div className="flex items-center gap-2">
                 {slides.map((_, i) => (
                   <button
                     key={i}
@@ -208,8 +211,8 @@ const HeroSlider = () => {
                       className={cn(
                         "block rounded-full",
                         i === current
-                          ? "w-3 h-3 bg-white"
-                          : "w-2.5 h-2.5 border border-white/50 bg-transparent hover:border-white"
+                          ? "w-2.5 h-2.5 bg-white"
+                          : "w-2 h-2 border border-white/50 bg-transparent hover:border-white"
                       )}
                       style={{
                         willChange: "transform",
@@ -225,20 +228,20 @@ const HeroSlider = () => {
               <button
                 onClick={next}
                 disabled={current === total - 1}
-                className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 disabled:opacity-0 disabled:pointer-events-none"
+                className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 disabled:opacity-0 disabled:pointer-events-none"
                 aria-label="Next slide"
               >
-                <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
+                <ChevronRight className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
 
             {/* Right: Play / Pause */}
             <button
               onClick={() => setIsPlaying((p) => !p)}
-              className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
+              className="w-7 h-7 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
               aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
             >
-              {isPlaying ? <Pause className="w-4 h-4" strokeWidth={1.5} /> : <Play className="w-4 h-4" strokeWidth={1.5} />}
+              {isPlaying ? <Pause className="w-3.5 h-3.5" strokeWidth={1.5} /> : <Play className="w-3.5 h-3.5" strokeWidth={1.5} />}
             </button>
           </div>
         </>
