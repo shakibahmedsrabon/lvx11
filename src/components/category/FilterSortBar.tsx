@@ -24,6 +24,7 @@ import { useProducts } from "@/hooks/useProducts";
 export interface ActiveFilters {
   categories: string[];
   priceRange: string | null;
+  inStockOnly: boolean;
   sortBy: string;
 }
 
