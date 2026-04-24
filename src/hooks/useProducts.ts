@@ -122,7 +122,7 @@ const fetchProducts = (): Promise<Product[]> => {
 
   fetchPromise = (supabase as any)
     .from("Products")
-    .select("id, title, category, description, description_bn, price, image, stock, created_at")
+    .select("id, title, category, description, price, image, stock, created_at")
     .order("id", { ascending: true })
     .then(({ data, error }: any) => {
       if (error || !data) {
@@ -147,7 +147,7 @@ const fetchProducts = (): Promise<Product[]> => {
           currency: "BDT",
           image: row.image || "",
           description: row.description || undefined,
-          description_bn: row.description_bn || undefined,
+          description_bn: undefined,
           stock: row.stock ?? true,
           isNew,
           createdAt,
