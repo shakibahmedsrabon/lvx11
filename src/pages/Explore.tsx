@@ -225,7 +225,7 @@ const Explore = () => {
           case "under-500": return price > 0 && price < 500;
           case "500-1000": return price >= 500 && price <= 1000;
           case "1000-2000": return price >= 1000 && price <= 2000;
-          case "over-2000": return price > 2000;
+          case "over-5000": return price > 5000;
           default: return true;
         }
       });
