@@ -103,13 +103,6 @@ const InlineProductDetail = ({ productId }: { productId: string }) => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <button
-          onClick={() => navigate(-1)}
-          className="mt-4 inline-flex items-center gap-1.5 text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </button>
       </section>
 
       <section className="w-full px-6" aria-label="Product details">
