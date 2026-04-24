@@ -150,52 +150,44 @@ const Navigation = () => {
         WebkitBackdropFilter: 'blur(10px)',
       }}
     >
-      <div className="flex items-center justify-between h-16 px-6">
-        {/* Mobile hamburger button */}
-        <button
-          className="lg:hidden p-2 mt-0.5 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <div className="w-5 h-5 relative">
-            <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 ${
-              isMobileMenuOpen ? 'rotate-45 top-2.5' : 'top-1.5'
-            }`}></span>
-            <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 top-2.5 ${
-              isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
-            }`}></span>
-            <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 ${
-              isMobileMenuOpen ? '-rotate-45 top-2.5' : 'top-3.5'
-            }`}></span>
-          </div>
-        </button>
-
-        {/* Left navigation - Hidden on tablets and mobile */}
-        <div className="hidden lg:flex space-x-8">
-          {dynamicNavItems.map((item) => (
-            <div
-              key={item.name}
-              className="relative"
-              onMouseEnter={() => setActiveDropdown(item.name)}
-              onMouseLeave={() => setActiveDropdown(null)}
-            >
-              <AppLink
-                href={item.href}
-                className="text-nav-foreground hover:text-nav-hover transition-colors duration-200 text-sm font-light py-6 block"
-              >
-                {item.name}
-              </AppLink>
+      <div className="grid grid-cols-3 items-center h-16 px-6">
+        {/* Left: hamburger + search */}
+        <div className="flex items-center justify-start space-x-1">
+          <button
+            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <div className="w-5 h-5 relative">
+              <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 ${
+                isMobileMenuOpen ? 'rotate-45 top-2.5' : 'top-1.5'
+              }`}></span>
+              <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 top-2.5 ${
+                isMobileMenuOpen ? 'opacity-0' : 'opacity-100'
+              }`}></span>
+              <span className={`absolute block w-5 h-px bg-current transform transition-all duration-300 ${
+                isMobileMenuOpen ? '-rotate-45 top-2.5' : 'top-3.5'
+              }`}></span>
             </div>
-          ))}
+          </button>
+          <button
+            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
+            aria-label="Search"
+            onClick={() => setIsSearchOpen(!isSearchOpen)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
+              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+            </svg>
+          </button>
         </div>
 
-        {/* Center logo */}
-        <div className="absolute left-1/2 transform -translate-x-1/2">
+        {/* Center: logo */}
+        <div className="flex justify-center">
           <AppLink href="/" className="block">
             {siteConfig?.logo && (
-              <img 
-                src={siteConfig.logo} 
-                alt={siteConfig?.name || ""} 
+              <img
+                src={siteConfig.logo}
+                alt={siteConfig?.name || ""}
                 className="h-6 w-auto"
                 width="120"
                 height="24"
@@ -205,21 +197,9 @@ const Navigation = () => {
           </AppLink>
         </div>
 
-        {/* Right icons */}
-        <div className="flex items-center space-x-1">
-          <div className="hidden lg:block">
-            <ThemeSwitcher />
-          </div>
-          <button 
-            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
-            aria-label="Search"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-              <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-            </svg>
-          </button>
-          <button 
+        {/* Right: bag + theme */}
+        <div className="flex items-center justify-end space-x-1">
+          <button
             className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200 relative"
             aria-label="Shopping bag"
             onClick={() => setIsShoppingBagOpen(true)}
@@ -233,6 +213,7 @@ const Navigation = () => {
               </span>
             )}
           </button>
+          <ThemeSwitcher />
         </div>
       </div>
 
@@ -462,7 +443,7 @@ const Navigation = () => {
 
       {/* Mobile navigation menu */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden absolute top-full left-0 right-0 bg-nav border-b border-border z-50">
+        <div className="absolute top-full left-0 right-0 bg-nav border-b border-border z-50">
           <div className="px-6 py-8">
             <div className="space-y-6">
               {dynamicNavItems.map((item) => (
@@ -488,10 +469,6 @@ const Navigation = () => {
                    </div>
                 </div>
               ))}
-              <div className="pt-4 border-t border-border flex items-center justify-between">
-                <span className="text-nav-foreground text-sm font-light">Theme</span>
-                <ThemeSwitcher />
-              </div>
             </div>
           </div>
         </div>
