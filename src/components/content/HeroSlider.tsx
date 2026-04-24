@@ -14,6 +14,9 @@ interface Slide {
   alt: string;
 }
 
+const VIDEO_RE = /\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/i;
+const isVideoUrl = (url: string) => VIDEO_RE.test(url);
+
 const AUTO_PLAY_INTERVAL = 5000;
 const TRANSITION_DURATION = 1100;
 // Smooth, gentle ease for a calmer slide change
@@ -135,6 +138,7 @@ const HeroSlider = () => {
         const isActive = i === current;
         // Sequential loading: only render slides up to loadedCount.
         const shouldRender = i < loadedCount;
+        const isVideo = isVideoUrl(slide.image);
         return (
           <div
             key={slide.id}
@@ -149,27 +153,38 @@ const HeroSlider = () => {
             aria-hidden={!isActive}
           >
             {shouldRender && (
-              <img
-                src={slide.image}
-                alt={slide.alt}
-                loading={i === 0 ? "eager" : "lazy"}
-                decoding="async"
-                draggable={false}
-                onLoad={() =>
-                  setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
-                }
-                onError={() =>
-                  setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
-                }
-                className="w-full h-full object-cover pointer-events-none"
-                style={{
-                  willChange: "transform",
-                  transform: isActive ? "scale(1)" : "scale(1.04)",
-                  transition: `transform ${TRANSITION_DURATION + 600}ms ${EASE_SNAPPY}`,
-                  backfaceVisibility: "hidden",
-                  WebkitBackfaceVisibility: "hidden",
-                }}
-              />
+              isVideo ? (
+                <video
+                  src={slide.image}
+                  autoPlay={isActive}
+                  muted
+                  loop
+                  playsInline
+                  preload={i === 0 ? "auto" : "metadata"}
+                  onLoadedData={() =>
+                    setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
+                  }
+                  onError={() =>
+                    setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
+                  }
+                  className="w-full h-full object-cover pointer-events-none"
+                />
+              ) : (
+                <img
+                  src={slide.image}
+                  alt={slide.alt}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                  draggable={false}
+                  onLoad={() =>
+                    setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
+                  }
+                  onError={() =>
+                    setLoadedCount((c) => (i + 1 >= c ? Math.min(c + 1, slides.length) : c))
+                  }
+                  className="w-full h-full object-cover pointer-events-none"
+                />
+              )
             )}
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
           </div>
