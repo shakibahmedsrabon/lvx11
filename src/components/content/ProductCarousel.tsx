@@ -5,28 +5,73 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import AppLink from "@/lib/navigation/AppLink";
-import { useProducts, formatPrice } from "@/hooks/useProducts";
+import { useProducts, formatPrice, type Product } from "@/hooks/useProducts";
 import { ArrowRight } from "lucide-react";
 
-const ProductCarousel = () => {
+interface ProductCarouselProps {
+  /** Hide a specific product (e.g. the one currently being viewed) */
+  excludeProductId?: string | number;
+  /** Prioritise items from this category, then fill with others */
+  relatedCategory?: string;
+  /** Max number of items shown (default 12, related-mode default 6) */
+  limit?: number;
+  /** Override the section heading */
+  title?: string;
+  /** Override the small uppercase label */
+  eyebrow?: string;
+}
+
+const ProductCarousel = ({
+  excludeProductId,
+  relatedCategory,
+  limit,
+  title,
+  eyebrow,
+}: ProductCarouselProps = {}) => {
   const { products, loading } = useProducts();
 
   if (loading || products.length === 0) return null;
 
-  // Show older products (oldest first) - opposite of TopProductsCarousel
-  const olderProducts = [...products]
-    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-    .slice(0, 12);
+  const isRelatedMode = Boolean(relatedCategory);
+  const max = limit ?? (isRelatedMode ? 6 : 12);
+
+  const pool = excludeProductId
+    ? products.filter((p) => String(p.id) !== String(excludeProductId))
+    : products;
+
+  let displayProducts: Product[];
+  if (isRelatedMode) {
+    const sameCat = pool.filter(
+      (p) => p.category?.toLowerCase() === relatedCategory!.toLowerCase()
+    );
+    const others = pool.filter(
+      (p) => p.category?.toLowerCase() !== relatedCategory!.toLowerCase()
+    );
+    displayProducts = [...sameCat, ...others].slice(0, max);
+  } else {
+    // Default: oldest first (Archive view)
+    displayProducts = [...pool]
+      .sort(
+        (a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      )
+      .slice(0, max);
+  }
+
+  if (displayProducts.length === 0) return null;
+
+  const headingEyebrow = eyebrow ?? (isRelatedMode ? "You might also like" : "Archive");
+  const headingTitle = title ?? (isRelatedMode ? "Related Picks" : "Explore the Collection");
 
   return (
     <section className="w-full mb-20 md:mb-24 px-6" aria-label="Explore products">
       <div className="flex items-end justify-between mb-6 md:mb-8">
         <div>
           <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
-            Archive
+            {headingEyebrow}
           </p>
           <h2 className="text-xl md:text-2xl font-medium text-foreground">
-            Explore the Collection
+            {headingTitle}
           </h2>
         </div>
         <AppLink
@@ -46,7 +91,7 @@ const ProductCarousel = () => {
         className="w-full"
       >
         <CarouselContent>
-          {olderProducts.map((product) => (
+          {displayProducts.map((product) => (
             <CarouselItem
               key={product.id}
               className="basis-1/2 md:basis-1/3 lg:basis-1/4 pr-2 md:pr-4"

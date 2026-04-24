@@ -116,10 +116,11 @@ const InlineProductDetail = ({ productId }: { productId: string }) => {
       </section>
 
       <section className="w-full mt-16 lg:mt-24" aria-label="Recommended products">
-        <div className="mb-4 px-6">
-          <h2 className="text-sm font-light text-foreground">You might also like</h2>
-        </div>
-        <ProductCarousel />
+        <ProductCarousel
+          excludeProductId={product.id}
+          relatedCategory={product.category}
+          limit={6}
+        />
       </section>
     </>
   );
