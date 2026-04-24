@@ -1,15 +1,16 @@
 /**
- * ProductInfo — displays product details with duration-based pricing.
+ * ProductInfo — displays product details with type + duration variant pricing.
  *
  * Pricing logic:
- * - Each product has a `prices` map: { months: price } (e.g. {1:400, 2:700, 3:800, 6:1200, 12:1200})
- * - Available durations come ONLY from the JSON keys (not incremental)
- * - Default = first (lowest) duration
- * - User selects from available duration options
- * - Displayed price = prices[selectedDuration]
+ * - Each product has `variants: PriceVariant[]` where each variant is
+ *   { type: string, amount: number, duration: number (months) }
+ * - Available types come from the variants list
+ * - For the currently-selected type, only its durations are shown
+ * - Default = first variant (index 0)
+ * - Displayed price = selected variant's amount
  */
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import AppLink from "@/lib/navigation/AppLink";
 import { buildWhatsAppUrl } from "@/lib/whatsapp";
 import { Button } from "@/components/ui/button";
@@ -24,7 +25,7 @@ import {
 import { Minus, Plus } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import { Product, formatPrice } from "@/hooks/useProducts";
+import { Product, formatPrice, formatTypeLabel } from "@/hooks/useProducts";
 import { cn } from "@/lib/utils";
 
 interface ProductInfoProps {
@@ -33,22 +34,45 @@ interface ProductInfoProps {
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
-  /** Index into product.availableDurations — default is 0 (first/shortest duration) */
-  const [durationIndex, setDurationIndex] = useState(0);
+  /** Selected type (defaults to the first variant's type) */
+  const [selectedType, setSelectedType] = useState<string>(
+    product.variants[0]?.type ?? "standard"
+  );
+  /** Selected duration (defaults to the first variant's duration) */
+  const [selectedDuration, setSelectedDuration] = useState<number>(
+    product.variants[0]?.duration ?? 1
+  );
+
   const { addToCart, getItemQuantity } = useCart();
   const { toast } = useToast();
 
-  const selectedDuration = product.availableDurations[durationIndex];
-  const currentPrice = product.prices[selectedDuration] || 0;
+  /** All durations available for the currently selected type */
+  const durationsForType = useMemo(
+    () =>
+      product.variants
+        .filter((v) => v.type === selectedType)
+        .map((v) => v.duration)
+        .sort((a, b) => a - b),
+    [product.variants, selectedType]
+  );
+
+  /** Active variant lookup; falls back to first matching type or first variant */
+  const activeVariant =
+    product.variants.find(
+      (v) => v.type === selectedType && v.duration === selectedDuration
+    ) ||
+    product.variants.find((v) => v.type === selectedType) ||
+    product.variants[0];
+
+  const currentPrice = activeVariant?.amount ?? 0;
   const displayPrice = formatPrice(currentPrice);
 
-  /** Move to previous available duration */
-  const prevDuration = () => {
-    setDurationIndex((i) => Math.max(0, i - 1));
-  };
-  /** Move to next available duration */
-  const nextDuration = () => {
-    setDurationIndex((i) => Math.min(product.availableDurations.length - 1, i + 1));
+  /** When user picks a new type, snap duration to the first available for that type */
+  const handleSelectType = (type: string) => {
+    vibrate(30);
+    setSelectedType(type);
+    const firstDur = product.variants.find((v) => v.type === type)?.duration;
+    if (firstDur != null) setSelectedDuration(firstDur);
   };
 
   const cartProduct = {
@@ -56,7 +80,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     name: product.title,
     price: displayPrice,
     unitPrice: currentPrice,
-    duration: selectedDuration,
+    variantType: activeVariant?.type ?? selectedType,
+    duration: activeVariant?.duration ?? selectedDuration,
     image: product.image,
     category: product.category,
   };
@@ -75,7 +100,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     }
     toast({
       title: "Added to bag",
-      description: `${product.title} (${selectedDuration} mo × ${quantity}) added.`,
+      description: `${product.title} (${formatTypeLabel(cartProduct.variantType)} · ${cartProduct.duration} mo × ${quantity}) added.`,
     });
     setQuantity(1);
   };
@@ -123,18 +148,41 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
       )}
 
-      {/* Duration selector — pill-style buttons for available durations */}
-      {product.availableDurations.length > 1 && (
+      {/* Type selector — pill-style buttons (only shown if >1 type) */}
+      {product.availableTypes.length > 1 && (
+        <div className="py-4 border-b border-border">
+          <span className="text-sm font-light text-foreground mb-3 block">Type</span>
+          <div className="flex flex-wrap gap-2">
+            {product.availableTypes.map((type) => (
+              <button
+                key={type}
+                onClick={() => handleSelectType(type)}
+                className={cn(
+                  "px-4 py-2 text-sm border transition-colors",
+                  type === selectedType
+                    ? "border-foreground bg-foreground text-background"
+                    : "border-border text-foreground hover:border-foreground"
+                )}
+              >
+                {formatTypeLabel(type)}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Duration selector — pill-style buttons for the selected type */}
+      {durationsForType.length > 1 && (
         <div className="py-4 border-b border-border">
           <span className="text-sm font-light text-foreground mb-3 block">Duration</span>
           <div className="flex flex-wrap gap-2">
-            {product.availableDurations.map((dur, idx) => (
+            {durationsForType.map((dur) => (
               <button
                 key={dur}
-                onClick={() => { vibrate(30); setDurationIndex(idx); }}
+                onClick={() => { vibrate(30); setSelectedDuration(dur); }}
                 className={cn(
                   "px-4 py-2 text-sm border transition-colors",
-                  idx === durationIndex
+                  dur === selectedDuration
                     ? "border-foreground bg-foreground text-background"
                     : "border-border text-foreground hover:border-foreground"
                 )}
@@ -194,7 +242,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           </button>
         </div>
 
-        {/* Buy Now — sends selected duration + price via WhatsApp */}
+        {/* Buy Now — sends selected type+duration via WhatsApp */}
         <Button
           className="w-full h-12 bg-foreground text-background hover:bg-foreground/90 font-light rounded-none tracking-wide"
           disabled={!product.stock}
@@ -204,7 +252,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
               price: displayPrice,
               quantity,
               slug: product.slug,
-              duration: selectedDuration,
+              variantType: cartProduct.variantType,
+              duration: cartProduct.duration,
               unitPrice: currentPrice,
             }]);
             window.open(url, "_blank");

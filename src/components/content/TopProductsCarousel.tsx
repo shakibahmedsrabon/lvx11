@@ -7,7 +7,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import AppLink from "@/lib/navigation/AppLink";
 import { supabase } from "@/integrations/supabase/client";
-import { formatPrice, parsePriceMap, getDurations } from "@/hooks/useProducts";
+import { formatPrice, parseVariants } from "@/hooks/useProducts";
 
 interface TopRow {
   id: number;
@@ -84,9 +84,8 @@ const TopProductsCarousel = () => {
           if (!p) return null;
           const title = p.title || `Product ${p.id}`;
           const category = p.category || "";
-          const prices = parsePriceMap(p.price);
-          const durations = getDurations(prices);
-          const basePrice = prices[durations[0]] || 0;
+          const variants = parseVariants(p.price);
+          const basePrice = variants[0]?.amount || 0;
           const titleSlug = slugify(title);
           const productSlug = `${titleSlug}-${p.id}`;
           const categorySlug = category ? slugify(category) : "all";
