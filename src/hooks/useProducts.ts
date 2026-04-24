@@ -134,7 +134,9 @@ const fetchProducts = (): Promise<Product[]> => {
   fetchPromise = (supabase as any)
     .from("Products")
     .select("id, title, category, description, price, image, stock, created_at")
+    .order("stock", { ascending: false })
     .order("id", { ascending: true })
+    .limit(20)
     .then(({ data, error }: any) => {
       if (error || !data) {
         cached = [];
