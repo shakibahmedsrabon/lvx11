@@ -153,7 +153,7 @@ const FilterSortBar = ({
                           onCheckedChange={() => {
                             setDraftCategories([]);
                             setDraftPrice(null);
-                            setFilters({ ...filters, categories: [], priceRange: null });
+                            setFilters({ ...filters, categories: [], priceRange: null, inStockOnly: false });
                             setFiltersOpen(false);
                             navigate("/explore");
                           }}
