@@ -141,12 +141,6 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
       </div>
 
-      {/* Description */}
-      {product.description && (
-        <div className="space-y-4 py-4 border-b border-border">
-          <p className="text-sm font-light text-muted-foreground">{product.description}</p>
-        </div>
-      )}
 
       {/* Type selector — only render when at least one type variant exists. */}
       {product.availableTypes.length > 0 && product.variants.length > 0 && (
