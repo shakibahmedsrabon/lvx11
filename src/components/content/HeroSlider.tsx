@@ -181,67 +181,69 @@ const HeroSlider = () => {
 
       {total > 1 && (
         <>
-          <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center gap-3 pb-5 md:pb-7">
-            <button
-              onClick={prev}
-              className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
-              aria-label="Previous slide"
-            >
-              <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
-            </button>
-
-            <div className="flex items-center gap-2.5">
-              {slides.map((_, i) => (
+          <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-between gap-3 px-5 md:px-7 pb-5 md:pb-7">
+            {/* Left: Previous (hidden on first slide) */}
+            <div className="w-8 h-8 flex items-center justify-start">
+              {current > 0 && (
                 <button
-                  key={i}
-                  onClick={() => goTo(i)}
-                  aria-label={`Go to slide ${i + 1}`}
-                  className="relative flex items-center justify-center p-1"
+                  onClick={prev}
+                  className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
+                  aria-label="Previous slide"
                 >
-                  <span
-                    className={cn(
-                      "block rounded-full",
-                      i === current
-                        ? "w-3 h-3 bg-white"
-                        : "w-2.5 h-2.5 border border-white/50 bg-transparent hover:border-white"
-                    )}
-                    style={{
-                      willChange: "transform",
-                      transition:
-                        "width 400ms cubic-bezier(0.34,1.56,0.64,1), height 400ms cubic-bezier(0.34,1.56,0.64,1), background-color 300ms ease, border-color 300ms ease, transform 400ms cubic-bezier(0.34,1.56,0.64,1)",
-                      transform: i === current ? "scale(1)" : "scale(0.85)",
-                    }}
-                  />
+                  <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
                 </button>
-              ))}
+              )}
             </div>
 
-            <button
-              onClick={next}
-              className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
-              aria-label="Next slide"
-            >
-              <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
-            </button>
+            {/* Center: dots + Next */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2.5">
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i)}
+                    aria-label={`Go to slide ${i + 1}`}
+                    className="relative flex items-center justify-center p-1"
+                  >
+                    <span
+                      className={cn(
+                        "block rounded-full",
+                        i === current
+                          ? "w-3 h-3 bg-white"
+                          : "w-2.5 h-2.5 border border-white/50 bg-transparent hover:border-white"
+                      )}
+                      style={{
+                        willChange: "transform",
+                        transition:
+                          "width 400ms cubic-bezier(0.34,1.56,0.64,1), height 400ms cubic-bezier(0.34,1.56,0.64,1), background-color 300ms ease, border-color 300ms ease, transform 400ms cubic-bezier(0.34,1.56,0.64,1)",
+                        transform: i === current ? "scale(1)" : "scale(0.85)",
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
 
-            <button
-              onClick={() => setIsPlaying((p) => !p)}
-              className="ml-2 w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
-              aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
-            >
-              {isPlaying ? <Pause className="w-4 h-4" strokeWidth={1.5} /> : <Play className="w-4 h-4" strokeWidth={1.5} />}
-            </button>
-          </div>
+              {current < total - 1 && (
+                <button
+                  onClick={next}
+                  className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
+                  aria-label="Next slide"
+                >
+                  <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
+                </button>
+              )}
+            </div>
 
-          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-white/10 z-10">
-            <div
-              className="h-full bg-white/60"
-              style={{
-                width: `${((current + 1) / total) * 100}%`,
-                transition: `width ${TRANSITION_DURATION}ms ${EASE_SNAPPY}`,
-                willChange: "width",
-              }}
-            />
+            {/* Right: Play / Pause */}
+            <div className="w-8 h-8 flex items-center justify-end">
+              <button
+                onClick={() => setIsPlaying((p) => !p)}
+                className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
+                aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
+              >
+                {isPlaying ? <Pause className="w-4 h-4" strokeWidth={1.5} /> : <Play className="w-4 h-4" strokeWidth={1.5} />}
+              </button>
+            </div>
           </div>
         </>
       )}
