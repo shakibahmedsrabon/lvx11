@@ -14,6 +14,9 @@ interface Slide {
   alt: string;
 }
 
+const VIDEO_RE = /\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/i;
+const isVideoUrl = (url: string) => VIDEO_RE.test(url);
+
 const AUTO_PLAY_INTERVAL = 5000;
 const TRANSITION_DURATION = 1100;
 // Smooth, gentle ease for a calmer slide change
