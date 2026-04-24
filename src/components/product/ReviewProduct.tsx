@@ -31,9 +31,10 @@ const CustomStar = ({ filled, onClick, className }: { filled: boolean; onClick: 
 
 interface ReviewProductProps {
   onSubmitted?: () => void;
+  productId?: number;
 }
 
-const ReviewProduct = ({ onSubmitted }: ReviewProductProps) => {
+const ReviewProduct = ({ onSubmitted, productId }: ReviewProductProps) => {
   const [rating, setRating] = useState(0);
   const [description, setDescription] = useState("");
   const [fullName, setFullName] = useState("");
@@ -71,6 +72,7 @@ const ReviewProduct = ({ onSubmitted }: ReviewProductProps) => {
       star: rating,
       profile: profileToSave || null,
       description: description.trim(),
+      product_id: productId ?? null,
     });
     setSubmitting(false);
 
