@@ -488,6 +488,10 @@ const Navigation = () => {
                    </div>
                 </div>
               ))}
+              <div className="pt-4 border-t border-border flex items-center justify-between">
+                <span className="text-nav-foreground text-sm font-light">Theme</span>
+                <ThemeSwitcher />
+              </div>
             </div>
           </div>
         </div>
