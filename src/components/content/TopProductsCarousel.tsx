@@ -146,7 +146,7 @@ const TopProductsCarousel = () => {
                           src={item.image}
                           alt={`${item.title} ${item.category}`.trim()}
                           className="w-full h-full object-cover"
-                          loading="lazy"
+                          loading="lazy" decoding="async" fetchPriority="low"
                         />
                       )}
                       <div className="absolute inset-0 bg-black/[0.03]" />

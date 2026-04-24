@@ -88,7 +88,7 @@ const InfiniteProductGrid = ({ products, loading, pageSize = 24 }: InfiniteProdu
                       src={product.image}
                       alt={product.title}
                       className="w-full h-full object-cover"
-                      loading="lazy"
+                      loading="lazy" decoding="async" fetchPriority="low"
                     />
                   )}
                   <div className="absolute inset-0 bg-black/[0.03]"></div>
