@@ -24,6 +24,7 @@ import { useProducts } from "@/hooks/useProducts";
 export interface ActiveFilters {
   categories: string[];
   priceRange: string | null;
+  inStockOnly: boolean;
   sortBy: string;
 }
 
@@ -62,9 +63,10 @@ const FilterSortBar = ({
   // Local draft state so user can pick multiple options before applying
   const [draftCategories, setDraftCategories] = useState<string[]>(filters.categories);
   const [draftPrice, setDraftPrice] = useState<string | null>(filters.priceRange);
+  const [draftInStock, setDraftInStock] = useState<boolean>(filters.inStockOnly);
 
   const activeFilterCount =
-    filters.categories.length + (filters.priceRange ? 1 : 0);
+    filters.categories.length + (filters.priceRange ? 1 : 0) + (filters.inStockOnly ? 1 : 0);
 
   const toggleDraftCategory = (name: string) => {
     setDraftCategories((prev) =>
@@ -77,14 +79,15 @@ const FilterSortBar = ({
   };
 
   const applyFilters = () => {
-    setFilters({ ...filters, categories: draftCategories, priceRange: draftPrice });
+    setFilters({ ...filters, categories: draftCategories, priceRange: draftPrice, inStockOnly: draftInStock });
     setFiltersOpen(false);
   };
 
   const clearAll = () => {
     setDraftCategories([]);
     setDraftPrice(null);
-    setFilters({ ...filters, categories: [], priceRange: null });
+    setDraftInStock(false);
+    setFilters({ ...filters, categories: [], priceRange: null, inStockOnly: false });
     setFiltersOpen(false);
   };
 
@@ -97,6 +100,7 @@ const FilterSortBar = ({
     if (open) {
       setDraftCategories(filters.categories);
       setDraftPrice(filters.priceRange);
+      setDraftInStock(filters.inStockOnly);
     }
     setFiltersOpen(open);
   };
@@ -149,7 +153,7 @@ const FilterSortBar = ({
                           onCheckedChange={() => {
                             setDraftCategories([]);
                             setDraftPrice(null);
-                            setFilters({ ...filters, categories: [], priceRange: null });
+                            setFilters({ ...filters, categories: [], priceRange: null, inStockOnly: false });
                             setFiltersOpen(false);
                             navigate("/explore");
                           }}
@@ -206,6 +210,29 @@ const FilterSortBar = ({
                         </Label>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                <Separator className="border-border" />
+
+                {/* Availability Filter */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4 text-foreground tracking-wide uppercase">
+                    Availability
+                  </h3>
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="in-stock-only"
+                      checked={draftInStock}
+                      onCheckedChange={(v) => setDraftInStock(Boolean(v))}
+                      className="border-border data-[state=checked]:bg-foreground data-[state=checked]:border-foreground"
+                    />
+                    <Label
+                      htmlFor="in-stock-only"
+                      className="text-sm font-light text-foreground cursor-pointer"
+                    >
+                      In stock only
+                    </Label>
                   </div>
                 </div>
               </div>

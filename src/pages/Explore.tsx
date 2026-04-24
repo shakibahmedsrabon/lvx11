@@ -136,6 +136,7 @@ const Explore = () => {
   const [filters, setFilters] = useState<ActiveFilters>({
     categories: [],
     priceRange: null,
+    inStockOnly: false,
     sortBy: "featured",
   });
   const [currentPage, setCurrentPage] = useState(1);
@@ -211,6 +212,10 @@ const Explore = () => {
     if (filters.categories.length > 0) {
       const wantedSlugs = filters.categories.map(slugify);
       result = result.filter((p) => wantedSlugs.includes(slugify(p.category)));
+    }
+
+    if (filters.inStockOnly) {
+      result = result.filter((p) => p.stock);
     }
 
     if (filters.priceRange) {
