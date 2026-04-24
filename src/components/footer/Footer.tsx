@@ -161,8 +161,7 @@ const Footer = () => {
                 {siteConfig.slong}
               </p>
             )}
-
-
+            <NewsletterSubscribe />
 
             {contacts.length > 0 ? (
               <div className="space-y-2 text-sm font-light text-muted-foreground">
