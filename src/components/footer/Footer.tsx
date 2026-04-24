@@ -90,12 +90,16 @@ const Footer = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-8">
           <div>
             {siteConfig?.logoFull && (
-              <img
-                src={siteConfig.logoFull}
-                alt={siteConfig?.name || ""}
-                className="mb-4 h-6 w-auto"
-                loading="lazy"
-              />
+              <div className="mb-4 h-6">
+                <img
+                  src={siteConfig.logoFull}
+                  alt={siteConfig?.name || ""}
+                  className="h-6 w-auto"
+                  width="120"
+                  height="24"
+                  loading="lazy"
+                />
+              </div>
             )}
             {siteConfig?.slong && (
               <p className="text-sm font-light text-muted-foreground leading-relaxed max-w-md mb-6">
