@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import AppLink from "@/lib/navigation/AppLink";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
-
+import NewsletterSubscribe from "./NewsletterSubscribe";
 
 interface Contact {
   id: number;
