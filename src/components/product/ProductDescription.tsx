@@ -57,9 +57,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
           </Button>
           {isDescriptionOpen && (
             <div className="pb-6">
-              <p className="text-sm font-light text-muted-foreground leading-relaxed whitespace-pre-line">
-                {description}
-              </p>
+              <MarkdownRenderer content={description} />
             </div>
           )}
         </div>
@@ -82,9 +80,7 @@ const ProductDescription = ({ product }: ProductDescriptionProps) => {
           </Button>
           {isDescriptionBnOpen && (
             <div className="pb-6">
-              <p className="text-sm font-light text-muted-foreground leading-relaxed whitespace-pre-line">
-                {descriptionBn}
-              </p>
+              <MarkdownRenderer content={descriptionBn} />
             </div>
           )}
         </div>
