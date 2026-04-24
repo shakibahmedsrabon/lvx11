@@ -122,7 +122,7 @@ const HeroSlider = () => {
   return (
     <section
       ref={containerRef}
-      className="relative w-full overflow-hidden select-none mb-8 md:mb-12 bg-muted/20 aspect-[3/2] sm:aspect-[16/9] md:aspect-[2.86/1]"
+      className="relative w-full overflow-hidden select-none mb-8 md:mb-12 bg-muted/20 aspect-[16/10] sm:aspect-[16/9] md:aspect-[2.86/1]"
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
