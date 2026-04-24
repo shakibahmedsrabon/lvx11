@@ -139,9 +139,6 @@ const TopProductsCarousel = () => {
                 <Card className="border-none shadow-none bg-transparent group">
                   <CardContent className="p-0">
                     <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">
-                      </span>
-                        #{item.rank}
-                      </span>
                       {item.image && (
                         <img
                           src={item.image}
