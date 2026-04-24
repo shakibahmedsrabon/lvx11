@@ -65,7 +65,7 @@ const ProductCarousel = () => {
                           src={product.image}
                           alt={`${product.title} ${product.category}`}
                           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                          loading="lazy"
+                          loading="lazy" decoding="async" fetchPriority="low"
                         />
                       )}
                       <div className="absolute inset-0 bg-black/[0.03]"></div>
