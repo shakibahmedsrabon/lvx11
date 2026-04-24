@@ -86,8 +86,9 @@ const HeroSlider = () => {
   const goTo = useCallback(
     (index: number) => {
       if (isTransitioning || total === 0) return;
+      if (index < 0 || index >= total) return;
       setIsTransitioning(true);
-      setCurrent((index + total) % total);
+      setCurrent(index);
       setTimeout(() => setIsTransitioning(false), TRANSITION_DURATION);
     },
     [isTransitioning, total]
@@ -98,6 +99,8 @@ const HeroSlider = () => {
 
   useEffect(() => {
     if (!isPlaying || total <= 1) return;
+    // Stop autoplay at the last slide (no loop)
+    if (current >= total - 1) return;
     timerRef.current = setTimeout(next, AUTO_PLAY_INTERVAL);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
