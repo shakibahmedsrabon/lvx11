@@ -2,7 +2,7 @@
  * WhatsApp checkout message builder.
  *
  * Generates a professional receipt-style message with:
- * - Product name, duration (months), unit price, qty, line total
+ * - Product name, type, duration (months), unit price, qty, line total
  * - Grand total at the bottom
  */
 
@@ -16,9 +16,13 @@ interface WhatsAppItem {
   slug?: string;
   /** Selected duration in months */
   duration?: number;
+  /** Selected variant type (e.g. "personal") */
+  variantType?: string;
   /** Numeric unit price for total calculation */
   unitPrice?: number;
 }
+
+const cap = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "");
 
 export const buildWhatsAppUrl = (items: WhatsAppItem[]) => {
   let message = "Hi! I'd like to order the following from LINEA Jewelry:\n\n";
@@ -29,12 +33,14 @@ export const buildWhatsAppUrl = (items: WhatsAppItem[]) => {
     const qty = item.quantity || 1;
     const dur = item.duration || 1;
     const durLabel = dur === 1 ? "1 month" : `${dur} months`;
+    const typeLabel = item.variantType ? cap(item.variantType) : "";
     const lineTotal = (item.unitPrice || 0) * qty;
     grandTotal += lineTotal;
 
     const productUrl = item.slug ? `${SITE_URL}/explore/product/${item.slug}` : "";
     message += `${idx + 1}. ${item.name}\n`;
-    message += `   Duration: ${durLabel} · ${item.price}/ea\n`;
+    const meta = [typeLabel, durLabel].filter(Boolean).join(" · ");
+    message += `   ${meta} · ${item.price}/ea\n`;
     if (qty > 1) message += `   Qty: ${qty}\n`;
     message += `   Subtotal: ৳${lineTotal.toLocaleString()}\n`;
     if (productUrl) message += `   ${productUrl}\n`;

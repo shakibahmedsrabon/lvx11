@@ -1,12 +1,14 @@
 /**
- * CartContext — manages shopping bag state with duration-based pricing.
+ * CartContext — manages shopping bag state with type+duration based pricing.
  *
  * Each CartItem tracks:
- * - `duration`: selected month count (e.g. 1, 3, 6, 12)
- * - `unitPrice`: numeric price for that duration (from the product's price JSON)
- * - `price`: formatted display price string (e.g. "৳400")
+ * - `variantType`: selected variant type (e.g. "personal", "family")
+ * - `duration`: selected month count
+ * - `unitPrice`: numeric price for that variant
+ * - `price`: formatted display price string
  *
- * Items are keyed by `id + duration` — same product with different durations = separate line items.
+ * Items are keyed by `id + variantType + duration` — different variants of the
+ * same product are separate line items.
  */
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
@@ -14,10 +16,12 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 export interface CartItem {
   id: number;
   name: string;
-  /** Formatted display price for the selected duration (e.g. "৳400") */
+  /** Formatted display price for the selected variant (e.g. "৳3,000") */
   price: string;
-  /** Raw numeric price for the selected duration */
+  /** Raw numeric price for the selected variant */
   unitPrice: number;
+  /** Selected variant type (e.g. "personal") */
+  variantType: string;
   /** Selected rental duration in months */
   duration: number;
   image: string;
@@ -28,8 +32,8 @@ export interface CartItem {
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">) => void;
-  updateQuantity: (id: number, duration: number, newQuantity: number) => void;
-  removeFromCart: (id: number, duration: number) => void;
+  updateQuantity: (id: number, variantType: string, duration: number, newQuantity: number) => void;
+  removeFromCart: (id: number, variantType: string, duration: number) => void;
   clearCart: () => void;
   getItemQuantity: (id: number) => number;
   totalItems: number;
@@ -42,11 +46,23 @@ const CART_KEY = "linea-cart";
 function loadFromStorage<T>(key: string, fallback: T): T {
   try {
     const stored = localStorage.getItem(key);
-    return stored ? JSON.parse(stored) : fallback;
+    if (!stored) return fallback;
+    const parsed = JSON.parse(stored);
+    // Backward compat: older items may not have `variantType`
+    if (Array.isArray(parsed)) {
+      return parsed.map((i: any) => ({
+        variantType: i.variantType ?? "standard",
+        ...i,
+      })) as T;
+    }
+    return parsed;
   } catch {
     return fallback;
   }
 }
+
+const sameLine = (a: { id: number; variantType: string; duration: number }, b: { id: number; variantType: string; duration: number }) =>
+  a.id === b.id && a.variantType === b.variantType && a.duration === b.duration;
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>(() =>
@@ -59,29 +75,25 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (item: Omit<CartItem, "quantity">) => {
     setCartItems((prev) => {
-      const existing = prev.find(
-        (i) => i.id === item.id && i.duration === item.duration
-      );
+      const existing = prev.find((i) => sameLine(i, item));
       if (existing) {
         return prev.map((i) =>
-          i.id === item.id && i.duration === item.duration
-            ? { ...i, quantity: i.quantity + 1 }
-            : i
+          sameLine(i, item) ? { ...i, quantity: i.quantity + 1 } : i
         );
       }
       return [...prev, { ...item, quantity: 1 }];
     });
   };
 
-  const updateQuantity = (id: number, duration: number, newQuantity: number) => {
+  const updateQuantity = (id: number, variantType: string, duration: number, newQuantity: number) => {
     if (newQuantity <= 0) {
       setCartItems((prev) =>
-        prev.filter((item) => !(item.id === id && item.duration === duration))
+        prev.filter((item) => !sameLine(item, { id, variantType, duration }))
       );
     } else {
       setCartItems((prev) =>
         prev.map((item) =>
-          item.id === id && item.duration === duration
+          sameLine(item, { id, variantType, duration })
             ? { ...item, quantity: newQuantity }
             : item
         )
@@ -89,13 +101,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const removeFromCart = (id: number, duration: number) => {
+  const removeFromCart = (id: number, variantType: string, duration: number) => {
     setCartItems((prev) =>
-      prev.filter((item) => !(item.id === id && item.duration === duration))
+      prev.filter((item) => !sameLine(item, { id, variantType, duration }))
     );
   };
 
-  /** Total quantity across all durations for a given product id */
+  /** Total quantity across all variants for a given product id */
   const getItemQuantity = (id: number) => {
     return cartItems
       .filter((i) => i.id === id)
