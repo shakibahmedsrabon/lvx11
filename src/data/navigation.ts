@@ -30,6 +30,12 @@ export const navItems: NavItem[] = [
     images: [],
   },
   {
+    name: "Explore",
+    href: "/explore",
+    submenuItems: [],
+    images: [],
+  },
+  {
     name: "About",
     href: "/about/faq",
     submenuItems: ["FAQ"],
