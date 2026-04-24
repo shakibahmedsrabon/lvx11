@@ -195,21 +195,6 @@ const Footer = () => {
           </div>
 
           <nav aria-label="Footer navigation" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <h4 className="text-sm font-normal mb-4">Shop</h4>
-              <ul className="space-y-2">
-                <li>
-                  <AppLink href="/" className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors">
-                    Home
-                  </AppLink>
-                </li>
-                <li>
-                  <AppLink href="/explore" className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors">
-                    Explore
-                  </AppLink>
-                </li>
-              </ul>
-            </div>
             {abouts.length > 0 && (
               <div>
                 <h4 className="text-sm font-normal mb-4">About</h4>
