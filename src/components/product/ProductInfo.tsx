@@ -148,48 +148,104 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
       )}
 
-      {/* Type selector — pill-style buttons (only shown if >1 type) */}
+      {/* Type selector — dynamic from variants. Each card shows type label + lowest price for that type. */}
       {product.availableTypes.length > 1 && (
         <div className="py-4 border-b border-border">
-          <span className="text-sm font-light text-foreground mb-3 block">Type</span>
-          <div className="flex flex-wrap gap-2">
-            {product.availableTypes.map((type) => (
-              <button
-                key={type}
-                onClick={() => handleSelectType(type)}
-                className={cn(
-                  "px-4 py-2 text-sm border transition-colors",
-                  type === selectedType
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border text-foreground hover:border-foreground"
-                )}
-              >
-                {formatTypeLabel(type)}
-              </button>
-            ))}
+          <div className="flex items-baseline justify-between mb-3">
+            <span className="text-sm font-light text-foreground">Plan type</span>
+            <span className="text-xs font-light text-muted-foreground">
+              {product.availableTypes.length} options
+            </span>
+          </div>
+          <div
+            role="radiogroup"
+            aria-label="Plan type"
+            className="grid grid-cols-2 sm:grid-cols-3 gap-2"
+          >
+            {product.availableTypes.map((type) => {
+              const typeVariants = product.variants.filter((v) => v.type === type);
+              const fromAmount = Math.min(...typeVariants.map((v) => v.amount));
+              const isActive = type === selectedType;
+              return (
+                <button
+                  key={type}
+                  role="radio"
+                  aria-checked={isActive}
+                  onClick={() => handleSelectType(type)}
+                  className={cn(
+                    "group relative flex flex-col items-start text-left px-3 py-2.5 border transition-all min-h-[58px]",
+                    isActive
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border text-foreground hover:border-foreground"
+                  )}
+                >
+                  <span className="text-sm font-medium leading-tight truncate w-full">
+                    {formatTypeLabel(type)}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[11px] font-light mt-0.5",
+                      isActive ? "text-background/70" : "text-muted-foreground"
+                    )}
+                  >
+                    From {formatPrice(fromAmount)}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
 
-      {/* Duration selector — pill-style buttons for the selected type */}
-      {durationsForType.length > 1 && (
+      {/* Duration selector — dynamic for the selected type. Each card shows duration + exact price. */}
+      {durationsForType.length > 0 && (
         <div className="py-4 border-b border-border">
-          <span className="text-sm font-light text-foreground mb-3 block">Duration</span>
-          <div className="flex flex-wrap gap-2">
-            {durationsForType.map((dur) => (
-              <button
-                key={dur}
-                onClick={() => { vibrate(30); setSelectedDuration(dur); }}
-                className={cn(
-                  "px-4 py-2 text-sm border transition-colors",
-                  dur === selectedDuration
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-border text-foreground hover:border-foreground"
-                )}
-              >
-                {dur} {dur === 1 ? "month" : "months"}
-              </button>
-            ))}
+          <div className="flex items-baseline justify-between mb-3">
+            <span className="text-sm font-light text-foreground">Duration</span>
+            {durationsForType.length > 1 && (
+              <span className="text-xs font-light text-muted-foreground">
+                {durationsForType.length} options
+              </span>
+            )}
+          </div>
+          <div
+            role="radiogroup"
+            aria-label="Duration"
+            className="grid grid-cols-2 sm:grid-cols-3 gap-2"
+          >
+            {durationsForType.map((dur) => {
+              const variant = product.variants.find(
+                (v) => v.type === selectedType && v.duration === dur
+              );
+              const amount = variant?.amount ?? 0;
+              const isActive = dur === selectedDuration;
+              return (
+                <button
+                  key={dur}
+                  role="radio"
+                  aria-checked={isActive}
+                  onClick={() => { vibrate(30); setSelectedDuration(dur); }}
+                  className={cn(
+                    "group relative flex flex-col items-start text-left px-3 py-2.5 border transition-all min-h-[58px]",
+                    isActive
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-border text-foreground hover:border-foreground"
+                  )}
+                >
+                  <span className="text-sm font-medium leading-tight">
+                    {dur} {dur === 1 ? "month" : "months"}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-[11px] font-light mt-0.5",
+                      isActive ? "text-background/70" : "text-muted-foreground"
+                    )}
+                  >
+                    {formatPrice(amount)}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}
