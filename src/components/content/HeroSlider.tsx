@@ -182,21 +182,20 @@ const HeroSlider = () => {
       {total > 1 && (
         <>
           <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-between gap-3 px-5 md:px-7 pb-5 md:pb-7">
-            {/* Left: Previous (hidden on first slide) */}
-            <div className="w-8 h-8 flex items-center justify-start">
-              {current > 0 && (
-                <button
-                  onClick={prev}
-                  className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
-                  aria-label="Previous slide"
-                >
-                  <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
-                </button>
-              )}
-            </div>
+            {/* Left spacer to balance the right play/pause button */}
+            <div className="w-8 h-8" />
 
-            {/* Center: dots + Next */}
+            {/* Center: Prev + dots + Next */}
             <div className="flex items-center gap-3">
+              <button
+                onClick={prev}
+                disabled={current === 0}
+                className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 disabled:opacity-0 disabled:pointer-events-none"
+                aria-label="Previous slide"
+              >
+                <ChevronLeft className="w-5 h-5" strokeWidth={1.5} />
+              </button>
+
               <div className="flex items-center gap-2.5">
                 {slides.map((_, i) => (
                   <button
@@ -223,27 +222,24 @@ const HeroSlider = () => {
                 ))}
               </div>
 
-              {current < total - 1 && (
-                <button
-                  onClick={next}
-                  className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
-                  aria-label="Next slide"
-                >
-                  <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
-                </button>
-              )}
+              <button
+                onClick={next}
+                disabled={current === total - 1}
+                className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-all duration-200 disabled:opacity-0 disabled:pointer-events-none"
+                aria-label="Next slide"
+              >
+                <ChevronRight className="w-5 h-5" strokeWidth={1.5} />
+              </button>
             </div>
 
             {/* Right: Play / Pause */}
-            <div className="w-8 h-8 flex items-center justify-end">
-              <button
-                onClick={() => setIsPlaying((p) => !p)}
-                className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
-                aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
-              >
-                {isPlaying ? <Pause className="w-4 h-4" strokeWidth={1.5} /> : <Play className="w-4 h-4" strokeWidth={1.5} />}
-              </button>
-            </div>
+            <button
+              onClick={() => setIsPlaying((p) => !p)}
+              className="w-8 h-8 flex items-center justify-center text-white/70 hover:text-white transition-colors duration-200"
+              aria-label={isPlaying ? "Pause slideshow" : "Play slideshow"}
+            >
+              {isPlaying ? <Pause className="w-4 h-4" strokeWidth={1.5} /> : <Play className="w-4 h-4" strokeWidth={1.5} />}
+            </button>
           </div>
         </>
       )}
