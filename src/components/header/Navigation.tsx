@@ -162,20 +162,22 @@ const Navigation = () => {
 
   return (
     <nav
-      className="relative"
+      className="relative transition-colors duration-300"
       style={{
-        backgroundColor: 'hsl(var(--nav-glass))',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
+        backgroundColor: isTransparent ? 'transparent' : 'hsl(var(--nav-glass))',
+        backdropFilter: isTransparent ? 'none' : 'blur(10px)',
+        WebkitBackdropFilter: isTransparent ? 'none' : 'blur(10px)',
+        color: isTransparent ? '#fff' : undefined,
       }}
     >
       <div className="grid grid-cols-3 items-center h-16 px-6">
         {/* Left: hamburger + search */}
-        <div className="flex items-center justify-start space-x-1">
+        <div className="flex items-center justify-start gap-1 sm:gap-3">
           <button
-            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
+            className="flex items-center gap-1.5 p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle menu"
+            style={isTransparent ? { color: '#fff' } : undefined}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -190,15 +192,18 @@ const Navigation = () => {
               <path d={isMobileMenuOpen ? "M6 6L18 18" : "M4 9L20 9"} />
               <path d={isMobileMenuOpen ? "M6 18L18 6" : "M4 15L14 15"} />
             </svg>
+            <span className="hidden sm:inline text-sm font-light">Menu</span>
           </button>
           <button
-            className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
+            className="flex items-center gap-1.5 p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
             aria-label="Search"
             onClick={() => setIsSearchOpen(!isSearchOpen)}
+            style={isTransparent ? { color: '#fff' } : undefined}
           >
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
               <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
             </svg>
+            <span className="hidden sm:inline text-sm font-light">Search</span>
           </button>
         </div>
 
