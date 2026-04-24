@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      "All-Policy": {
+        Row: {
+          created_at: string
+          id: number
+          PolicyMD: string | null
+          PolicyName: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          PolicyMD?: string | null
+          PolicyName?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          PolicyMD?: string | null
+          PolicyName?: string | null
+        }
+        Relationships: []
+      }
       Category: {
         Row: {
           created_at: string
