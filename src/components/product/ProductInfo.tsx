@@ -148,14 +148,16 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
       )}
 
-      {/* Type selector — dynamic from variants. Always shown when at least one type exists. */}
-      {product.availableTypes.length > 0 && (
+      {/* Type selector — only render when at least one type variant exists. */}
+      {product.availableTypes.length > 0 && product.variants.length > 0 && (
         <div className="py-4 border-b border-border">
           <div className="flex items-baseline justify-between mb-3">
             <span className="text-sm font-light text-foreground">Plan type</span>
-            <span className="text-xs font-light text-muted-foreground">
-              {product.availableTypes.length} options
-            </span>
+            {product.availableTypes.length > 1 && (
+              <span className="text-[11px] font-light text-muted-foreground tracking-wide uppercase">
+                {product.availableTypes.length} options
+              </span>
+            )}
           </div>
           <div
             role="radiogroup"
@@ -164,6 +166,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
           >
             {product.availableTypes.map((type) => {
               const typeVariants = product.variants.filter((v) => v.type === type);
+              if (typeVariants.length === 0) return null;
               const fromAmount = Math.min(...typeVariants.map((v) => v.amount));
               const isActive = type === selectedType;
               return (
@@ -173,10 +176,10 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                   aria-checked={isActive}
                   onClick={() => handleSelectType(type)}
                   className={cn(
-                    "group relative flex flex-col items-start text-left px-3 py-2.5 border transition-all min-h-[58px]",
+                    "group relative flex flex-col items-start text-left px-3.5 py-3 border transition-all min-h-[64px]",
                     isActive
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border text-foreground hover:border-foreground"
+                      ? "border-foreground bg-foreground text-background shadow-sm"
+                      : "border-border text-foreground hover:border-foreground/60 hover:bg-muted/30"
                   )}
                 >
                   <span className="text-sm font-medium leading-tight truncate w-full">
@@ -184,8 +187,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                   </span>
                   <span
                     className={cn(
-                      "text-[11px] font-light mt-0.5",
-                      isActive ? "text-background/70" : "text-muted-foreground"
+                      "text-[11px] font-light mt-1",
+                      isActive ? "text-background/75" : "text-muted-foreground"
                     )}
                   >
                     From {formatPrice(fromAmount)}
@@ -197,13 +200,13 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         </div>
       )}
 
-      {/* Duration selector — dynamic for the selected type. Each card shows duration + exact price. */}
+      {/* Duration selector — only render when the selected type has durations. */}
       {durationsForType.length > 0 && (
         <div className="py-4 border-b border-border">
           <div className="flex items-baseline justify-between mb-3">
             <span className="text-sm font-light text-foreground">Duration</span>
             {durationsForType.length > 1 && (
-              <span className="text-xs font-light text-muted-foreground">
+              <span className="text-[11px] font-light text-muted-foreground tracking-wide uppercase">
                 {durationsForType.length} options
               </span>
             )}
@@ -213,12 +216,15 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             aria-label="Duration"
             className="grid grid-cols-2 sm:grid-cols-3 gap-2"
           >
-            {durationsForType.map((dur) => {
+            {durationsForType.map((dur, idx) => {
               const variant = product.variants.find(
                 (v) => v.type === selectedType && v.duration === dur
               );
-              const amount = variant?.amount ?? 0;
+              if (!variant) return null;
+              const amount = variant.amount;
               const isActive = dur === selectedDuration;
+              const isBestValue =
+                durationsForType.length > 1 && idx === durationsForType.length - 1;
               return (
                 <button
                   key={dur}
@@ -226,19 +232,31 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                   aria-checked={isActive}
                   onClick={() => { vibrate(30); setSelectedDuration(dur); }}
                   className={cn(
-                    "group relative flex flex-col items-start text-left px-3 py-2.5 border transition-all min-h-[58px]",
+                    "group relative flex flex-col items-start text-left px-3.5 py-3 border transition-all min-h-[64px]",
                     isActive
-                      ? "border-foreground bg-foreground text-background"
-                      : "border-border text-foreground hover:border-foreground"
+                      ? "border-foreground bg-foreground text-background shadow-sm"
+                      : "border-border text-foreground hover:border-foreground/60 hover:bg-muted/30"
                   )}
                 >
+                  {isBestValue && (
+                    <span
+                      className={cn(
+                        "absolute -top-2 right-2 text-[9px] font-medium tracking-wider uppercase px-1.5 py-0.5 border",
+                        isActive
+                          ? "bg-background text-foreground border-background"
+                          : "bg-foreground text-background border-foreground"
+                      )}
+                    >
+                      Best
+                    </span>
+                  )}
                   <span className="text-sm font-medium leading-tight">
                     {dur} {dur === 1 ? "month" : "months"}
                   </span>
                   <span
                     className={cn(
-                      "text-[11px] font-light mt-0.5",
-                      isActive ? "text-background/70" : "text-muted-foreground"
+                      "text-[11px] font-light mt-1",
+                      isActive ? "text-background/75" : "text-muted-foreground"
                     )}
                   >
                     {formatPrice(amount)}
