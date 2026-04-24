@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ReviewProduct from "./ReviewProduct";
+import MarkdownRenderer from "@/components/MarkdownRenderer";
 import type { Product } from "@/hooks/useProducts";
 import { useReviews } from "@/hooks/useReviews";
 import { useSiteConfig } from "@/hooks/useSiteConfig";
