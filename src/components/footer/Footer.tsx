@@ -71,52 +71,72 @@ const byName = <T extends { name?: string | null; Name?: string | null }>(a: T, 
     sensitivity: 'base',
   });
 
+interface FooterData {
+  contacts: Contact[];
+  channels: Channel[];
+  groups: Group[];
+  socials: SocialPlatform[];
+  policies: Policy[];
+  abouts: AboutEntry[];
+}
+
+let footerCache: FooterData | null = null;
+let footerPromise: Promise<FooterData> | null = null;
+
+const fetchFooterData = (): Promise<FooterData> => {
+  if (footerCache) return Promise.resolve(footerCache);
+  if (footerPromise) return footerPromise;
+
+  footerPromise = (async () => {
+    const [contactsRes, channelsRes, groupsRes, socialsRes, policiesRes, aboutsRes] = await Promise.all([
+      (supabase as any).from('Connects').select('*').order('id'),
+      (supabase as any).from('Channels').select('*').order('id'),
+      (supabase as any).from('Groups').select('*').order('id'),
+      (supabase as any).from('Social Platforms').select('*').order('id'),
+      (supabase as any).from('All-Policy').select('id, PolicyName').order('id'),
+      (supabase as any).from('All-About').select('id, AboutName').order('id'),
+    ]);
+    const data: FooterData = {
+      contacts: !contactsRes.error && contactsRes.data
+        ? [...contactsRes.data].sort(
+            (a: Contact, b: Contact) => contactPriority(a.link) - contactPriority(b.link),
+          )
+        : [],
+      channels: !channelsRes.error && channelsRes.data ? [...channelsRes.data].sort(byName) : [],
+      groups: !groupsRes.error && groupsRes.data ? [...groupsRes.data].sort(byName) : [],
+      socials: !socialsRes.error && socialsRes.data ? [...socialsRes.data].sort(byName) : [],
+      policies: !policiesRes.error && policiesRes.data
+        ? ([...policiesRes.data].filter((p: Policy) => p.PolicyName) as Policy[])
+        : [],
+      abouts: !aboutsRes.error && aboutsRes.data
+        ? ([...aboutsRes.data].filter((a: AboutEntry) => a.AboutName) as AboutEntry[])
+        : [],
+    };
+    footerCache = data;
+    return data;
+  })();
+
+  return footerPromise;
+};
+
 const Footer = () => {
   const { config: siteConfig } = useSiteConfig();
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [channels, setChannels] = useState<Channel[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [socials, setSocials] = useState<SocialPlatform[]>([]);
-  const [policies, setPolicies] = useState<Policy[]>([]);
-  const [abouts, setAbouts] = useState<AboutEntry[]>([]);
+  const [contacts, setContacts] = useState<Contact[]>(footerCache?.contacts ?? []);
+  const [channels, setChannels] = useState<Channel[]>(footerCache?.channels ?? []);
+  const [groups, setGroups] = useState<Group[]>(footerCache?.groups ?? []);
+  const [socials, setSocials] = useState<SocialPlatform[]>(footerCache?.socials ?? []);
+  const [policies, setPolicies] = useState<Policy[]>(footerCache?.policies ?? []);
+  const [abouts, setAbouts] = useState<AboutEntry[]>(footerCache?.abouts ?? []);
 
   useEffect(() => {
-    const fetchAll = async () => {
-      const [contactsRes, channelsRes, groupsRes, socialsRes, policiesRes, aboutsRes] = await Promise.all([
-        (supabase as any).from('Connects').select('*').order('id'),
-        (supabase as any).from('Channels').select('*').order('id'),
-        (supabase as any).from('Groups').select('*').order('id'),
-        (supabase as any).from('Social Platforms').select('*').order('id'),
-        (supabase as any).from('All-Policy').select('id, PolicyName').order('id'),
-        (supabase as any).from('All-About').select('id, AboutName').order('id'),
-      ]);
-      if (!contactsRes.error && contactsRes.data) {
-        const sorted = [...contactsRes.data].sort(
-          (a: Contact, b: Contact) => contactPriority(a.link) - contactPriority(b.link),
-        );
-        setContacts(sorted);
-      }
-      if (!channelsRes.error && channelsRes.data) {
-        setChannels([...channelsRes.data].sort(byName));
-      }
-      if (!groupsRes.error && groupsRes.data) {
-        setGroups([...groupsRes.data].sort(byName));
-      }
-      if (!socialsRes.error && socialsRes.data) {
-        setSocials([...socialsRes.data].sort(byName));
-      }
-      if (!policiesRes.error && policiesRes.data) {
-        setPolicies(
-          [...policiesRes.data].filter((p: Policy) => p.PolicyName) as Policy[],
-        );
-      }
-      if (!aboutsRes.error && aboutsRes.data) {
-        setAbouts(
-          [...aboutsRes.data].filter((a: AboutEntry) => a.AboutName) as AboutEntry[],
-        );
-      }
-    };
-    fetchAll();
+    fetchFooterData().then((data) => {
+      setContacts(data.contacts);
+      setChannels(data.channels);
+      setGroups(data.groups);
+      setSocials(data.socials);
+      setPolicies(data.policies);
+      setAbouts(data.abouts);
+    });
   }, []);
 
   return (
