@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
-import { useSearchParams, useParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useParams } from "react-router-dom";
 import MainLayout from "../layouts/MainLayout";
 import SEOHead from "../components/SEOHead";
 import CategoryHeader from "../components/category/CategoryHeader";
@@ -22,7 +22,7 @@ import {
 import { useProducts, useProduct } from "@/hooks/useProducts";
 import { useCategories } from "@/hooks/useCategories";
 import { useSearchIndex, getSuggestions } from "@/hooks/useSearchIndex";
-import { Search, ArrowLeft } from "lucide-react";
+import { Search } from "lucide-react";
 import type { ActiveFilters } from "@/components/category/FilterSortBar";
 
 const ITEMS_PER_PAGE_MOBILE = 8;
@@ -33,7 +33,7 @@ const slugify = (s: string) =>
 
 /* ---------- Inline product detail view ---------- */
 const InlineProductDetail = ({ productId }: { productId: string }) => {
-  const navigate = useNavigate();
+  
   const { product, loading } = useProduct(productId);
 
   if (loading) {
@@ -103,13 +103,6 @@ const InlineProductDetail = ({ productId }: { productId: string }) => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <button
-          onClick={() => navigate(-1)}
-          className="mt-4 inline-flex items-center gap-1.5 text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back
-        </button>
       </section>
 
       <section className="w-full px-6" aria-label="Product details">
