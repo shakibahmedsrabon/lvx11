@@ -18,6 +18,12 @@ export interface NavItem {
 
 export const navItems: NavItem[] = [
   {
+    name: "Home",
+    href: "/",
+    submenuItems: [],
+    images: [],
+  },
+  {
     name: "Shop",
     href: "/explore",
     submenuItems: [],
