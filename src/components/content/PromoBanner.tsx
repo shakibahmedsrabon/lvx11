@@ -6,17 +6,17 @@ const PromoBanner = () => {
   if (loading || !banner) return null;
 
   return (
-    <section className="w-full px-6 py-12">
+    <section className="w-full py-12">
       <div className="w-full">
         {banner.image && (
           <img
             src={banner.image}
             alt={banner.title || "Promotional banner"}
             loading="lazy"
-            className="w-full h-auto object-cover rounded-lg"
+            className="w-full h-auto object-cover"
           />
         )}
-        <div className="mt-4 text-left">
+        <div className="mt-4 text-left px-6">
           {banner.title && (
             <h2 className="text-base md:text-lg font-medium text-foreground mb-1">
               {banner.title}
