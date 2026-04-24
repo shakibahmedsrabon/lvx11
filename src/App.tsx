@@ -19,6 +19,7 @@ const TermsOfService = lazy(() => import("./pages/TermsOfService"));
 const RefundExchangePolicy = lazy(() => import("./pages/RefundExchangePolicy"));
 const Trademark = lazy(() => import("./pages/Trademark"));
 const Policy = lazy(() => import("./pages/Policy"));
+const About = lazy(() => import("./pages/About"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -53,6 +54,7 @@ const App = () => (
               <Route path="/refund-exchange-policy" element={<RefundExchangePolicy />} />
               <Route path="/trademark" element={<Trademark />} />
               <Route path="/policy/:slug" element={<Policy />} />
+              <Route path="/about/:slug" element={<About />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

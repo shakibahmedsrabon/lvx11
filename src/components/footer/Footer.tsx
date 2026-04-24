@@ -33,13 +33,21 @@ interface Policy {
   PolicyName: string | null;
 }
 
-const policySlug = (name: string): string =>
+interface AboutEntry {
+  id: number;
+  AboutName: string | null;
+}
+
+const slugify = (name: string): string =>
   name
     .toLowerCase()
     .trim()
     .replace(/[^a-z0-9\s-]/g, "")
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
+
+const policySlug = slugify;
+const aboutSlug = slugify;
 
 const cleanContactDisplay = (value: string): string => {
   return value
@@ -70,15 +78,17 @@ const Footer = () => {
   const [groups, setGroups] = useState<Group[]>([]);
   const [socials, setSocials] = useState<SocialPlatform[]>([]);
   const [policies, setPolicies] = useState<Policy[]>([]);
+  const [abouts, setAbouts] = useState<AboutEntry[]>([]);
 
   useEffect(() => {
     const fetchAll = async () => {
-      const [contactsRes, channelsRes, groupsRes, socialsRes, policiesRes] = await Promise.all([
+      const [contactsRes, channelsRes, groupsRes, socialsRes, policiesRes, aboutsRes] = await Promise.all([
         (supabase as any).from('Connects').select('*').order('id'),
         (supabase as any).from('Channels').select('*').order('id'),
         (supabase as any).from('Groups').select('*').order('id'),
         (supabase as any).from('Social Platforms').select('*').order('id'),
         (supabase as any).from('All-Policy').select('id, PolicyName').order('id'),
+        (supabase as any).from('All-About').select('id, AboutName').order('id'),
       ]);
       if (!contactsRes.error && contactsRes.data) {
         const sorted = [...contactsRes.data].sort(
@@ -98,6 +108,11 @@ const Footer = () => {
       if (!policiesRes.error && policiesRes.data) {
         setPolicies(
           [...policiesRes.data].filter((p: Policy) => p.PolicyName) as Policy[],
+        );
+      }
+      if (!aboutsRes.error && aboutsRes.data) {
+        setAbouts(
+          [...aboutsRes.data].filter((a: AboutEntry) => a.AboutName) as AboutEntry[],
         );
       }
     };
@@ -159,7 +174,24 @@ const Footer = () => {
             )}
           </div>
 
-          <nav aria-label="Footer navigation" className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <nav aria-label="Footer navigation" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {abouts.length > 0 && (
+              <div>
+                <h4 className="text-sm font-normal mb-4">About</h4>
+                <ul className="space-y-2">
+                  {abouts.map((a) => (
+                    <li key={a.id}>
+                      <AppLink
+                        href={`/about/${aboutSlug(a.AboutName as string)}`}
+                        className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {a.AboutName}
+                      </AppLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div>
               <h4 className="text-sm font-normal mb-4">Channels</h4>
               <ul className="space-y-2">

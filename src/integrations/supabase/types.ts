@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      "All-About": {
+        Row: {
+          AboutMD: string | null
+          AboutName: string | null
+          created_at: string
+          id: number
+        }
+        Insert: {
+          AboutMD?: string | null
+          AboutName?: string | null
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          AboutMD?: string | null
+          AboutName?: string | null
+          created_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
       "All-Policy": {
         Row: {
           created_at: string
