@@ -233,6 +233,9 @@ const Explore = () => {
       case "name": result.sort((a, b) => a.title.localeCompare(b.title)); break;
     }
 
+    // Always surface in-stock products first, regardless of chosen sort
+    result.sort((a, b) => Number(b.stock) - Number(a.stock));
+
     return result;
   })();
 
