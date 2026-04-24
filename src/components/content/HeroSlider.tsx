@@ -18,14 +18,14 @@ const VIDEO_RE = /\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/i;
 const isVideoUrl = (url: string) => VIDEO_RE.test(url);
 
 const AUTO_PLAY_INTERVAL = 5000;
-const TRANSITION_DURATION = 1100;
+const TRANSITION_DURATION = 600;
 // Smooth, gentle ease for a calmer slide change
 const EASE_SNAPPY = "cubic-bezier(0.65, 0, 0.35, 1)";
 
 const HeroSlider = () => {
   const [slides, setSlides] = useState<Slide[]>([]);
   const [current, setCurrent] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   // Tracks how many slides have been allowed to begin loading. Loads sequentially
   // so the browser doesn't try to fetch every hero image at once on first paint.
