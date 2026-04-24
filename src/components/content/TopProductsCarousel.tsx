@@ -137,7 +137,7 @@ const TopProductsCarousel = () => {
                 <Card className="border-none shadow-none bg-transparent group">
                   <CardContent className="p-0">
                     <div className="aspect-square mb-3 overflow-hidden bg-muted/10 relative">
-                      <span className="absolute top-2 left-2 z-10 bg-foreground text-background text-[11px] font-medium tracking-wider px-2 py-0.5">
+                      <span className="absolute top-2 left-2 z-10 bg-white/20 backdrop-blur-md text-white text-[11px] font-semibold tracking-wider px-2.5 py-1 rounded-full border border-white/30 shadow-sm">
                         #{item.rank}
                       </span>
                       {item.image && (
