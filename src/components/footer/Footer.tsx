@@ -28,6 +28,19 @@ interface SocialPlatform {
   Link: string | null;
 }
 
+interface Policy {
+  id: number;
+  PolicyName: string | null;
+}
+
+const policySlug = (name: string): string =>
+  name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-");
+
 const cleanContactDisplay = (value: string): string => {
   return value
     .replace(/^mailto:/i, '')
@@ -56,14 +69,16 @@ const Footer = () => {
   const [channels, setChannels] = useState<Channel[]>([]);
   const [groups, setGroups] = useState<Group[]>([]);
   const [socials, setSocials] = useState<SocialPlatform[]>([]);
+  const [policies, setPolicies] = useState<Policy[]>([]);
 
   useEffect(() => {
     const fetchAll = async () => {
-      const [contactsRes, channelsRes, groupsRes, socialsRes] = await Promise.all([
+      const [contactsRes, channelsRes, groupsRes, socialsRes, policiesRes] = await Promise.all([
         (supabase as any).from('Connects').select('*').order('id'),
         (supabase as any).from('Channels').select('*').order('id'),
         (supabase as any).from('Groups').select('*').order('id'),
         (supabase as any).from('Social Platforms').select('*').order('id'),
+        (supabase as any).from('All-Policy').select('id, PolicyName').order('id'),
       ]);
       if (!contactsRes.error && contactsRes.data) {
         const sorted = [...contactsRes.data].sort(
@@ -79,6 +94,11 @@ const Footer = () => {
       }
       if (!socialsRes.error && socialsRes.data) {
         setSocials([...socialsRes.data].sort(byName));
+      }
+      if (!policiesRes.error && policiesRes.data) {
+        setPolicies(
+          [...policiesRes.data].filter((p: Policy) => p.PolicyName) as Policy[],
+        );
       }
     };
     fetchAll();
@@ -212,6 +232,15 @@ const Footer = () => {
             <AppLink href="/refund-exchange-policy" className="text-xs font-light text-muted-foreground hover:text-foreground transition-colors">
               Refund & Exchange
             </AppLink>
+            {policies.map((p) => (
+              <AppLink
+                key={p.id}
+                href={`/policy/${policySlug(p.PolicyName as string)}`}
+                className="text-xs font-light text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {p.PolicyName}
+              </AppLink>
+            ))}
           </div>
         </div>
       </div>
