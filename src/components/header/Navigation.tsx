@@ -161,14 +161,12 @@ const Navigation = () => {
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
-              width="20"
-              height="20"
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="w-5 h-5"
+              className="w-6 h-6"
             >
               <path d={isMobileMenuOpen ? "M6 6L18 18" : "M4 9L20 9"} />
               <path d={isMobileMenuOpen ? "M6 18L18 6" : "M4 15L14 15"} />
