@@ -10,9 +10,11 @@ import { useSiteConfig } from "@/hooks/useSiteConfig";
 import { useCategories } from "@/hooks/useCategories";
 import { useProducts, formatPrice, type Product } from "@/hooks/useProducts";
 import { useSearchIndex, getSuggestions } from "@/hooks/useSearchIndex";
+import { useTheme } from "@/hooks/useTheme";
 
 const Navigation = () => {
   const { config: siteConfig } = useSiteConfig();
+  const { resolvedScheme } = useTheme();
   const { categories: dbCategories } = useCategories();
   const navigate = useNavigate();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -194,7 +196,8 @@ const Navigation = () => {
               <img 
                 src={siteConfig.logo} 
                 alt={siteConfig?.name || ""} 
-                className="h-6 w-auto dark:invert-0 invert"
+                className="h-6 w-auto"
+                style={{ filter: resolvedScheme === "light" ? "invert(1)" : "none" }}
               />
             )}
           </AppLink>
