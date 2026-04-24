@@ -40,7 +40,7 @@ const priceRanges = [
   { id: "under-500", label: "Under ৳500" },
   { id: "500-1000", label: "৳500 – ৳1,000" },
   { id: "1000-2000", label: "৳1,000 – ৳2,000" },
-  { id: "over-2000", label: "Over ৳2,000" },
+  { id: "over-5000", label: "Over ৳5,000" },
 ];
 
 const FilterSortBar = ({
