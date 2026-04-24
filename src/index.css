@@ -179,7 +179,7 @@
      Base #1a1f2e, cyan #08D9D6, crimson #FF2E63, purple #8b5cf6
      =========================================================== */
   :root[data-theme="cyan-crimson"] {
-    --background: 222 28% 11%;          /* darker than #252A34 */
+    --background: 222 28% 11%;
     --foreground: 0 0% 94%;
 
     --status-bar: 222 30% 7%;
@@ -187,25 +187,25 @@
 
     --nav-background: 222 28% 11%;
     --nav-foreground: 0 0% 90%;
-    --nav-hover: 179 93% 50%;
+    --nav-hover: 262 83% 68%;
     --nav-glass: 222 30% 7% / 0.6;
 
-    --primary: 179 93% 44%;             /* cyan #08D9D6 */
-    --primary-foreground: 222 30% 8%;
-    --primary-hover: 179 93% 52%;
+    --primary: 262 83% 58%;             /* royal purple #7C3AED */
+    --primary-foreground: 0 0% 100%;
+    --primary-hover: 262 83% 64%;
 
-    --secondary: 258 60% 22%;           /* deep purple */
+    --secondary: 258 40% 22%;
     --secondary-foreground: 0 0% 96%;
 
     --muted: 222 22% 18%;
     --muted-foreground: 0 0% 72%;
 
-    --accent: 258 90% 66%;              /* purple pop #8b5cf6 */
+    --accent: 262 83% 58%;              /* royal purple */
     --accent-foreground: 0 0% 100%;
 
     --border: 222 22% 22%;
     --input: 222 22% 22%;
-    --ring: 258 90% 66%;
+    --ring: 262 83% 58%;
 
     --card: 222 26% 14%;
     --card-foreground: 0 0% 94%;
@@ -213,7 +213,7 @@
     --popover: 222 26% 14%;
     --popover-foreground: 0 0% 94%;
 
-    --destructive: 344 100% 59%;        /* crimson #FF2E63 */
+    --destructive: 344 100% 59%;
     --destructive-foreground: 0 0% 100%;
   }
 
