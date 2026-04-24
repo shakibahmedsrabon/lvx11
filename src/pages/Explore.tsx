@@ -214,6 +214,10 @@ const Explore = () => {
       result = result.filter((p) => wantedSlugs.includes(slugify(p.category)));
     }
 
+    if (filters.inStockOnly) {
+      result = result.filter((p) => p.stock);
+    }
+
     if (filters.priceRange) {
       result = result.filter((p) => {
         const price = p.basePrice;
