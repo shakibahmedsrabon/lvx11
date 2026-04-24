@@ -17,6 +17,7 @@ interface CartItem {
   name: string;
   price: string;
   unitPrice: number;
+  variantType: string;
   duration: number;
   image: string;
   quantity: number;
@@ -27,9 +28,11 @@ interface ShoppingBagProps {
   isOpen: boolean;
   onClose: () => void;
   cartItems: CartItem[];
-  updateQuantity: (id: number, duration: number, newQuantity: number) => void;
+  updateQuantity: (id: number, variantType: string, duration: number, newQuantity: number) => void;
   clearCart: () => void;
 }
+
+const capType = (s: string) => (s ? s.charAt(0).toUpperCase() + s.slice(1) : "");
 
 const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart }: ShoppingBagProps) => {
   if (!isOpen) return null;
@@ -90,8 +93,9 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart }: 
               <div className="flex-1 overflow-y-auto space-y-6 mb-6">
                 {cartItems.map((item) => {
                   const lineTotal = item.unitPrice * item.quantity;
+                  const lineKey = `${item.id}-${item.variantType}-${item.duration}`;
                   return (
-                    <div key={`${item.id}-${item.duration}`} className="flex gap-4">
+                    <div key={lineKey} className="flex gap-4">
                       <div className="w-20 h-20 bg-muted/10 rounded-lg overflow-hidden flex-shrink-0">
                         <img 
                           src={item.image} 
@@ -109,15 +113,15 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart }: 
                             {formatPrice(lineTotal)}
                           </p>
                         </div>
-                        {/* Duration + unit price */}
+                        {/* Type + Duration + unit price */}
                         <p className="text-xs text-muted-foreground">
-                          {item.duration} {item.duration === 1 ? "month" : "months"} · {formatPrice(item.unitPrice)}
+                          {capType(item.variantType)} · {item.duration} {item.duration === 1 ? "month" : "months"} · {formatPrice(item.unitPrice)}
                         </p>
                         {/* Quantity controls */}
                         <div className="flex items-center gap-2 mt-2">
                           <div className="flex items-center border border-border">
                             <button 
-                              onClick={() => updateQuantity(item.id, item.duration, item.quantity - 1)}
+                              onClick={() => updateQuantity(item.id, item.variantType, item.duration, item.quantity - 1)}
                               className="p-1.5 hover:bg-muted/50 transition-colors"
                               aria-label="Decrease quantity"
                             >
@@ -127,7 +131,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart }: 
                               {item.quantity}
                             </span>
                             <button 
-                              onClick={() => updateQuantity(item.id, item.duration, item.quantity + 1)}
+                              onClick={() => updateQuantity(item.id, item.variantType, item.duration, item.quantity + 1)}
                               className="p-1.5 hover:bg-muted/50 transition-colors"
                               aria-label="Increase quantity"
                             >
@@ -146,9 +150,9 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart }: 
                 {/* Line item breakdown */}
                 <div className="space-y-1.5">
                   {cartItems.map((item) => (
-                    <div key={`${item.id}-${item.duration}-summary`} className="flex justify-between text-xs text-muted-foreground">
+                    <div key={`${item.id}-${item.variantType}-${item.duration}-summary`} className="flex justify-between text-xs text-muted-foreground">
                       <span className="truncate mr-2">
-                        {item.name} × {item.quantity} ({item.duration}mo)
+                        {item.name} × {item.quantity} ({capType(item.variantType)}, {item.duration}mo)
                       </span>
                       <span className="flex-shrink-0">{formatPrice(item.unitPrice * item.quantity)}</span>
                     </div>
@@ -175,6 +179,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart }: 
                         name: item.name,
                         price: formatPrice(item.unitPrice),
                         quantity: item.quantity,
+                        variantType: item.variantType,
                         duration: item.duration,
                         unitPrice: item.unitPrice,
                       }))
