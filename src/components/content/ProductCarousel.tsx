@@ -6,14 +6,38 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import AppLink from "@/lib/navigation/AppLink";
 import { useProducts, formatPrice } from "@/hooks/useProducts";
+import { ArrowRight } from "lucide-react";
 
 const ProductCarousel = () => {
   const { products, loading } = useProducts();
 
   if (loading || products.length === 0) return null;
 
+  // Show older products (oldest first) - opposite of TopProductsCarousel
+  const olderProducts = [...products]
+    .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+    .slice(0, 12);
+
   return (
-    <section className="w-full mb-16 px-6" aria-label="Product carousel">
+    <section className="w-full mb-16 px-6" aria-label="Explore products">
+      <div className="flex items-end justify-between mb-6 md:mb-8">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
+            Archive
+          </p>
+          <h2 className="text-xl md:text-2xl font-medium text-foreground">
+            Explore the Collection
+          </h2>
+        </div>
+        <AppLink
+          href="/explore"
+          className="group hidden md:inline-flex items-center gap-1.5 text-sm font-medium text-foreground border-b border-foreground/20 hover:border-foreground transition-colors pb-0.5"
+        >
+          See all products
+          <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+        </AppLink>
+      </div>
+
       <Carousel
         opts={{
           align: "start",
@@ -22,7 +46,7 @@ const ProductCarousel = () => {
         className="w-full"
       >
         <CarouselContent>
-          {products.map((product) => (
+          {olderProducts.map((product) => (
             <CarouselItem
               key={product.id}
               className="basis-1/2 md:basis-1/3 lg:basis-1/4 pr-2 md:pr-4"
@@ -40,7 +64,7 @@ const ProductCarousel = () => {
                         <img
                           src={product.image}
                           alt={`${product.title} ${product.category}`}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                           loading="lazy"
                         />
                       )}
@@ -66,6 +90,17 @@ const ProductCarousel = () => {
           ))}
         </CarouselContent>
       </Carousel>
+
+      {/* Mobile see-all */}
+      <div className="mt-8 flex md:hidden justify-center">
+        <AppLink
+          href="/explore"
+          className="group inline-flex items-center gap-1.5 text-sm font-medium text-foreground border-b border-foreground/20 hover:border-foreground transition-colors pb-0.5"
+        >
+          See all products
+          <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+        </AppLink>
+      </div>
     </section>
   );
 };
