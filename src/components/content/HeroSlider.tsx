@@ -14,10 +14,10 @@ interface Slide {
   alt: string;
 }
 
-const AUTO_PLAY_INTERVAL = 4500;
-const TRANSITION_DURATION = 700;
-// Apple/Samsung-style snappy ease-out curve (fast start, gentle settle)
-const EASE_SNAPPY = "cubic-bezier(0.22, 1, 0.36, 1)";
+const AUTO_PLAY_INTERVAL = 5000;
+const TRANSITION_DURATION = 1100;
+// Smooth, gentle ease for a calmer slide change
+const EASE_SNAPPY = "cubic-bezier(0.65, 0, 0.35, 1)";
 
 const HeroSlider = () => {
   const [slides, setSlides] = useState<Slide[]>([]);
