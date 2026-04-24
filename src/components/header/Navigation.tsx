@@ -17,13 +17,32 @@ const Navigation = () => {
   const { resolvedScheme } = useTheme();
   const { categories: dbCategories } = useCategories();
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isShoppingBagOpen, setIsShoppingBagOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const debounceRef = useRef<number | null>(null);
+
+  // Transparent overlay only on the homepage hero
+  const isHome = location.pathname === "/";
+  const isTransparent = isHome && !isScrolled && !isSearchOpen && !isMobileMenuOpen && !activeDropdown;
+
+  // Track scroll to switch nav from transparent to solid near end of hero
+  useEffect(() => {
+    if (!isHome) return;
+    const onScroll = () => {
+      // Trigger threshold: ~70% of viewport height (near end of hero)
+      const threshold = window.innerHeight * 0.7;
+      setIsScrolled(window.scrollY > threshold);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [isHome]);
 
   const { cartItems, updateQuantity, clearCart, totalItems } = useCart();
   const { products } = useProducts();
