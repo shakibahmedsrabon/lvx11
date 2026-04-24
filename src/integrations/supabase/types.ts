@@ -167,6 +167,7 @@ export type Database = {
           description: string | null
           FullName: string | null
           id: number
+          product_id: number | null
           profile: string | null
           star: number | null
         }
@@ -175,6 +176,7 @@ export type Database = {
           description?: string | null
           FullName?: string | null
           id?: number
+          product_id?: number | null
           profile?: string | null
           star?: number | null
         }
@@ -183,6 +185,7 @@ export type Database = {
           description?: string | null
           FullName?: string | null
           id?: number
+          product_id?: number | null
           profile?: string | null
           star?: number | null
         }
@@ -194,6 +197,8 @@ export type Database = {
           id: number
           logo: string | null
           name: string | null
+          "og-image": string | null
+          show_review: boolean | null
           slong: string | null
           title: string | null
         }
@@ -202,6 +207,8 @@ export type Database = {
           id?: number
           logo?: string | null
           name?: string | null
+          "og-image"?: string | null
+          show_review?: boolean | null
           slong?: string | null
           title?: string | null
         }
@@ -210,6 +217,8 @@ export type Database = {
           id?: number
           logo?: string | null
           name?: string | null
+          "og-image"?: string | null
+          show_review?: boolean | null
           slong?: string | null
           title?: string | null
         }
