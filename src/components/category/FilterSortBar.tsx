@@ -212,6 +212,29 @@ const FilterSortBar = ({
                     ))}
                   </div>
                 </div>
+
+                <Separator className="border-border" />
+
+                {/* Availability Filter */}
+                <div>
+                  <h3 className="text-sm font-medium mb-4 text-foreground tracking-wide uppercase">
+                    Availability
+                  </h3>
+                  <div className="flex items-center space-x-3">
+                    <Checkbox
+                      id="in-stock-only"
+                      checked={draftInStock}
+                      onCheckedChange={(v) => setDraftInStock(Boolean(v))}
+                      className="border-border data-[state=checked]:bg-foreground data-[state=checked]:border-foreground"
+                    />
+                    <Label
+                      htmlFor="in-stock-only"
+                      className="text-sm font-light text-foreground cursor-pointer"
+                    >
+                      In stock only
+                    </Label>
+                  </div>
+                </div>
               </div>
 
               {/* Action buttons pinned to bottom */}
