@@ -194,7 +194,7 @@ const Navigation = () => {
               <img 
                 src={siteConfig.logo} 
                 alt={siteConfig?.name || ""} 
-                className="h-6 w-auto"
+                className="h-6 w-auto dark:invert-0 invert"
               />
             )}
           </AppLink>
