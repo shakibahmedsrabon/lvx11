@@ -133,8 +133,6 @@ const HeroSlider = () => {
     >
       {slides.map((slide, i) => {
         const isActive = i === current;
-        const distance = i - current;
-        const isAdjacent = Math.abs(distance) <= 1;
         // Sequential loading: only render slides up to loadedCount.
         const shouldRender = i < loadedCount;
         return (
@@ -142,15 +140,11 @@ const HeroSlider = () => {
             key={slide.id}
             className="absolute inset-0"
             style={{
-              willChange: isAdjacent ? "transform" : "auto",
-              transform: `translate3d(${distance * 100}%, 0, 0)`,
-              transition: `transform ${TRANSITION_DURATION}ms ${EASE_SNAPPY}`,
-              // Hide non-adjacent slides completely to prevent overlay artifacts
-              visibility: isAdjacent ? "visible" : "hidden",
+              opacity: isActive ? 1 : 0,
+              transition: `opacity ${TRANSITION_DURATION}ms ${EASE_SNAPPY}`,
               zIndex: isActive ? 2 : 1,
-              backfaceVisibility: "hidden",
-              WebkitBackfaceVisibility: "hidden",
-              WebkitTransform: `translate3d(${distance * 100}%, 0, 0)`,
+              willChange: "opacity",
+              pointerEvents: isActive ? "auto" : "none",
             }}
             aria-hidden={!isActive}
           >
@@ -170,8 +164,8 @@ const HeroSlider = () => {
                 className="w-full h-full object-cover pointer-events-none"
                 style={{
                   willChange: "transform",
-                  transform: isActive ? "translate3d(0,0,0) scale(1)" : "translate3d(0,0,0) scale(1.06)",
-                  transition: `transform ${TRANSITION_DURATION + 400}ms ${EASE_SNAPPY}`,
+                  transform: isActive ? "scale(1)" : "scale(1.04)",
+                  transition: `transform ${TRANSITION_DURATION + 600}ms ${EASE_SNAPPY}`,
                   backfaceVisibility: "hidden",
                   WebkitBackfaceVisibility: "hidden",
                 }}
