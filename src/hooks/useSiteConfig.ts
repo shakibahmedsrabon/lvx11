@@ -9,6 +9,7 @@ interface SiteConfigData {
   logo: string;
   logoFull: string;
   showReview: boolean;
+  ogImage: string;
 }
 
 let cached: SiteConfigData | null = null;
