@@ -174,7 +174,24 @@ const Footer = () => {
             )}
           </div>
 
-          <nav aria-label="Footer navigation" className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          <nav aria-label="Footer navigation" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {abouts.length > 0 && (
+              <div>
+                <h4 className="text-sm font-normal mb-4">About</h4>
+                <ul className="space-y-2">
+                  {abouts.map((a) => (
+                    <li key={a.id}>
+                      <AppLink
+                        href={`/about/${aboutSlug(a.AboutName as string)}`}
+                        className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        {a.AboutName}
+                      </AppLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div>
               <h4 className="text-sm font-normal mb-4">Channels</h4>
               <ul className="space-y-2">
