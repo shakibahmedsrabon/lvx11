@@ -207,7 +207,9 @@ const Navigation = () => {
 
         {/* Right icons */}
         <div className="flex items-center space-x-1">
-          <ThemeSwitcher />
+          <div className="hidden lg:block">
+            <ThemeSwitcher />
+          </div>
           <button 
             className="p-2 text-nav-foreground hover:text-nav-hover transition-colors duration-200"
             aria-label="Search"
@@ -486,6 +488,10 @@ const Navigation = () => {
                    </div>
                 </div>
               ))}
+              <div className="pt-4 border-t border-border flex items-center justify-between">
+                <span className="text-nav-foreground text-sm font-light">Theme</span>
+                <ThemeSwitcher />
+              </div>
             </div>
           </div>
         </div>
