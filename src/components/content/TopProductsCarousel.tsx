@@ -116,14 +116,16 @@ const TopProductsCarousel = () => {
   if (loading || items.length === 0) return null;
 
   return (
-    <section className="w-full mb-16 px-6" aria-label="Top 10 trending products">
-      <div className="flex items-baseline justify-between mb-4">
-        <h2 className="text-sm font-light text-foreground tracking-wide uppercase">
-          Top 10 Trending
-        </h2>
-        <span className="text-xs font-light text-muted-foreground">
-          This week
-        </span>
+    <section className="w-full px-6 mb-20 md:mb-24" aria-label="Top 10 trending products">
+      <div className="flex items-end justify-between mb-6 md:mb-8">
+        <div>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
+            This week
+          </p>
+          <h2 className="text-xl md:text-2xl font-medium text-foreground">
+            Top 10 Trending
+          </h2>
+        </div>
       </div>
 
       <Carousel opts={{ align: "start", loop: false }} className="w-full">

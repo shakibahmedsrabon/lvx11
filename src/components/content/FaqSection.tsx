@@ -33,15 +33,20 @@ const FaqSection = () => {
   if (loading || faqs.length === 0) return null;
 
   return (
-    <section className="w-full px-6 mb-16" aria-label="Frequently asked questions">
+    <section className="w-full px-6 mb-20 md:mb-24" aria-label="Frequently asked questions">
       <div className="max-w-3xl mx-auto">
-        <div className="flex items-baseline justify-between mb-6">
-          <h2 className="text-sm font-light text-foreground tracking-wide uppercase">
-            Frequently Asked
-          </h2>
+        <div className="flex items-end justify-between mb-6 md:mb-8">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-1.5">
+              Help Center
+            </p>
+            <h2 className="text-xl md:text-2xl font-medium text-foreground">
+              Frequently Asked
+            </h2>
+          </div>
           <AppLink
             href="/about/faq"
-            className="text-xs font-light text-muted-foreground hover:text-foreground transition-colors"
+            className="text-sm font-medium text-foreground border-b border-foreground/20 hover:border-foreground transition-colors pb-0.5"
           >
             View all
           </AppLink>
