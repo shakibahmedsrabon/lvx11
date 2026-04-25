@@ -31,8 +31,9 @@ export const buildWhatsAppUrl = (items: WhatsAppItem[]) => {
 
   items.forEach((item, idx) => {
     const qty = item.quantity || 1;
-    const dur = item.duration || 1;
-    const durLabel = dur === 1 ? "1 month" : `${dur} months`;
+    const dur = item.duration ?? 1;
+    const isLifetime = dur === 0 || (item.variantType || "").toLowerCase() === "lifetime";
+    const durLabel = isLifetime ? "Lifetime" : (dur === 1 ? "1 month" : `${dur} months`);
     const typeLabel = item.variantType ? cap(item.variantType) : "";
     const lineTotal = (item.unitPrice || 0) * qty;
     grandTotal += lineTotal;

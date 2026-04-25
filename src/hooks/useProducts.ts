@@ -67,10 +67,23 @@ export function parseVariants(raw: any): PriceVariant[] {
     return raw
       .map((v: any) => {
         const rawType = typeof v?.type === "string" ? v.type.trim() : "";
+        const type = rawType || fallbackType;
+        const isLifetime = type.toLowerCase() === "lifetime";
+        // Lifetime variants don't need a duration. Otherwise default to 1 month
+        // when duration is missing/invalid.
+        let duration: number;
+        if (typeof v?.duration === "number") {
+          duration = v.duration;
+        } else if (v?.duration != null && v?.duration !== "") {
+          const parsed = parseInt(String(v.duration), 10);
+          duration = isNaN(parsed) ? (isLifetime ? 0 : 1) : parsed;
+        } else {
+          duration = isLifetime ? 0 : 1;
+        }
         return {
-          type: rawType || fallbackType,
+          type,
           amount: typeof v?.amount === "number" ? v.amount : parseFloat(v?.amount ?? "0") || 0,
-          duration: typeof v?.duration === "number" ? v.duration : parseInt(v?.duration ?? "1", 10) || 1,
+          duration,
         };
       })
       .filter((v) => v.amount > 0);
@@ -136,7 +149,7 @@ const fetchProducts = (): Promise<Product[]> => {
     .select("id, title, category, description, price, image, stock, created_at")
     .order("stock", { ascending: false })
     .order("id", { ascending: true })
-    .limit(20)
+    .range(0, 9999)
     .then(({ data, error }: any) => {
       if (error || !data) {
         cached = [];

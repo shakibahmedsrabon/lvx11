@@ -98,9 +98,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     for (let i = 0; i < quantity; i++) {
       addToCart(cartProduct);
     }
+    const durLabel = cartProduct.duration === 0 || cartProduct.variantType.toLowerCase() === "lifetime"
+      ? "Lifetime"
+      : `${cartProduct.duration} mo`;
     toast({
       title: "Added to bag",
-      description: `${product.title} (${formatTypeLabel(cartProduct.variantType)} · ${cartProduct.duration} mo × ${quantity}) added.`,
+      description: `${product.title} (${formatTypeLabel(cartProduct.variantType)} · ${durLabel} × ${quantity}) added.`,
     });
     setQuantity(1);
   };
@@ -245,7 +248,9 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
                     </span>
                   )}
                   <span className="text-sm font-medium leading-tight">
-                    {dur} {dur === 1 ? "month" : "months"}
+                    {dur === 0 || selectedType.toLowerCase() === "lifetime"
+                      ? "Lifetime"
+                      : `${dur} ${dur === 1 ? "month" : "months"}`}
                   </span>
                   <span
                     className={cn(

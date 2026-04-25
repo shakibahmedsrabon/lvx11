@@ -115,7 +115,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart }: 
                         </div>
                         {/* Type + Duration + unit price */}
                         <p className="text-xs text-muted-foreground">
-                          {capType(item.variantType)} · {item.duration} {item.duration === 1 ? "month" : "months"} · {formatPrice(item.unitPrice)}
+                          {capType(item.variantType)} · {item.duration === 0 || item.variantType.toLowerCase() === "lifetime" ? "Lifetime" : `${item.duration} ${item.duration === 1 ? "month" : "months"}`} · {formatPrice(item.unitPrice)}
                         </p>
                         {/* Quantity controls */}
                         <div className="flex items-center gap-2 mt-2">
@@ -152,7 +152,7 @@ const ShoppingBag = ({ isOpen, onClose, cartItems, updateQuantity, clearCart }: 
                   {cartItems.map((item) => (
                     <div key={`${item.id}-${item.variantType}-${item.duration}-summary`} className="flex justify-between text-xs text-muted-foreground">
                       <span className="truncate mr-2">
-                        {item.name} × {item.quantity} ({capType(item.variantType)}, {item.duration}mo)
+                        {item.name} × {item.quantity} ({capType(item.variantType)}, {item.duration === 0 || item.variantType.toLowerCase() === "lifetime" ? "Lifetime" : `${item.duration}mo`})
                       </span>
                       <span className="flex-shrink-0">{formatPrice(item.unitPrice * item.quantity)}</span>
                     </div>
