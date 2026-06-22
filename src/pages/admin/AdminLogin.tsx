@@ -109,7 +109,7 @@ const AdminLogin = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            minLength={8}
+            minLength={6}
             autoComplete={mode === "signup" ? "new-password" : "current-password"}
           />
         </div>
