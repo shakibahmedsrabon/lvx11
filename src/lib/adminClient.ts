@@ -1,4 +1,4 @@
-import { supabase as cloud } from "@/integrations/supabase/client";
+import { cloudSupabase as cloud } from "@/integrations/lovable-cloud/client";
 import { createClient } from "@supabase/supabase-js";
 
 /**

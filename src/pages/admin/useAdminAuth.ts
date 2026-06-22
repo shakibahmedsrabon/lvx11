@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { cloudSupabase as supabase } from "@/integrations/lovable-cloud/client";
 import type { Session } from "@supabase/supabase-js";
 
 /**

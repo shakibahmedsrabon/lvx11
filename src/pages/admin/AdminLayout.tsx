@@ -1,5 +1,5 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { cloudSupabase as supabase } from "@/integrations/lovable-cloud/client";
 import { Button } from "@/components/ui/button";
 import { useAdminAuth } from "./useAdminAuth";
 import { ADMIN_TABLES } from "./adminConfig";
