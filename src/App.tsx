@@ -20,6 +20,10 @@ const RefundExchangePolicy = lazy(() => import("./pages/RefundExchangePolicy"));
 const Trademark = lazy(() => import("./pages/Trademark"));
 const Policy = lazy(() => import("./pages/Policy"));
 const About = lazy(() => import("./pages/About"));
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminLayout = lazy(() => import("./pages/admin/AdminLayout"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminTable = lazy(() => import("./pages/admin/AdminTable"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -55,6 +59,13 @@ const App = () => (
               <Route path="/trademark" element={<Trademark />} />
               <Route path="/policy/:slug" element={<Policy />} />
               <Route path="/about/:slug" element={<About />} />
+
+              {/* Admin */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<AdminDashboard />} />
+                <Route path=":tableKey" element={<AdminTable />} />
+              </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
