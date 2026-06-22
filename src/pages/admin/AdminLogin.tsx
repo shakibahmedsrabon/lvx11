@@ -62,10 +62,12 @@ const AdminLogin = () => {
           options: { emailRedirectTo: `${window.location.origin}/admin` },
         });
         if (error) throw error;
-        if (data.user) await ensureAdminRole(data.user.id);
+        if (data.session?.user.id) await ensureAdminRole(data.session.user.id);
         toast({
           title: "Account created",
-          description: "Admin access ready. Sign in korte parben.",
+          description: data.session
+            ? "Admin access ready. Sign in korte parben."
+            : "Email confirm korte hole inbox check kore tarpor sign in korun.",
         });
         setMode("signin");
         return;
@@ -74,6 +76,7 @@ const AdminLogin = () => {
       if (error) throw error;
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("No user");
+      await ensureAdminRole(u.user.id);
       const { data: role } = await supabase
         .from("user_roles")
         .select("role")
