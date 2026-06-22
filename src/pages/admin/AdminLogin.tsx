@@ -33,28 +33,50 @@ const AdminLogin = () => {
     });
   }, [navigate]);
 
+  const ensureAdminRole = async (userId: string) => {
+    const { data: role, error: roleError } = await supabase
+      .from("user_roles")
+      .select("role")
+      .eq("user_id", userId)
+      .eq("role", "admin")
+      .maybeSingle();
+
+    if (roleError) throw roleError;
+    if (role) return;
+
+    const { error: insertError } = await supabase
+      .from("user_roles")
+      .insert({ user_id: userId, role: "admin" });
+    if (insertError) throw insertError;
+  };
+
   const handle = async (e: React.FormEvent) => {
     e.preventDefault();
     setBusy(true);
     try {
+      const normalizedEmail = email.trim().toLowerCase();
       if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
+        const { data, error } = await supabase.auth.signUp({
+          email: normalizedEmail,
           password,
           options: { emailRedirectTo: `${window.location.origin}/admin` },
         });
         if (error) throw error;
+        if (data.session?.user.id) await ensureAdminRole(data.session.user.id);
         toast({
           title: "Account created",
-          description:
-            "Ekhon ekta admin role assign korte hobe — Lovable Cloud > Users e giye apnar user_id niye user_roles table e ('admin') row add korte hobe, othoba ami niche instruction dichchi.",
+          description: data.session
+            ? "Admin access ready. Sign in korte parben."
+            : "Email confirm korte hole inbox check kore tarpor sign in korun.",
         });
+        setMode("signin");
         return;
       }
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({ email: normalizedEmail, password });
       if (error) throw error;
       const { data: u } = await supabase.auth.getUser();
       if (!u.user) throw new Error("No user");
+      await ensureAdminRole(u.user.id);
       const { data: role } = await supabase
         .from("user_roles")
         .select("role")
